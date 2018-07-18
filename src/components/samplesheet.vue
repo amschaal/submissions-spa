@@ -1,8 +1,8 @@
 <template>
   <div>
-    <HotTable :settings="settings"></HotTable>
+    <!-- <HotTable :settings="settings"></HotTable> -->
     <!-- <q-select :value="value" :options="options" @change="handleChange" filter filter-placeholder="select"/> -->
-    <q-modal v-model="opened" :content-css="{minWidth: '80vw', minHeight: '80vh'}">
+    <q-modal v-model="opened" :content-css="{minWidth: '80vw', minHeight: '80vh'}" @open="modalOpened($event)">
       <q-modal-layout>
         <q-toolbar slot="header">
           <q-btn
@@ -23,28 +23,39 @@
         <div class="layout-padding">
           <h1>Modal</h1>
           <!-- <HotTable :settings="settings"></HotTable> -->
-          <div id="example1" class="hot handsontable htRowHeaders htColumnHeaders"></div>
 
-          <q-btn
-            color="primary"
-            v-close-overlay
-            label="Close"
-          />
           <q-btn
             color="primary"
             label="Create table"
             @click="createTable"
           />
+          <q-btn
+            color="primary"
+            label="Add Row"
+            @click="hst.addRow"
+          />
+          <div id="example1" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+
           <p>This is a Modal presenting a Layout.</p>
         </div>
         <q-toolbar slot="footer">
           <q-toolbar-title>
-            Footer
+            <q-btn
+              color="primary"
+              v-close-overlay
+              label="Close"
+            />
+            <q-btn
+              color="primary"
+              label="Save"
+              @click="save"
+            />
           </q-toolbar-title>
         </q-toolbar>
       </q-modal-layout>
     </q-modal>
     <q-btn label="Samplesheet"  @click="openSamplesheet"/>
+    {{data}}
   </div>
 </template>
 <!-- <link type="text/css" rel="stylesheet" href="https://docs.handsontable.com/4.0.0/components/handsontable/dist/handsontable.full.min.css"> -->
@@ -56,7 +67,7 @@
 
 <script>
 import { QSelect } from 'quasar'
-import HotTable from '@handsontable/vue'
+// import HotTable from '@handsontable/vue'
 import Handsontable from 'handsontable'
 import HotSchemaTable from '../assets/hot-schema/hotschema'
 import {example_schemas as ExampleSchemas} from '../assets/hot-schema/example_schema'
@@ -78,6 +89,8 @@ export default {
   data () {
     return {
       opened: false,
+      hst: {},
+      data: [],
       settings: {
         data: [
           ['', 'Ford', 'Volvo', 'Toyota', 'Honda'],
@@ -95,17 +108,27 @@ export default {
       this.$emit('input', newVal)
     },
     openSamplesheet () {
+      console.log(this.$refs)
       // console.log('hst', HotSchemaTable)
+      // if (!this.opened)
       this.opened = true
-      this.hst = new HotSchemaTable(document.getElementById('example1'), ExampleSchemas.veggie)
+      // this.hst = new HotSchemaTable(document.getElementById('example1'), ExampleSchemas.veggie)
     },
     createTable () {
       this.hst = new HotSchemaTable(document.getElementById('example1'), ExampleSchemas.veggie)
+    },
+    save () {
+      this.data = this.hst.table.getSourceData()
+    },
+    modalOpened () {
+      alert('hello?')
+      console.log('modal opened')
     }
+
   },
   components: {
-    QSelect,
-    HotTable
+    QSelect
+    // HotTable
   },
   created () {
     // loadScript('//docs.handsontable.com/4.0.0/components/handsontable/dist/handsontable.full.js')
@@ -114,6 +137,7 @@ export default {
     // loadScript('/statics/hot-schema/example_schema.js')
   }
 }
+
 </script>
 
 <style src="../../node_modules/handsontable/dist/handsontable.full.css"></style>

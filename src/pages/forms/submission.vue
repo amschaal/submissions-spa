@@ -5,7 +5,6 @@
         Create submission
       </q-card-title>
       <q-card-separator />
-      <Samplesheet v-model="submission.selected" :options="[]" />
       <q-card-main>
         {{errors}}
         {{submission}}
@@ -76,6 +75,7 @@
         >
           <q-input v-model="submission.payment_info" type="text"/>
         </q-field>
+        <Samplesheet v-model="submission.selected" :options="[]" />
       </q-card-main>
       <q-card-separator />
       <q-card-actions>
