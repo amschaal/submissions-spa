@@ -2,7 +2,7 @@
   <div>
     <!-- <HotTable :settings="settings"></HotTable> -->
     <!-- <q-select :value="value" :options="options" @change="handleChange" filter filter-placeholder="select"/> -->
-    <q-modal v-model="opened" :content-css="{minWidth: '80vw', minHeight: '80vh'}" @open="modalOpened($event)">
+    <q-modal v-model="opened" :content-css="{minWidth: '80vw', minHeight: '80vh'}" ref="modal">
       <q-modal-layout>
         <q-toolbar slot="header">
           <q-btn
@@ -13,37 +13,31 @@
             icon="keyboard_arrow_left"
           />
           <q-toolbar-title>
-            Header
+            Samplesheet
           </q-toolbar-title>
         </q-toolbar>
 
-        <q-toolbar slot="header">
-        </q-toolbar>
+        <!-- <q-toolbar slot="header">
+        </q-toolbar> -->
 
         <div class="layout-padding">
-          <h1>Modal</h1>
           <!-- <HotTable :settings="settings"></HotTable> -->
-
-          <q-btn
-            color="primary"
-            label="Create table"
-            @click="createTable"
-          />
+          {{schema}}
+          {{value}}
           <q-btn
             color="primary"
             label="Add Row"
+            v-if="hst.addRow"
             @click="hst.addRow"
           />
           <div id="example1" class="hot handsontable htRowHeaders htColumnHeaders"></div>
-
-          <p>This is a Modal presenting a Layout.</p>
         </div>
         <q-toolbar slot="footer">
           <q-toolbar-title>
             <q-btn
               color="primary"
-              v-close-overlay
-              label="Close"
+              label="Discard"
+              @click="discard"
             />
             <q-btn
               color="primary"
@@ -55,7 +49,6 @@
       </q-modal-layout>
     </q-modal>
     <q-btn label="Samplesheet"  @click="openSamplesheet"/>
-    {{data}}
   </div>
 </template>
 <!-- <link type="text/css" rel="stylesheet" href="https://docs.handsontable.com/4.0.0/components/handsontable/dist/handsontable.full.min.css"> -->
@@ -68,29 +61,17 @@
 <script>
 import { QSelect } from 'quasar'
 // import HotTable from '@handsontable/vue'
-import Handsontable from 'handsontable'
-import HotSchemaTable from '../assets/hot-schema/hotschema'
-import {example_schemas as ExampleSchemas} from '../assets/hot-schema/example_schema'
-// require('../statics/hot-schema/hotschema.js')
 // import Handsontable from 'handsontable'
-// import example_schemas from '../statics/hot-schema/example_schema'
-// import HotSchemaTable from '../statics/hot-schema/hotschema'
-
-// function loadScript (src) {
-//   var script = document.createElement('script')
-//   script.setAttribute('src', src)
-//   document.head.appendChild(script)
-// }
-console.log('Hands on table', Handsontable)
-console.log('HST', HotSchemaTable)
+import HotSchemaTable from '../assets/hot-schema/hotschema'
+import _ from 'lodash'
 
 export default {
-  props: ['value', 'options'],
+  props: ['value', 'schema'],
   data () {
     return {
       opened: false,
       hst: {},
-      data: [],
+      // data: this.value ? this.value : [{}],
       settings: {
         data: [
           ['', 'Ford', 'Volvo', 'Toyota', 'Honda'],
@@ -104,21 +85,49 @@ export default {
     }
   },
   methods: {
-    handleChange (newVal) {
-      this.$emit('input', newVal)
-    },
     openSamplesheet () {
-      console.log(this.$refs)
+      console.log('data', this.value)
       // console.log('hst', HotSchemaTable)
       // if (!this.opened)
-      this.opened = true
+      // this.opened = true
+      var self = this
+      console.log('openSamplesheet')
+      this.$refs.modal.show().then(() => {
+        self.createTable(self.schema, _.cloneDeep(this.value))
+      })
+      console.log('endOpenSamplesheet')
       // this.hst = new HotSchemaTable(document.getElementById('example1'), ExampleSchemas.veggie)
     },
-    createTable () {
-      this.hst = new HotSchemaTable(document.getElementById('example1'), ExampleSchemas.veggie)
+    // closeSamplesheet () {
+    //   var self = this
+    //   this.$refs.modal.hide().then(() => {
+    //     self.hst.table.destroy()
+    //     self.hst = {}
+    //   })
+    //   // this.hst = new HotSchemaTable(document.getElementById('example1'), ExampleSchemas.veggie)
+    // },
+    createTable (schema, data) {
+      // var useschema = schema ? schema : ExampleSchemas.veggie
+      console.log('create table', schema, data)
+      if (this.hst.table) {
+        console.log('Destroy!')
+        this.hst.table.destroy()
+      }
+      this.hst = new HotSchemaTable(document.getElementById('example1'), schema, data)
+      console.log('end create table', schema, data)
     },
     save () {
-      this.data = this.hst.table.getSourceData()
+      // this.local_data = this.hst.table.getSourceData()
+      // this.data = this.hst.table.getSourceData() // this.local_data
+      this.$emit('input', this.hst.table.getSourceData())
+      // this.data
+    },
+    discard () {
+      // this.data = this.value.slice()
+      this.hst.table.destroy()
+      this.hst = {}
+      this.$refs.modal.hide()
+      console.log('data', this.value)
     },
     modalOpened () {
       alert('hello?')
@@ -129,12 +138,6 @@ export default {
   components: {
     QSelect
     // HotTable
-  },
-  created () {
-    // loadScript('//docs.handsontable.com/4.0.0/components/handsontable/dist/handsontable.full.js')
-    // loadScript('//cdnjs.cloudflare.com/ajax/libs/ajv/4.1.7/ajv.bundle.js')
-    // loadScript('/statics/hot-schema/hotschema.js')
-    // loadScript('/statics/hot-schema/example_schema.js')
   }
 }
 

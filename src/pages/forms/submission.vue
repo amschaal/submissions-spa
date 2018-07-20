@@ -75,7 +75,24 @@
         >
           <q-input v-model="submission.payment_info" type="text"/>
         </q-field>
-        <Samplesheet v-model="submission.selected" :options="[]" />
+        <q-field
+          label="Submission Type"
+          :error="errors.type"
+          :error-label="errors.type"
+        >
+          <q-select
+            float-label="Select"
+            v-model="submission.type"
+            :options="type_options"
+          />
+        </q-field>
+        <Samplesheet v-model="submission.sample_data" :schema="schema" />
+        <p>SCHEMA:
+          {{schema}}
+        </p>
+        <p>DATA:
+          {{submission.sample_data}}
+        </p>
       </q-card-main>
       <q-card-separator />
       <q-card-actions>
@@ -95,9 +112,22 @@ export default {
   name: 'submission',
   data () {
     return {
-      submission: {},
-      errors: {}
+      submission: {'sample_data': [{}, {}]},
+      errors: {},
+      submission_types: [{ foo: 'bar' }],
+      type_options: [{ 'label': 'test', 'value': 2 }],
+      schema: []
     }
+  },
+  mounted: function () {
+    var self = this
+    axios
+      .get('http://127.0.0.1:8002/api/submission_types')
+      .then(function (response) {
+        console.log('response', response)
+        self.type_options = response.data.results.map(opt => ({label: opt.name, value: opt.id}))
+        self.submission_types = response.data.results
+      })
   },
   methods: {
     submit () {
@@ -118,11 +148,24 @@ export default {
     }
   },
   watch: {
+    'submission.type': function (newType) {
+      console.log('type changed', newType)
+      for (var i in this.submission_types) {
+        if (this.submission_types[i].id === newType) {
+          console.log('type', this.submission_types[i])
+          this.schema = this.submission_types[i].schema
+        }
+      }
+    }
   },
   computed: {
     error_message (field) {
       return this.errors[field]
     }
+    // type_options () {
+    //   return this.submission_types.map(opt => ({label: opt.name, value: opt.id}))
+    // }
+
   },
   components: {
     Samplesheet
