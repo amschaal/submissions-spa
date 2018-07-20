@@ -45,6 +45,9 @@
           <!-- <q-item-side icon="school" />
           <q-item-main label="Docs" sublabel="quasar-framework.org" /> -->
         </q-item>
+        <q-item :to="{ name: 'submission_types' }">
+          <q-item-main label="Submission Types"/>
+        </q-item>
         <!-- <q-item @click.native="openURL('http://quasar-framework.org')">
           <q-item-side icon="school" />
           <q-item-main label="Docs" sublabel="quasar-framework.org" />

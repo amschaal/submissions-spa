@@ -22,27 +22,33 @@
 
         <div class="layout-padding">
           <!-- <HotTable :settings="settings"></HotTable> -->
-          {{schema}}
-          {{value}}
-          <q-btn
-            color="primary"
-            label="Add Row"
-            v-if="hst.addRow"
-            @click="hst.addRow"
-          />
           <div id="example1" class="hot handsontable htRowHeaders htColumnHeaders"></div>
         </div>
         <q-toolbar slot="footer">
           <q-toolbar-title>
             <q-btn
-              color="primary"
-              label="Discard"
-              @click="discard"
+              color="positive"
+              label="Add Row"
+              v-if="hst.addRow"
+              @click="hst.addRow"
             />
             <q-btn
-              color="primary"
+              color="negative"
+              label="Remove selected rows"
+              v-if="hst.removeRows"
+              @click="hst.removeRows"
+            />
+            <q-btn
+              color="negative"
+              label="Discard"
+              @click="discard"
+              class="float-right"
+            />
+            <q-btn
+              color="positive"
               label="Save"
               @click="save"
+              class="float-right"
             />
           </q-toolbar-title>
         </q-toolbar>
@@ -87,6 +93,13 @@ export default {
   methods: {
     openSamplesheet () {
       console.log('data', this.value)
+      if (!this.schema.properties) {
+        this.$q.dialog({
+          title: 'Alert',
+          message: 'Please select a submission type first.'
+        })
+        return
+      }
       // console.log('hst', HotSchemaTable)
       // if (!this.opened)
       // this.opened = true
@@ -144,3 +157,8 @@ export default {
 </script>
 
 <style src="../../node_modules/handsontable/dist/handsontable.full.css"></style>
+<style>
+.htContextMenu, .htComments{
+  z-index: 9999999 !important;
+}
+</style>
