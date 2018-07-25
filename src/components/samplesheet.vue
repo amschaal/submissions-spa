@@ -2,16 +2,9 @@
   <div>
     <!-- <HotTable :settings="settings"></HotTable> -->
     <!-- <q-select :value="value" :options="options" @change="handleChange" filter filter-placeholder="select"/> -->
-    <q-modal v-model="opened" :content-css="{minWidth: '80vw', minHeight: '80vh'}" ref="modal">
+    <q-modal v-model="opened" :content-css="{minWidth: '90vw', minHeight: '90vh'}" ref="modal" no-backdrop-dismiss>
       <q-modal-layout>
         <q-toolbar slot="header">
-          <q-btn
-            flat
-            round
-            dense
-            v-close-overlay
-            icon="keyboard_arrow_left"
-          />
           <q-toolbar-title>
             Samplesheet
           </q-toolbar-title>
@@ -39,9 +32,14 @@
               @click="hst.removeRows"
             />
             <q-btn
+              label="Validate"
+              v-if="hst.removeRows"
+              @click="validate"
+            />
+            <q-btn
               color="negative"
               label="Discard"
-              @click="discard"
+              @click="close"
               class="float-right"
             />
             <q-btn
@@ -127,20 +125,30 @@ export default {
         this.hst.table.destroy()
       }
       this.hst = new HotSchemaTable(document.getElementById('example1'), schema, data)
+      this.hst.validateTable()
       console.log('end create table', schema, data)
     },
     save () {
       // this.local_data = this.hst.table.getSourceData()
       // this.data = this.hst.table.getSourceData() // this.local_data
-      this.$emit('input', this.hst.table.getSourceData())
+      this.validate()
+      if (!this.hst.hasErrors()) {
+        this.$emit('input', this.hst.table.getSourceData())
+        this.close()
+      } else {
+        this.$q.notify({message: 'Please fix errors.', type: 'negative'})
+      }
+
       // this.data
     },
-    discard () {
+    validate () {
+      this.hst.validateTable(true)
+    },
+    close () {
       // this.data = this.value.slice()
       this.hst.table.destroy()
       this.hst = {}
       this.$refs.modal.hide()
-      console.log('data', this.value)
     },
     modalOpened () {
       alert('hello?')

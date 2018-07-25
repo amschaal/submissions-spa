@@ -70,6 +70,7 @@ module.exports = function (ctx) {
         'QOptionGroup',
         'QDatetime',
         'QRating',
+        'QCheckbox',
         'QColor',
         'QCard',
         'QCardTitle',

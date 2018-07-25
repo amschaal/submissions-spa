@@ -11,13 +11,47 @@
             icon="keyboard_arrow_left"
           />
           <q-toolbar-title>
-            Field options
+            Field options for: {{variable}}
           </q-toolbar-title>
         </q-toolbar>
 
         <div class="layout-padding">
-          {{value}}
-          <q-chips-input v-model="options" placeholder="Enter options" />
+          {{data}}
+          <q-field
+            label="Title"
+            helper="This will be displayed as the column header"
+          >
+            <q-input v-model="data.title" />
+          </q-field>
+          <q-field
+            label="Description"
+          >
+            <q-input v-model="data.description" type="textarea" placeholder="Enter description here."/>
+          </q-field>
+          <q-field v-if="data.type === 'string'"
+            label="Regular Expression"
+            helper="Enter a valid regular expression to validate against. Example for matching values such as '20.3 ul': ^\d+(\.{1}\d+)? ul$"
+          >
+            <q-input v-model="data.pattern" />
+          </q-field>
+          <q-field v-if="data.type === 'string'"
+            label="Choices"
+            helper="If the variable should be constrained to specific choices, enter here."
+          >
+            <q-chips-input v-model="data.enum" placeholder="Enter options" />
+          </q-field>
+          <q-field v-if="data.type === 'number'"
+            label="Minimum"
+            helper="Optionally, enter a minimum valid number."
+          >
+            <q-input v-model="data.minimum" type="number"/>
+          </q-field>
+          <q-field v-if="data.type === 'number'"
+            label="Maximum"
+            helper="Optionally, enter a maximum valid number."
+          >
+            <q-input v-model="data.maximum" type="number"/>
+          </q-field>
           <!-- <td v-if="p.type == 'string'"><q-btn v-if="p.enum" @click="removeOptions(p)">Remove options</q-btn><q-btn v-if="!p.enum" @click="useOptions(p)">Use Options</q-btn><q-chips-input v-if="p.enum" v-model="p.enum" placeholder="Enter options" /></td>
           <td v-if="p.type == 'number'">Number stuff</td> -->
         </div>
@@ -44,26 +78,31 @@
 </template>
 
 <script>
-// import _ from 'lodash'
+import _ from 'lodash'
 
 export default {
-  props: ['value'],
+  props: ['value', 'variable'],
   data () {
     return {
       opened: false,
-      options: this.value && this.value.enum ? this.value.enum : []
+      data: {enum: []}
+      // options: this.value && this.value.enum ? this.value.enum : []
     }
   },
   methods: {
     openModal () {
-      // var self = this
+      this.data = _.cloneDeep(this.value)
       this.$refs.modal.show().then(() => {
+
       })
     },
     save () {
       // this.local_data = this.hst.table.getSourceData()
       // this.data = this.hst.table.getSourceData() // this.local_data
-      this.$emit('input', this.hst.table.getSourceData())
+      // this.value = this.options
+      console.log(this.value)
+      this.$emit('input', this.data)
+      this.$refs.modal.hide()
       // this.data
     },
     discard () {
