@@ -68,9 +68,10 @@ import { QSelect } from 'quasar'
 // import Handsontable from 'handsontable'
 import HotSchemaTable from '../assets/hot-schema/hotschema'
 import _ from 'lodash'
+import axios from 'axios'
 
 export default {
-  props: ['value', 'schema'],
+  props: ['value', 'schema', 'type'],
   data () {
     return {
       opened: false,
@@ -125,7 +126,7 @@ export default {
         this.hst.table.destroy()
       }
       this.hst = new HotSchemaTable(document.getElementById('example1'), schema, data)
-      this.hst.validateTable()
+      // this.hst.validateTable()
       console.log('end create table', schema, data)
     },
     save () {
@@ -138,11 +139,24 @@ export default {
       } else {
         this.$q.notify({message: 'Please fix errors.', type: 'negative'})
       }
-
       // this.data
     },
     validate () {
       this.hst.validateTable(true)
+      if (this.type) {
+        axios.post('http://127.0.0.1:8002/api/submission_types/' + this.type + '/validate_data/', {data: this.hst.table.getSourceData()})
+          .then(function (response) {
+            console.log(response)
+            self.$q.notify({message: 'Submission successfully validated.', type: 'positive'})
+          })
+          .catch(function (error, stuff) {
+            console.log('ERROR', error.response)
+            self.$q.notify({message: 'There were errors in your data.', type: 'negative'})
+            // if (error.response) {
+            //   self.errors = error.response.data.errors
+            // }
+          })
+      }
     },
     close () {
       // this.data = this.value.slice()
@@ -159,6 +173,13 @@ export default {
   components: {
     QSelect
     // HotTable
+  },
+  watch: {
+    'hst.table': function (newval, oldval) {
+      if (!oldval && newval) {
+        this.validate()
+      }
+    }
   }
 }
 

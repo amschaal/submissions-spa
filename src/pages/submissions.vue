@@ -13,6 +13,17 @@
       <template slot="top-right" slot-scope="props">
         <q-search hide-underline v-model="filter" />
       </template>
+      <template slot="body" slot-scope="props">
+        <q-tr :props="props">
+          <q-td key="id" :props="props"><router-link :to="{ name: 'submission', params: { id: props.row.id }}">{{ props.row.id }}</router-link></q-td>
+          <q-td key="internal_id" :props="props">{{ props.row.internal_id }}</q-td>
+          <q-td key="status" :props="props">{{ props.row.status }}</q-td>
+          <q-td key="submitted" :props="props">{{ props.row.submitted }}</q-td>
+          <q-td key="name" :props="props">{{ props.row.name }}</q-td>
+          <q-td key="email" :props="props">{{ props.row.email }}</q-td>
+          <q-td key="pi" :props="props">{{ props.row.pi }}</q-td>
+        </q-tr>
+      </template>
     </q-table>
   </q-page>
 </template>

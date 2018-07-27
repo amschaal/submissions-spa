@@ -23,7 +23,7 @@
           :error="errors.email"
           :error-label="errors.email"
         >
-          <q-input v-model="submission.email" type="email"/>
+          <q-input v-model="submission.email" type="email" :disable="submission.id != undefined"/>
         </q-field>
         <q-field
           label="Submitter phone"
@@ -84,9 +84,16 @@
             float-label="Select"
             v-model="submission.type"
             :options="type_options"
+            :disable="submission.id != undefined"
           />
         </q-field>
-        <Samplesheet v-model="submission.sample_data" :schema="schema" />
+        <q-field
+          label="Submission Type"
+          :error="errors.sample_data"
+          :error-label="errors.sample_data"
+        >
+          <Samplesheet v-model="submission.sample_data" :schema="schema" :type="submission.type"/>
+        </q-field>
         <p>SCHEMA:
           {{schema}}
         </p>
@@ -107,9 +114,11 @@
 import './docs-input.styl'
 import axios from 'axios'
 import Samplesheet from '../../components/samplesheet.vue'
+import Vue from 'vue'
 
 export default {
   name: 'submission',
+  props: ['id'],
   data () {
     return {
       submission: {'sample_data': [{}, {}]},
@@ -120,26 +129,41 @@ export default {
     }
   },
   mounted: function () {
+    console.log('mounted')
     var self = this
     axios
-      .get('http://127.0.0.1:8002/api/submission_types')
+      .get('http://127.0.0.1:8002/api/submission_types?show=true')
       .then(function (response) {
         console.log('response', response)
         self.type_options = response.data.results.map(opt => ({label: opt.name, value: opt.id}))
         self.submission_types = response.data.results
+        if (self.id) {
+          axios
+            .get('http://127.0.0.1:8002/api/submissions/' + self.id)
+            .then(function (response) {
+              console.log('response', response)
+              self.submission = response.data
+              Vue.set(self.submission, 'type', response.data.type.id)
+            })
+        }
       })
   },
   methods: {
     submit () {
       var self = this
-      axios
-        .post('http://127.0.0.1:8002', this.submission)
+      var id = this.submission.id
+      var action = id ? 'put' : 'post'
+      var url = id ? '/submissions/' + id + '/update/' : '/'
+      axios[action]('http://127.0.0.1:8002' + url, this.submission)
         .then(function (response) {
+          self.errors = {}
           console.log(response)
+          self.$q.notify({message: 'Submission successfully saved.', type: 'positive'})
         })
         .catch(function (error, stuff) {
           // raise different exception if due to invalid credentials
           console.log('ERROR', error.response)
+          self.$q.notify({message: 'There were errors saving your submission.', type: 'negative'})
           if (error.response) {
             self.errors = error.response.data.errors
           }
@@ -155,6 +179,20 @@ export default {
           console.log('type', this.submission_types[i])
           this.schema = this.submission_types[i].schema
         }
+      }
+    },
+    'id': function (id) {
+      var self = this
+      if (self.id) {
+        axios
+          .get('http://127.0.0.1:8002/api/submissions/' + self.id)
+          .then(function (response) {
+            console.log('response', response)
+            self.submission = response.data
+            Vue.set(self.submission, 'type', response.data.type.id)
+          })
+      } else {
+        this.submission = {'sample_data': [{}, {}]}
       }
     }
   },

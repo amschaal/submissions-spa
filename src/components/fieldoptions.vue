@@ -92,6 +92,9 @@ export default {
   methods: {
     openModal () {
       this.data = _.cloneDeep(this.value)
+      if (!this.data.enum) {
+        this.data.enum = []
+      }
       this.$refs.modal.show().then(() => {
 
       })
@@ -100,7 +103,9 @@ export default {
       // this.local_data = this.hst.table.getSourceData()
       // this.data = this.hst.table.getSourceData() // this.local_data
       // this.value = this.options
-      console.log(this.value)
+      if (this.data.enum.length < 1) {
+        this.data.enum = undefined
+      }
       this.$emit('input', this.data)
       this.$refs.modal.hide()
       // this.data

@@ -79,7 +79,8 @@ module.exports = function (ctx) {
         'QCardSeparator',
         'QCardActions',
         'QModal',
-        'QModalLayout'
+        'QModalLayout',
+        'QTooltip'
       ],
       directives: [
         'Ripple',

@@ -10,6 +10,12 @@ export default [
         component: () => import('pages/submissions'),
         name: 'submissions'
       },
+      {
+        path: '/submissions/:id',
+        component: () => import('pages/forms/submission'),
+        name: 'submission',
+        props: true
+      },
       { path: '/submissions/create', component: () => import('pages/forms/submission'), name: 'create_submission' },
       {
         path: '/submission_types',
