@@ -14,8 +14,14 @@
         </q-toolbar> -->
 
         <div class="layout-padding">
-          <!-- <HotTable :settings="settings"></HotTable> -->
-          <div id="example1" class="hot handsontable htRowHeaders htColumnHeaders"></div>
+          <q-btn
+            color="primary"
+            @click="show_help = true"
+            label="Help"
+            icon="fas fa-question-circle"
+            v-if="type.help"
+          />
+            <div id="example1" class="hot handsontable htRowHeaders htColumnHeaders"></div>
         </div>
         <q-toolbar slot="footer">
           <q-toolbar-title>
@@ -34,7 +40,7 @@
             <q-btn
               label="Validate"
               v-if="hst.removeRows"
-              @click="validate"
+              @click="validate(false)"
             />
             <q-btn
               color="negative"
@@ -45,11 +51,28 @@
             <q-btn
               color="positive"
               label="Save"
-              @click="save"
+              @click="validate(true)"
               class="float-right"
             />
           </q-toolbar-title>
         </q-toolbar>
+      </q-modal-layout>
+    </q-modal>
+    <q-modal v-model="show_help">
+      <q-modal-layout>
+        <q-toolbar slot="header">
+          <q-toolbar-title>
+            Help
+          </q-toolbar-title>
+        </q-toolbar>
+        <div class="layout-padding">
+          <div v-html="type.help" v-if="type.help"></div>
+          <q-btn
+            color="primary"
+            @click="show_help = false"
+            label="Close"
+          />
+        </div>
       </q-modal-layout>
     </q-modal>
     <q-btn label="Samplesheet"  @click="openSamplesheet"/>
@@ -71,10 +94,11 @@ import _ from 'lodash'
 import axios from 'axios'
 
 export default {
-  props: ['value', 'schema', 'type'],
+  props: ['value', 'type'],
   data () {
     return {
       opened: false,
+      show_help: false,
       hst: {},
       // data: this.value ? this.value : [{}],
       settings: {
@@ -92,7 +116,7 @@ export default {
   methods: {
     openSamplesheet () {
       console.log('data', this.value)
-      if (!this.schema.properties) {
+      if (!this.type) {
         this.$q.dialog({
           title: 'Alert',
           message: 'Please select a submission type first.'
@@ -105,7 +129,7 @@ export default {
       var self = this
       console.log('openSamplesheet')
       this.$refs.modal.show().then(() => {
-        self.createTable(self.schema, _.cloneDeep(this.value))
+        self.createTable(self.type.schema, _.cloneDeep(this.value))
       })
       console.log('endOpenSamplesheet')
       // this.hst = new HotSchemaTable(document.getElementById('example1'), ExampleSchemas.veggie)
@@ -130,27 +154,25 @@ export default {
       console.log('end create table', schema, data)
     },
     save () {
-      // this.local_data = this.hst.table.getSourceData()
-      // this.data = this.hst.table.getSourceData() // this.local_data
-      this.validate()
-      if (!this.hst.hasErrors()) {
-        this.$emit('input', this.hst.table.getSourceData())
-        this.close()
-      } else {
-        this.$q.notify({message: 'Please fix errors.', type: 'negative'})
-      }
-      // this.data
+      this.$emit('input', this.hst.table.getSourceData())
+      this.close()
     },
-    validate () {
-      this.hst.validateTable(true)
+    validate (save) {
+      // this.hst.validateTable(true)
+      console.log('validate', save)
+      var self = this
       if (this.type) {
-        axios.post('http://127.0.0.1:8002/api/submission_types/' + this.type + '/validate_data/', {data: this.hst.table.getSourceData()})
+        axios.post('http://127.0.0.1:8002/api/submission_types/' + this.type.id + '/validate_data/', {data: this.hst.table.getSourceData()})
           .then(function (response) {
             console.log(response)
             self.$q.notify({message: 'Submission successfully validated.', type: 'positive'})
+            if (save) {
+              self.save()
+            }
           })
           .catch(function (error, stuff) {
             console.log('ERROR', error.response)
+            self.hst.setErrors(error.response.data.errors)
             self.$q.notify({message: 'There were errors in your data.', type: 'negative'})
             // if (error.response) {
             //   self.errors = error.response.data.errors

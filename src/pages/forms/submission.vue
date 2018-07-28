@@ -6,8 +6,11 @@
       </q-card-title>
       <q-card-separator />
       <q-card-main>
-        {{errors}}
-        {{submission}}
+        <q-checkbox v-model="debug" label="Debug" />
+        <span v-if="debug">
+          {{errors}}
+          {{submission}}
+        </span>
         <q-field
           label="Full name"
           helper="Some helper"
@@ -88,18 +91,20 @@
           />
         </q-field>
         <q-field
-          label="Submission Type"
+          label="Samples"
           :error="errors.sample_data"
           :error-label="errors.sample_data"
         >
-          <Samplesheet v-model="submission.sample_data" :schema="schema" :type="submission.type"/>
+          <Samplesheet v-model="submission.sample_data" :type="type"/>
         </q-field>
-        <p>SCHEMA:
-          {{schema}}
-        </p>
-        <p>DATA:
-          {{submission.sample_data}}
-        </p>
+        <span v-if="debug">
+          <p>SCHEMA:
+            {{type.schema}}
+          </p>
+          <p>DATA:
+            {{submission.sample_data}}
+          </p>
+        </span>
       </q-card-main>
       <q-card-separator />
       <q-card-actions>
@@ -125,7 +130,8 @@ export default {
       errors: {},
       submission_types: [{ foo: 'bar' }],
       type_options: [{ 'label': 'test', 'value': 2 }],
-      schema: []
+      type: {},
+      debug: false
     }
   },
   mounted: function () {
@@ -177,7 +183,7 @@ export default {
       for (var i in this.submission_types) {
         if (this.submission_types[i].id === newType) {
           console.log('type', this.submission_types[i])
-          this.schema = this.submission_types[i].schema
+          this.type = this.submission_types[i]
         }
       }
     },

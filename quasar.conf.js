@@ -80,7 +80,11 @@ module.exports = function (ctx) {
         'QCardActions',
         'QModal',
         'QModalLayout',
-        'QTooltip'
+        'QTooltip',
+        'QEditor',
+        'QTabs',
+        'QTab',
+        'QTabPane'
       ],
       directives: [
         'Ripple',
@@ -91,7 +95,7 @@ module.exports = function (ctx) {
         'Notify',
         'Dialog'
       ],
-      iconSet: 'fontawesome'//ctx.theme.mat ? 'material-icons' : 'ionicons'
+      iconSet: 'fontawesome'// ctx.theme.mat ? 'material-icons' : 'ionicons'
       // i18n: 'de' // Quasar language
     },
     // animations: 'all' --- includes all animations

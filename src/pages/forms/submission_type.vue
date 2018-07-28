@@ -21,6 +21,22 @@
         >
           <q-input v-model="type.description" type="textarea"/>
         </q-field>
+        <q-field
+          label="Help"
+          :error="errors.help"
+          :error-label="errors.help"
+        >
+          <q-editor v-model="type.help"
+            :toolbar="[
+              ['bold', 'italic', 'strike', 'underline', 'subscript', 'superscript'],
+              ['token', 'hr', 'link', 'custom_btn'],
+              ['print', 'fullscreen'],
+              ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
+              ['undo', 'redo'],
+              ['table']
+            ]"
+          />
+        </q-field>
         <h6>Column Definitions</h6>
         <table v-if="type.schema" style="width:100%">
           <tr><th>Required</th><th>Variable</th><th>Type</th><th></th></tr>
