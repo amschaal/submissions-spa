@@ -48,6 +48,9 @@
         <q-item :to="{ name: 'submission_types' }">
           <q-item-main label="Submission Types"/>
         </q-item>
+        <q-item>
+          <Auth />
+        </q-item>
         <!-- <q-item @click.native="openURL('http://quasar-framework.org')">
           <q-item-side icon="school" />
           <q-item-main label="Docs" sublabel="quasar-framework.org" />
@@ -63,16 +66,21 @@
 
 <script>
 import { openURL } from 'quasar'
+import Auth from '../components/auth.vue'
 
 export default {
   name: 'LayoutDefault',
   data () {
     return {
-      leftDrawerOpen: this.$q.platform.is.desktop
+      leftDrawerOpen: this.$q.platform.is.desktop,
+      show_login: false
     }
   },
   methods: {
     openURL
+  },
+  components: {
+    Auth
   }
 }
 </script>
