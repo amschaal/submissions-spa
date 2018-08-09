@@ -48,9 +48,19 @@
         <q-item :to="{ name: 'submission_types' }">
           <q-item-main label="Submission Types"/>
         </q-item>
-        <q-item>
-          <Auth />
+        <q-item @click="auth.logout" v-if="$keycloak.authenticated">
+          <q-item-main label="Logout" />
+          <a @click="$keycloak.logout()">{{ $keycloak.user.username }}: Logout</a>
+          <!-- <q-item-side icon="school" />
+          <q-item-main label="Docs" sublabel="quasar-framework.org" /> -->
         </q-item>
+        <q-item @click="auth.logout" v-if="!$keycloak.authenticated">
+          <q-item-main label="Login" />
+          <a @click="$keycloak.login()">Click</a>
+          <!-- <q-item-side icon="school" />
+          <q-item-main label="Docs" sublabel="quasar-framework.org" /> -->
+        </q-item>
+
         <!-- <q-item @click.native="openURL('http://quasar-framework.org')">
           <q-item-side icon="school" />
           <q-item-main label="Docs" sublabel="quasar-framework.org" />

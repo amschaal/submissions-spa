@@ -42,7 +42,9 @@ export default {
   props: ['show_login'],
   data () {
     return {
-      opened: this.show_login
+      opened: this.show_login,
+      username: null,
+      password: null
     }
   },
   methods: {
