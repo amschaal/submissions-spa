@@ -91,7 +91,7 @@ import { QSelect } from 'quasar'
 // import Handsontable from 'handsontable'
 import HotSchemaTable from '../assets/hot-schema/hotschema'
 import _ from 'lodash'
-import axios from 'axios'
+// import axios from 'axios'
 
 export default {
   props: ['value', 'type'],
@@ -162,7 +162,7 @@ export default {
       console.log('validate', save)
       var self = this
       if (this.type) {
-        axios.post('http://127.0.0.1:8002/api/submission_types/' + this.type.id + '/validate_data/', {data: this.hst.table.getSourceData()})
+        this.$axios.post('/api/submission_types/' + this.type.id + '/validate_data/', {data: this.hst.table.getSourceData()})
           .then(function (response) {
             console.log(response)
             self.$q.notify({message: 'Submission successfully validated.', type: 'positive'})

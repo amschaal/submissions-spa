@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 
 export default {
   name: 'submission_types',
@@ -52,8 +52,8 @@ export default {
       // we do the server data fetch, based on pagination and filter received
       // (using Axios here, but can be anything; parameters vary based on backend implementation)
       console.log(pagination, filter)
-      axios
-        .get(`http://127.0.0.1:8002/api/submission_types/?ordering=${pagination.sortBy}&page=${pagination.page}&page_size=${pagination.rowsPerPage}`)// ${pagination.descending}&filter=${filter}
+      this.$axios
+        .get(`/api/submission_types/?ordering=${pagination.sortBy}&page=${pagination.page}&page_size=${pagination.rowsPerPage}`)// ${pagination.descending}&filter=${filter}
         .then(({ data }) => {
         /*
           // updating pagination to reflect in the UI
