@@ -39,15 +39,16 @@ export default {
       loading: false,
       serverPagination: {
         page: 1,
-        rowsNumber: 0, // specifying this determines pagination is server-side
-        rowsPerPage: 10
+        rowsNumber: 10, // specifying this determines pagination is server-side
+        rowsPerPage: 10,
+        descending: true
       },
       serverData: [],
       columns: [
         { name: 'id', label: 'Id', field: 'id', sortable: true },
         { name: 'internal_id', label: 'Internal Id', field: 'internal_id', sortable: true },
         { name: 'status', label: 'Status', field: 'status' },
-        { name: 'submitted', label: 'Submitted', field: 'submitted' },
+        { name: 'submitted', label: 'Submitted', field: 'submitted', sortable: true },
         { name: 'name', label: 'Name', field: 'name' },
         { name: 'email', label: 'Email', field: 'email', sortable: true },
         { name: 'pi_name', label: 'PI', field: 'pi_name', sortable: true }
@@ -62,18 +63,21 @@ export default {
       // we do the server data fetch, based on pagination and filter received
       // (using Axios here, but can be anything; parameters vary based on backend implementation)
       console.log(pagination, filter)
+      var sortBy = pagination.sortBy
+      if (pagination.descending) {
+        sortBy = '-' + sortBy
+      }
       this.$axios
-        .get(`/api/submissions/?ordering=${pagination.sortBy}&page=${pagination.page}&page_size=${pagination.rowsPerPage}`)// ${pagination.descending}&filter=${filter}
+        .get(`/api/submissions/?ordering=${sortBy}&page=${pagination.page}&page_size=${pagination.rowsPerPage}`)// ${pagination.descending}&filter=${filter}
         .then(({ data }) => {
-        /*
+          console.log('data', data)
           // updating pagination to reflect in the UI
           this.serverPagination = pagination
 
           // we also set (or update) rowsNumber
-          this.serverPagination.rowsNumber = data.rowsNumber
+          this.serverPagination.rowsNumber = data.count
 
           // then we update the rows with the fetched ones
-          */
           this.serverData = data.results
 
           // finally we tell QTable to exit the "loading" state

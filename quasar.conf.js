@@ -13,8 +13,8 @@ module.exports = function (ctx) {
     extras: [
       ctx.theme.mat ? 'roboto-font' : null,
       'material-icons', // optional, you are not bound to it
-      // 'ionicons',
-      // 'mdi',
+      'ionicons',
+      'mdi',
       'fontawesome'
     ],
     supportIE: true,
@@ -97,7 +97,7 @@ module.exports = function (ctx) {
         'Notify',
         'Dialog'
       ],
-      iconSet: 'fontawesome'// ctx.theme.mat ? 'material-icons' : 'ionicons'
+      iconSet: ctx.theme.mat ? 'material-icons' : 'ionicons' // 'fontawesome'
       // i18n: 'de' // Quasar language
     },
     // animations: 'all' --- includes all animations
