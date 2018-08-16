@@ -52,12 +52,11 @@
           <q-item-side icon="fas fa-user" />
           <q-item-main><div @click="$refs.auth.opened=true">Login</div></q-item-main>
         </q-item>
-        <q-item v-if="$store.getters.isLoggedIn" tag="div">
+        <q-item v-if="$store.getters.isLoggedIn" @click.native="$refs.auth.logout()">
           <q-item-side icon="fas fa-user" />
           <q-item-main v-if="$store.getters.isLoggedIn" @click="$refs.auth.logout()">
             <q-item-tile label>{{$store.state.auth.user.first_name}} {{$store.state.auth.user.last_name}}</q-item-tile>
             <q-item-tile sublabel >Logout</q-item-tile>
-            <div @click="$refs.auth.logout()">Logout</div>
           </q-item-main>
         </q-item>
       </q-list>
