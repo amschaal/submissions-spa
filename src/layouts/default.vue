@@ -48,29 +48,25 @@
         <q-item :to="{ name: 'submission_types' }">
           <q-item-main label="Submission Types"/>
         </q-item>
-        <q-item v-if="$keycloak.authenticated">
-          <q-item-main label="Logout" />
-          <a @click="$keycloak.logout()">{{ $keycloak.user.username }}: Logout</a>
-          <!-- <q-item-side icon="school" />
-          <q-item-main label="Docs" sublabel="quasar-framework.org" /> -->
+        <q-item v-if="!$store.getters.isLoggedIn">
+          <q-item-side icon="fas fa-user" />
+          <q-item-main><div @click="$refs.auth.opened=true">Login</div></q-item-main>
         </q-item>
-        <q-item v-if="!$keycloak.authenticated">
-          <q-item-main label="Login" />
-          <a @click="$keycloak.login()">Click</a>
-          <!-- <q-item-side icon="school" />
-          <q-item-main label="Docs" sublabel="quasar-framework.org" /> -->
+        <q-item v-if="$store.getters.isLoggedIn" tag="div">
+          <q-item-side icon="fas fa-user" />
+          <q-item-main v-if="$store.getters.isLoggedIn" @click="$refs.auth.logout()">
+            <q-item-tile label>{{$store.state.auth.user.first_name}} {{$store.state.auth.user.last_name}}</q-item-tile>
+            <q-item-tile sublabel >Logout</q-item-tile>
+            <div @click="$refs.auth.logout()">Logout</div>
+          </q-item-main>
         </q-item>
-
-        <!-- <q-item @click.native="openURL('http://quasar-framework.org')">
-          <q-item-side icon="school" />
-          <q-item-main label="Docs" sublabel="quasar-framework.org" />
-        </q-item> -->
       </q-list>
     </q-layout-drawer>
 
     <q-page-container>
       <router-view />
     </q-page-container>
+    <Auth ref="auth"/>
   </q-layout>
 </template>
 

@@ -7,18 +7,20 @@
 <script>
 import axios from 'axios'
 // import Keycloak from 'assets/keycloak/keycloak.js'
-import Vue from 'vue'
-import VueKeycloak from 'vue-keycloak'
-Vue.use(VueKeycloak, {
-  keycloakOptions: '/statics/keycloak.json',
-  keycloakInitOptions: {
-    // onLoad: 'check-sso'
-  }
-})
+// import Vue from 'vue'
+// import VueKeycloak from 'vue-keycloak'
+// Vue.use(VueKeycloak, {
+//   keycloakOptions: '/statics/keycloak.json',
+//   keycloakInitOptions: {
+//     // onLoad: 'check-sso'
+//   }
+// })
 export default {
   name: 'App',
   props: ['authenticated', 'blah'],
   mounted () {
+    this.$store.dispatch('checkAuth')
+    console.log('$store', this.$store)
     // once mounted, we need to trigger
     console.log('set axios defaults', [document.cookie, document])
     axios.defaults.withCredentials = true
