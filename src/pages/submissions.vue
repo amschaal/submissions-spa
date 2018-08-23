@@ -41,7 +41,8 @@ export default {
         page: 1,
         rowsNumber: 10, // specifying this determines pagination is server-side
         rowsPerPage: 10,
-        descending: true
+        descending: true,
+        sortBy: 'submitted'
       },
       serverData: [],
       columns: [

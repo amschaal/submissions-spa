@@ -116,7 +116,8 @@ export default {
   methods: {
     openSamplesheet () {
       console.log('data', this.value)
-      if (!this.type) {
+      console.log('type', this.type)
+      if (!this.type || !this.type.schema) {
         this.$q.dialog({
           title: 'Alert',
           message: 'Please select a submission type first.'
@@ -197,11 +198,11 @@ export default {
     // HotTable
   },
   watch: {
-    'hst.table': function (newval, oldval) {
-      if (!oldval && newval) {
-        this.validate()
-      }
-    }
+    // 'hst.table': function (newval, oldval) {
+    //   if (!oldval && newval) {
+    //     this.validate()
+    //   }
+    // }
   }
 }
 
