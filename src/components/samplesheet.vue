@@ -116,7 +116,6 @@ export default {
   methods: {
     openSamplesheet () {
       console.log('data', this.value)
-      console.log('type', this.type)
       if (!this.type || !this.type.schema) {
         this.$q.dialog({
           title: 'Alert',
@@ -198,11 +197,11 @@ export default {
     // HotTable
   },
   watch: {
-    // 'hst.table': function (newval, oldval) {
-    //   if (!oldval && newval) {
-    //     this.validate()
-    //   }
-    // }
+    'hst.table': function (newval, oldval) {
+      if (!oldval && newval) {
+        this.validate()
+      }
+    }
   }
 }
 

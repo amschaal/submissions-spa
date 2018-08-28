@@ -64,8 +64,13 @@ export default {
 
           // then we update the rows with the fetched ones
           */
-          this.serverData = data.results
+          this.serverPagination = pagination
 
+          // we also set (or update) rowsNumber
+          this.serverPagination.rowsNumber = data.count
+
+          // then we update the rows with the fetched ones
+          this.serverData = data.results
           // finally we tell QTable to exit the "loading" state
           this.loading = false
         })

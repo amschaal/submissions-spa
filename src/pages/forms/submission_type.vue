@@ -123,7 +123,7 @@ export default {
   mounted: function () {
     var self = this
     axios
-      .get('http://127.0.0.1:8002/api/submission_types/' + self.id + '/')
+      .get('/api/submission_types/' + self.id + '/')
       .then(function (response) {
         self.type = response.data
       })
@@ -169,7 +169,7 @@ export default {
       var id = this.id
       var action = id ? 'put' : 'post'
       var url = id ? '/api/submission_types/' + id + '/' : '/api/submission_types/'
-      axios[action]('http://127.0.0.1:8002' + url, this.type)
+      axios[action](url, this.type)
         .then(function (response) {
           console.log(response)
           self.$q.notify({message: 'Submission type successfully saved.', type: 'positive'})
