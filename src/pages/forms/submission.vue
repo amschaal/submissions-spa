@@ -141,9 +141,10 @@ export default {
       .get('/api/submission_types/?show=true')
       .then(function (response) {
         console.log('response', response)
+        console.log('id', self.id)
         self.type_options = response.data.results.map(opt => ({label: opt.name, value: opt.id}))
         self.submission_types = response.data.results
-        if (self.id && typeof self.id === 'number') {
+        if (self.id && self.id !== 'create') {
           self.$axios
             .get('/api/submissions/' + self.id)
             .then(function (response) {
@@ -189,7 +190,7 @@ export default {
     },
     'id': function (id) {
       var self = this
-      if (self.id && typeof self.id === 'number') {
+      if (self.id && self.id !== 'create') {
         self.$axios
           .get('/api/submissions/' + self.id)
           .then(function (response) {
