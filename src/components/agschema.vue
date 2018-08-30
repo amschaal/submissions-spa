@@ -99,8 +99,9 @@ import { AgGridVue } from 'ag-grid-vue'
 import '../../node_modules/ag-grid/dist/styles/ag-grid.css'
 import '../../node_modules/ag-grid/dist/styles/ag-theme-balham.css'
 import 'ag-grid-enterprise/main'
+// import { ClipboardService } from '../../node_modules/ag-grid-enterprise/dist/lib/clipboardService.js'
 // import axios from 'axios'
-
+// var clipboardService = null
 export default {
   props: ['value', 'type'],
   data () {
@@ -113,7 +114,14 @@ export default {
         {headerName: 'Price', field: 'price'}
       ],
       rowData: this.value,
-      gridOptions: {}
+      gridOptions: {
+        enableRangeSelection: true,
+        defaultColDef: {
+          editable: true
+        },
+        suppressMultiRangeSelection: true,
+        suppressRowClickSelection: true
+      }
     }
   },
   methods: {
@@ -128,7 +136,7 @@ export default {
       this.columnDefs = this.schema2Columns(this.type.schema)
       console.log('openSamplesheet', this.rowData, this.value, this.columnDefs)
       this.$refs.modal.show().then(() => {
-        alert('do stuff')
+        // alert('do stuff')
       })
     },
     schema2Columns (schema) {
