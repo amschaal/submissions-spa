@@ -96,6 +96,7 @@
           :error-label="errors.sample_data"
         >
           <Samplesheet v-model="submission.sample_data" :type="type"/>
+          <Agschema v-model="submission.sample_data" :type="type"/>
         </q-field>
         <span v-if="debug">
           <p>SCHEMA:
@@ -119,6 +120,7 @@
 import './docs-input.styl'
 // import axios from 'axios'
 import Samplesheet from '../../components/samplesheet.vue'
+import Agschema from '../../components/agschema.vue'
 import Vue from 'vue'
 
 export default {
@@ -126,7 +128,7 @@ export default {
   props: ['id'],
   data () {
     return {
-      submission: {'sample_data': [{}, {}]},
+      submission: {'sample_data': [{}, {}, {}]},
       errors: {},
       submission_types: [{ foo: 'bar' }],
       type_options: [{ 'label': 'test', 'value': 2 }],
@@ -213,7 +215,8 @@ export default {
 
   },
   components: {
-    Samplesheet
+    Samplesheet,
+    Agschema
   }
 }
 </script>
