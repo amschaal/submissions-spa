@@ -55,13 +55,13 @@
               label="Discard"
               @click="close"
               class="float-right"
-            />
+            /> -->
             <q-btn
               color="positive"
               label="Save"
               @click="validate(true)"
               class="float-right"
-            /> -->
+            />
           </q-toolbar-title>
         </q-toolbar>
       </q-modal-layout>
@@ -99,6 +99,8 @@ import { AgGridVue } from 'ag-grid-vue'
 import '../../node_modules/ag-grid/dist/styles/ag-grid.css'
 import '../../node_modules/ag-grid/dist/styles/ag-theme-balham.css'
 import 'ag-grid-enterprise/main'
+import _ from 'lodash'
+
 // import { ClipboardService } from '../../node_modules/ag-grid-enterprise/dist/lib/clipboardService.js'
 // import axios from 'axios'
 // var clipboardService = null
@@ -126,6 +128,7 @@ export default {
   },
   methods: {
     openSamplesheet () {
+      this.rowData = _.cloneDeep(this.value)
       if (!this.type || !this.type.schema) {
         this.$q.dialog({
           title: 'Alert',
@@ -151,26 +154,27 @@ export default {
     getColDef (id, definition, schema) {
       console.log('definition', id, definition, schema)
       var header = id
+      var tooltip = null
       if (definition.title) {
         header = definition.title
       }
       if (schema.required && schema.required.indexOf(id) !== -1) {
-        header = '<b>*' + header + '</b>'
+        header = '*' + header
       }
       if (definition.description) {
-        header = '<div title="' + definition.description + '">' + header + '</div>'
+        tooltip = definition.description
       }
       switch (definition.type) {
         case 'string':
           if (definition.enum) {
-            return {headerName: header, field: id, cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum}, editable: true}
+            return {headerName: header, headerTooltip: tooltip, field: id, cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum}, editable: true}
           } else {
-            return {headerName: header, field: id, type: 'text', editable: true}
+            return {headerName: header, headerTooltip: tooltip, field: id, type: 'text', editable: true}
           }
         case 'number':
-          return {headerName: header, field: id, type: 'numericColumn', editable: true}
+          return {headerName: header, headerTooltip: tooltip, field: id, type: 'numericColumn', editable: true}
         case 'boolean':
-          return {headerName: header, field: id, type: 'checkbox', editable: true}
+          return {headerName: header, headerTooltip: tooltip, field: id, type: 'checkbox', editable: true}
         case 'array':
           var def = {headerName: header, field: id, type: 'dropdown', editable: true}
           if (definition.items && definition.items.enum) {
@@ -183,31 +187,31 @@ export default {
       }
     },
     save () {
-      // this.$emit('input', this.hst.table.getSourceData())
+      this.$emit('input', this.rowData)
       this.close()
     },
     validate (save) {
-      // // this.hst.validateTable(true)
-      // console.log('validate', save)
-      // var self = this
-      // if (this.type) {
-      //   this.$axios.post('/api/submission_types/' + this.type.id + '/validate_data/', {data: this.hst.table.getSourceData()})
-      //     .then(function (response) {
-      //       console.log(response)
-      //       self.$q.notify({message: 'Submission successfully validated.', type: 'positive'})
-      //       if (save) {
-      //         self.save()
-      //       }
-      //     })AgGridVue
-      //     .catch(function (error, stuff) {
-      //       console.log('ERROR', error.response)
-      //       self.hst.setErrors(error.response.data.errors)
-      //       self.$q.notify({message: 'There were errors in your data.', type: 'negative'})
-      //       // if (error.response) {
-      //       //   self.errors = error.response.data.errors
-      //       // }
-      //     })
-      // }
+      // this.hst.validateTable(true)
+      console.log('validate', save)
+      var self = this
+      if (this.type) {
+        this.$axios.post('/api/submission_types/' + this.type.id + '/validate_data/', {data: this.rowData})
+          .then(function (response) {
+            console.log(response)
+            self.$q.notify({message: 'Submission successfully validated.', type: 'positive'})
+            if (save) {
+              self.save()
+            }
+          })
+          .catch(function (error, stuff) {
+            console.log('ERROR', error.response)
+            // self.hst.setErrors(error.response.data.errors)
+            self.$q.notify({message: 'There were errors in your data.', type: 'negative'})
+            // if (error.response) {
+            //   self.errors = error.response.data.errors
+            // }
+          })
+      }
     },
     close () {
       // this.data = this.value.slice()
