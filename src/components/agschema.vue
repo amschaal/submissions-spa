@@ -99,11 +99,16 @@ import { AgGridVue } from 'ag-grid-vue'
 import '../../node_modules/ag-grid/dist/styles/ag-grid.css'
 import '../../node_modules/ag-grid/dist/styles/ag-theme-balham.css'
 import 'ag-grid-enterprise/main'
+import NumericComponent from './aggrid/editors/NumericComponent.vue'
+// import DateComponent from './aggrid/DateComponent.vue'
+import AutocompleteComponent from './aggrid/editors/AutocompleteComponent.vue'
+import BooleanComponent from './aggrid/editors/BooleanComponent.vue'
 import _ from 'lodash'
 
 // import { ClipboardService } from '../../node_modules/ag-grid-enterprise/dist/lib/clipboardService.js'
 // import axios from 'axios'
 // var clipboardService = null
+
 export default {
   props: ['value', 'type'],
   data () {
@@ -167,14 +172,14 @@ export default {
       switch (definition.type) {
         case 'string':
           if (definition.enum) {
-            return {headerName: header, headerTooltip: tooltip, field: id, cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum}, editable: true}
+            return {headerName: header, headerTooltip: tooltip, field: id, cellEditorFramework: AutocompleteComponent, editable: true} // cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum}
           } else {
             return {headerName: header, headerTooltip: tooltip, field: id, type: 'text', editable: true}
           }
         case 'number':
-          return {headerName: header, headerTooltip: tooltip, field: id, type: 'numericColumn', editable: true}
+          return {headerName: header, headerTooltip: tooltip, field: id, editable: true, cellEditorFramework: NumericComponent}
         case 'boolean':
-          return {headerName: header, headerTooltip: tooltip, field: id, type: 'checkbox', editable: true}
+          return {headerName: header, headerTooltip: tooltip, field: id, type: 'checkbox', editable: true, cellEditorFramework: BooleanComponent}
         case 'array':
           var def = {headerName: header, field: id, type: 'dropdown', editable: true}
           if (definition.items && definition.items.enum) {
@@ -220,8 +225,10 @@ export default {
     modalOpened () {
       alert('hello?')
       console.log('modal opened')
+    },
+    beforeMount () {
+      this.gridOptions.numericComponentFramework = NumericComponent
     }
-
   },
   components: {
     QSelect,
