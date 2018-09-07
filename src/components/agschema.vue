@@ -28,26 +28,24 @@
             :enableSorting='true'
             :gridOptions='gridOptions'
             :rowData='rowData'
-            :columnDefs='columnDefs'>
+            :columnDefs='columnDefs'
+            :ref="'grid'">
           </ag-grid-vue>
         </div>
         <q-toolbar slot="footer">
           <q-toolbar-title>
-            <!-- <q-btn
+            <q-btn
               color="positive"
               label="Add Row"
-              v-if="hst.addRow"
-              @click="hst.addRow"
+              @click="addRow"
             />
             <q-btn
               color="negative"
               label="Remove selected rows"
-              v-if="hst.removeRows"
-              @click="hst.removeRows"
+              @click="removeRows"
             />
             <q-btn
               label="Validate"
-              v-if="hst.removeRows"
               @click="validate(false)"
             />
             <q-btn
@@ -55,7 +53,7 @@
               label="Discard"
               @click="close"
               class="float-right"
-            /> -->
+            />
             <q-btn
               color="positive"
               label="Save"
@@ -127,7 +125,8 @@ export default {
           editable: true
         },
         suppressMultiRangeSelection: true,
-        suppressRowClickSelection: true
+        suppressRowClickSelection: true,
+        checkboxSelection: function () { return true }
       },
       errors: {}
     }
@@ -155,6 +154,9 @@ export default {
           columnDefs.push(this.getColDef(prop, schema.properties[prop], schema))
         }
       }
+      columnDefs[0].headerCheckboxSelection = true
+      columnDefs[0].headerCheckboxSelectionFilteredOnly = true
+      columnDefs[0].checkboxSelection = true
       return columnDefs
     },
     getColDef (id, definition, schema) {
@@ -164,8 +166,14 @@ export default {
         if (self.errors[params.rowIndex] && self.errors[params.rowIndex][params.colDef.field]) {
           return ['error']
         }
-        return ['my-class-1']
+        return []
       }
+      function cellTooltip (params) {
+        if (self.errors[params.rowIndex] && self.errors[params.rowIndex][params.colDef.field]) {
+          return self.errors[params.rowIndex][params.colDef.field].join(', ')
+        }
+      }
+      // var cellTooltip = 'testing testing'
       console.log('definition', id, definition, schema)
       var header = id
       var tooltip = null
@@ -181,16 +189,16 @@ export default {
       switch (definition.type) {
         case 'string':
           if (definition.enum) {
-            return {headerName: header, headerTooltip: tooltip, field: id, cellEditorFramework: AutocompleteComponent, editable: true, cellClass: cellClass} // cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum}
+            return {headerName: header, headerTooltip: tooltip, field: id, cellEditorFramework: AutocompleteComponent, editable: true, cellClass: cellClass, tooltip: cellTooltip} // cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum}
           } else {
-            return {headerName: header, headerTooltip: tooltip, field: id, type: 'text', editable: true, cellClass: cellClass}
+            return {headerName: header, headerTooltip: tooltip, field: id, type: 'text', editable: true, cellClass: cellClass, tooltip: cellTooltip}
           }
         case 'number':
-          return {headerName: header, headerTooltip: tooltip, field: id, editable: true, cellEditorFramework: NumericComponent, cellClass: cellClass}
+          return {headerName: header, headerTooltip: tooltip, field: id, editable: true, cellEditorFramework: NumericComponent, cellClass: cellClass, tooltip: cellTooltip}
         case 'boolean':
-          return {headerName: header, headerTooltip: tooltip, field: id, type: 'checkbox', editable: true, cellEditorFramework: BooleanComponent, cellClass: cellClass}
+          return {headerName: header, headerTooltip: tooltip, field: id, type: 'checkbox', editable: true, cellEditorFramework: BooleanComponent, cellClass: cellClass, tooltip: cellTooltip}
         case 'array':
-          var def = {headerName: header, field: id, type: 'dropdown', editable: true, cellClass: cellClass}
+          var def = {headerName: header, field: id, type: 'dropdown', editable: true, cellClass: cellClass, tooltip: cellTooltip}
           if (definition.items && definition.items.enum) {
             def.source = definition.items.enum
           }
@@ -212,20 +220,33 @@ export default {
         this.$axios.post('/api/submission_types/' + this.type.id + '/validate_data/', {data: this.rowData})
           .then(function (response) {
             console.log(response)
+            self.errors = {}
+            self.gridOptions.api.redrawRows() // redrawCells({force: true})
             self.$q.notify({message: 'Submission successfully validated.', type: 'positive'})
             if (save) {
               self.save()
             }
           })
           .catch(function (error, stuff) {
-            console.log('ERROR', error.response)
+            console.log('ERROR', error.response, self.$refs.grid, self.gridOptions.api.refreshCells)
             self.errors = error.response.data.errors
+            self.gridOptions.api.redrawRows() // redrawCells({force: true})
             self.$q.notify({message: 'There were errors in your data.', type: 'negative'})
+
             // if (error.response) {
             //   self.errors = error.response.data.errors
             // }
           })
       }
+    },
+    addRow () {
+      this.rowData.push({})
+    },
+    removeRows () {
+      var selectedData = this.gridOptions.api.getSelectedRows()
+      this.gridOptions.api.updateRowData({remove: selectedData})
+      this.errors = {}
+      this.validate(false)
     },
     close () {
       // this.data = this.value.slice()
