@@ -128,7 +128,8 @@ export default {
         },
         suppressMultiRangeSelection: true,
         suppressRowClickSelection: true
-      }
+      },
+      errors: {}
     }
   },
   methods: {
@@ -157,6 +158,14 @@ export default {
       return columnDefs
     },
     getColDef (id, definition, schema) {
+      var self = this
+      function cellClass (params) {
+        console.log('cellClass', params, self.errors)
+        if (self.errors[params.rowIndex] && self.errors[params.rowIndex][params.colDef.field]) {
+          return ['error']
+        }
+        return ['my-class-1']
+      }
       console.log('definition', id, definition, schema)
       var header = id
       var tooltip = null
@@ -172,16 +181,16 @@ export default {
       switch (definition.type) {
         case 'string':
           if (definition.enum) {
-            return {headerName: header, headerTooltip: tooltip, field: id, cellEditorFramework: AutocompleteComponent, editable: true} // cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum}
+            return {headerName: header, headerTooltip: tooltip, field: id, cellEditorFramework: AutocompleteComponent, editable: true, cellClass: cellClass} // cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum}
           } else {
-            return {headerName: header, headerTooltip: tooltip, field: id, type: 'text', editable: true}
+            return {headerName: header, headerTooltip: tooltip, field: id, type: 'text', editable: true, cellClass: cellClass}
           }
         case 'number':
-          return {headerName: header, headerTooltip: tooltip, field: id, editable: true, cellEditorFramework: NumericComponent}
+          return {headerName: header, headerTooltip: tooltip, field: id, editable: true, cellEditorFramework: NumericComponent, cellClass: cellClass}
         case 'boolean':
-          return {headerName: header, headerTooltip: tooltip, field: id, type: 'checkbox', editable: true, cellEditorFramework: BooleanComponent}
+          return {headerName: header, headerTooltip: tooltip, field: id, type: 'checkbox', editable: true, cellEditorFramework: BooleanComponent, cellClass: cellClass}
         case 'array':
-          var def = {headerName: header, field: id, type: 'dropdown', editable: true}
+          var def = {headerName: header, field: id, type: 'dropdown', editable: true, cellClass: cellClass}
           if (definition.items && definition.items.enum) {
             def.source = definition.items.enum
           }
@@ -210,7 +219,7 @@ export default {
           })
           .catch(function (error, stuff) {
             console.log('ERROR', error.response)
-            // self.hst.setErrors(error.response.data.errors)
+            self.errors = error.response.data.errors
             self.$q.notify({message: 'There were errors in your data.', type: 'negative'})
             // if (error.response) {
             //   self.errors = error.response.data.errors
@@ -239,3 +248,9 @@ export default {
 }
 
 </script>
+
+<style>
+  .ag-row .error {
+    background-color: pink;
+  }
+</style>
