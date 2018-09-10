@@ -126,7 +126,20 @@ export default {
         },
         suppressMultiRangeSelection: true,
         suppressRowClickSelection: true,
-        checkboxSelection: function () { return true }
+        checkboxSelection: function () { return true },
+        processCellFromClipboard (params) {
+          switch (params.column.colDef.dataType) {
+            case 'boolean':
+              if (params.value === 'true' || params.value === 'True' || params.value === true) {
+                return true
+              }
+              return false
+            case 'numeric':
+              return parseFloat(params.value)
+            default:
+              return params.value
+          }
+        }
       },
       errors: {}
     }
@@ -194,9 +207,9 @@ export default {
             return {headerName: header, headerTooltip: tooltip, field: id, type: 'text', editable: true, cellClass: cellClass, tooltip: cellTooltip}
           }
         case 'number':
-          return {headerName: header, headerTooltip: tooltip, field: id, editable: true, cellEditorFramework: NumericComponent, cellClass: cellClass, tooltip: cellTooltip}
+          return {headerName: header, headerTooltip: tooltip, field: id, editable: true, cellEditorFramework: NumericComponent, cellClass: cellClass, tooltip: cellTooltip, dataType: 'numeric'}
         case 'boolean':
-          return {headerName: header, headerTooltip: tooltip, field: id, type: 'checkbox', editable: true, cellEditorFramework: BooleanComponent, cellClass: cellClass, tooltip: cellTooltip}
+          return {headerName: header, headerTooltip: tooltip, field: id, type: 'checkbox', editable: true, cellEditorFramework: BooleanComponent, cellClass: cellClass, tooltip: cellTooltip, dataType: 'boolean'}
         case 'array':
           var def = {headerName: header, field: id, type: 'dropdown', editable: true, cellClass: cellClass, tooltip: cellTooltip}
           if (definition.items && definition.items.enum) {
@@ -209,7 +222,7 @@ export default {
       }
     },
     save () {
-      this.$emit('input', this.rowData)
+      this.$emit('input', this.getRowData())
       this.close()
     },
     validate (save) {
@@ -217,7 +230,7 @@ export default {
       console.log('validate', save)
       var self = this
       if (this.type) {
-        this.$axios.post('/api/submission_types/' + this.type.id + '/validate_data/', {data: this.rowData})
+        this.$axios.post('/api/submission_types/' + this.type.id + '/validate_data/', {data: this.getRowData()})
           .then(function (response) {
             console.log(response)
             self.errors = {}
@@ -239,14 +252,24 @@ export default {
           })
       }
     },
+    getRowData () {
+      var data = []
+      this.gridOptions.api.forEachNode(function (node) {
+        data.push(node.data)
+      })
+      return data
+    },
     addRow () {
-      this.rowData.push({})
+      this.gridOptions.api.updateRowData({add: [{}]})
+      console.log('addRow', this.getRowData())
     },
     removeRows () {
+      console.log('grid', this.gridOptions)
       var selectedData = this.gridOptions.api.getSelectedRows()
       this.gridOptions.api.updateRowData({remove: selectedData})
       this.errors = {}
-      this.validate(false)
+      this.gridOptions.api.redrawRows()
+      // this.validate(false)
     },
     close () {
       // this.data = this.value.slice()
@@ -255,10 +278,11 @@ export default {
     modalOpened () {
       alert('hello?')
       console.log('modal opened')
-    },
-    beforeMount () {
-      this.gridOptions.numericComponentFramework = NumericComponent
     }
+    // ,
+    // beforeMount () {
+    //   this.gridOptions.numericComponentFramework = NumericComponent
+    // }
   },
   components: {
     QSelect,
