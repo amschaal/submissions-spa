@@ -99,7 +99,7 @@ import '../../node_modules/ag-grid/dist/styles/ag-theme-balham.css'
 import 'ag-grid-enterprise/main'
 import NumericComponent from './aggrid/editors/NumericComponent.vue'
 // import DateComponent from './aggrid/DateComponent.vue'
-import AutocompleteComponent from './aggrid/editors/AutocompleteComponent.vue'
+// import AutocompleteComponent from './aggrid/editors/AutocompleteComponent.vue'
 import BooleanComponent from './aggrid/editors/BooleanComponent.vue'
 import _ from 'lodash'
 
@@ -202,7 +202,7 @@ export default {
       switch (definition.type) {
         case 'string':
           if (definition.enum) {
-            return {headerName: header, headerTooltip: tooltip, field: id, cellEditorFramework: AutocompleteComponent, editable: true, cellClass: cellClass, tooltip: cellTooltip} // cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum}
+            return {headerName: header, headerTooltip: tooltip, field: id, cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum}, editable: true, cellClass: cellClass, tooltip: cellTooltip} // cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum} // cellEditorFramework: AutocompleteComponent
           } else {
             return {headerName: header, headerTooltip: tooltip, field: id, type: 'text', editable: true, cellClass: cellClass, tooltip: cellTooltip}
           }
@@ -222,7 +222,7 @@ export default {
       }
     },
     save () {
-      this.$emit('input', this.getRowData())
+      this.$emit('input', this.getRowData(false))
       this.close()
     },
     validate (save) {
@@ -230,7 +230,7 @@ export default {
       console.log('validate', save)
       var self = this
       if (this.type) {
-        this.$axios.post('/api/submission_types/' + this.type.id + '/validate_data/', {data: this.getRowData()})
+        this.$axios.post('/api/submission_types/' + this.type.id + '/validate_data/', {data: this.getRowData(true)})
           .then(function (response) {
             console.log(response)
             self.errors = {}
@@ -252,9 +252,10 @@ export default {
           })
       }
     },
-    getRowData () {
+    getRowData (filterAndSort) {
       var data = []
-      this.gridOptions.api.forEachNode(function (node) {
+      var method = filterAndSort ? 'forEachNodeAfterFilterAndSort' : 'forEachNode'
+      this.gridOptions.api[method](function (node) {
         data.push(node.data)
       })
       return data
@@ -267,7 +268,7 @@ export default {
       console.log('grid', this.gridOptions)
       var selectedData = this.gridOptions.api.getSelectedRows()
       this.gridOptions.api.updateRowData({remove: selectedData})
-      this.errors = {}
+      // this.errors = {}
       this.gridOptions.api.redrawRows()
       // this.validate(false)
     },

@@ -95,7 +95,7 @@
           :error="errors.sample_data"
           :error-label="errors.sample_data"
         >
-          <Samplesheet v-model="submission.sample_data" :type="type"/>
+          <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
           <Agschema v-model="submission.sample_data" :type="type"/>
         </q-field>
         <span v-if="debug">
@@ -119,7 +119,7 @@
 <script>
 import './docs-input.styl'
 // import axios from 'axios'
-import Samplesheet from '../../components/samplesheet.vue'
+// import Samplesheet from '../../components/samplesheet.vue'
 import Agschema from '../../components/agschema.vue'
 import Vue from 'vue'
 
@@ -168,6 +168,9 @@ export default {
           self.errors = {}
           console.log(response)
           self.$q.notify({message: 'Submission successfully saved.', type: 'positive'})
+          if (!id) {
+            self.$router.push({name: 'submission', params: {id: response.data.id}})
+          }
         })
         .catch(function (error, stuff) {
           // raise different exception if due to invalid credentials
@@ -215,7 +218,7 @@ export default {
 
   },
   components: {
-    Samplesheet,
+    // Samplesheet,
     Agschema
   }
 }
