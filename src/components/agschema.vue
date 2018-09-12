@@ -56,7 +56,7 @@
             />
             <q-btn
               color="positive"
-              label="Save"
+              label="Keep Changes"
               @click="validate(true)"
               class="float-right"
             />
@@ -235,7 +235,7 @@ export default {
             console.log(response)
             self.errors = {}
             self.gridOptions.api.redrawRows() // redrawCells({force: true})
-            self.$q.notify({message: 'Submission successfully validated.', type: 'positive'})
+            self.$q.notify({message: 'Samples successfully validated.  Please save the submission.', type: 'positive'})
             if (save) {
               self.save()
             }

@@ -113,6 +113,16 @@
       </q-card-actions>
 
     </q-card>
+    <q-card style="width:800px" v-if="submission.id">
+      <q-card-title>
+        Files
+      </q-card-title>
+      <q-card-separator />
+      <q-card-main>
+        <!-- <q-uploader url="/api/submission_files/" :upload-factory="uploadFile" multiple="true"/> -->
+        <files :submission="submission"/>
+      </q-card-main>
+    </q-card>
   </q-page>
 </template>
 
@@ -121,6 +131,7 @@ import './docs-input.styl'
 // import axios from 'axios'
 // import Samplesheet from '../../components/samplesheet.vue'
 import Agschema from '../../components/agschema.vue'
+import Files from '../../components/files.vue'
 import Vue from 'vue'
 
 export default {
@@ -181,6 +192,30 @@ export default {
           }
           throw error
         })
+    },
+    uploadFile (file, uploadProgress) {
+      var formData = new FormData()
+      formData.append('file', file)
+      formData.append('submission', this.submission.id)
+
+      return this.$axios.post('/api/submission_files/',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          onUploadProgress: function (progressEvent) {
+            var percentCompleted = progressEvent.loaded / progressEvent.total
+            // execute the callback
+            uploadProgress(percentCompleted)
+            return percentCompleted * 100.0
+          }
+        }
+      )
+      // .then(function (response) {
+      //   console.log('success', response.data)
+      //   uploadProgress(1.0)
+      // })
     }
   },
   watch: {
@@ -218,7 +253,7 @@ export default {
 
   },
   components: {
-    // Samplesheet,
+    Files,
     Agschema
   }
 }

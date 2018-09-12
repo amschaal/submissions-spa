@@ -87,7 +87,8 @@ module.exports = function (ctx) {
         'QTabs',
         'QTab',
         'QTabPane',
-        'QAutocomplete'
+        'QAutocomplete',
+        'QUploader'
       ],
       directives: [
         'Ripple',
