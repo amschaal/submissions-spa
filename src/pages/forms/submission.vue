@@ -1,92 +1,97 @@
 <template>
-  <q-page padding class="docs-input row justify-center">
-    <q-card style="width:800px">
-    <q-tabs>
-      <q-tab slot="title" name="submission" label="Submission" default/>
-      <q-tab slot="title" name="files" label="Files"  v-if="submission.id"/>
-      <q-tab slot="title" name="comments" label="comments"  v-if="submission.id"/>
-
-    <q-tab-pane name="submission">
-
-      <q-card-title>
-        <span v-if="submission.id">Update submission</span><span v-else>Create submission</span>
-      </q-card-title>
-      <q-card-separator />
-      <q-card-main>
-        <q-checkbox v-model="debug" label="Debug" />
+  <div>
+      <q-checkbox v-model="debug" label="Debug" />
         <span v-if="debug">
           {{errors}}
           {{submission}}
         </span>
-        <q-field
-          label="Full name"
-          helper="Some helper"
-          :error="errors.name"
-          :error-label="errors.name"
-          :warning="errors.name"
-          warning-label="Hey, we got a warning."
-        >
-          <q-input v-model="submission.name" type="text"/>
-        </q-field>
-        <q-field
-          label="Email"
-          :error="errors.email"
-          :error-label="errors.email"
-        >
-          <q-input v-model="submission.email" type="email" :disable="submission.id != undefined"/>
-        </q-field>
-        <q-field
-          label="Submitter phone"
-          :error="errors.phone"
-          :error-label="errors.phone"
-        >
-          <q-input v-model="submission.phone" type="text"/>
-        </q-field>
-        <br>
-        <q-field
-          label="PI Full Name"
-          :error="errors.pi_name"
-          :error-label="errors.pi_name"
-        >
-          <q-input v-model="submission.pi_name" type="text"/>
-        </q-field>
-        <q-field
-          label="PI Email"
-          :error="errors.pi_email"
-          :error-label="errors.pi_email"
-        >
-          <q-input v-model="submission.pi_email" type="text"/>
-        </q-field>
-        <q-field
-          label="Institute"
-          :error="errors.institute"
-          :error-label="errors.institute"
-        >
-        <q-input v-model="submission.institute" type="text"/>
-        </q-field>
-        <q-field
-          label="Payment Type"
-          :error="errors.payment_type"
-          :error-label="errors.payment_type"
-        >
-          <q-select
-            float-label="Select"
-            v-model="submission.payment_type"
-            :options="[
-              {label: 'Credit Card', value: 'Credit Card'},
-              {label: 'DaFIS', value: 'DaFIS'}
-            ]"
-          />
-        </q-field>
-        <q-field
-          label="Payment Info"
-          :error="errors.payment_info"
-          :error-label="errors.payment_info"
-        >
-          <q-input v-model="submission.payment_info" type="text"/>
-        </q-field>
+        <p class="caption">Submitter</p>
+        <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-4">
+            <q-field
+              helper="Some helper"
+              :error="errors.name"
+              :error-label="errors.name"
+              :warning="errors.name"
+              warning-label="Hey, we got a warning."
+            >
+              <q-input v-model="submission.name" type="text" stack-label="Full name"/>
+            </q-field>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <q-field
+              :error="errors.email"
+              :error-label="errors.email"
+            >
+              <q-input v-model="submission.email" type="email" :disable="submission.id != undefined" stack-label="Email"/>
+            </q-field>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <q-field
+              :error="errors.phone"
+              :error-label="errors.phone"
+            >
+              <q-input v-model="submission.phone" type="text" stack-label="Submitter phone"/>
+            </q-field>
+          </div>
+        </div>
+        <p class="caption">PI</p>
+        <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-4">
+            <q-field
+              :error="errors.pi_name"
+              :error-label="errors.pi_name"
+            >
+              <q-input v-model="submission.pi_name" type="text" stack-label="PI Full Name"/>
+            </q-field>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <q-field
+              :error="errors.pi_email"
+              :error-label="errors.pi_email"
+            >
+              <q-input v-model="submission.pi_email" type="text" stack-label="PI Email"/>
+            </q-field>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <q-field
+              :error="errors.institute"
+              :error-label="errors.institute"
+            >
+            <q-input v-model="submission.institute" type="text" stack-label="Institute"/>
+            </q-field>
+          </div>
+        </div>
+        <p class="caption">Payment</p>
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <q-field
+              :error="errors.payment_type"
+              :error-label="errors.payment_type"
+            >
+              <q-select
+                float-label="Select"
+                v-model="submission.payment_type"
+                :options="[
+                  {label: 'Credit Card', value: 'Credit Card'},
+                  {label: 'DaFIS', value: 'DaFIS'}
+                ]"
+                stack-label="Payment Type"
+              />
+            </q-field>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <q-field
+              :error="errors.payment_info"
+              :error-label="errors.payment_info"
+            >
+              <q-input v-model="submission.payment_info" type="text" stack-label="Payment Info"/>
+            </q-field>
+          </div>
+        </div>
         <q-field
           label="Submission Type"
+          label-width="2"
           :error="errors.type"
           :error-label="errors.type"
         >
@@ -99,6 +104,7 @@
         </q-field>
         <q-field
           label="Samples"
+          label-width="2"
           :error="errors.sample_data"
           :error-label="errors.sample_data"
         >
@@ -113,24 +119,10 @@
             {{submission.sample_data}}
           </p>
         </span>
-      </q-card-main>
-      <q-card-separator />
-      <q-card-actions>
-        <q-btn @click="submit" label="Submit"></q-btn>
-      </q-card-actions>
-    </q-tab-pane>
-    <q-tab-pane name="files"  v-if="submission.id">
-      <q-card-main>
-        <!-- <q-uploader url="/api/submission_files/" :upload-factory="uploadFile" multiple="true"/> -->
-        <files :submission="submission"/>
-      </q-card-main>
-
-  </q-tab-pane>
-  <q-tab-pane name="comments" v-if="submission.id">
-  </q-tab-pane>
-  </q-tabs>
-  </q-card>
-  </q-page>
+        <q-card-actions>
+          <q-btn @click="submit" label="Submit"></q-btn>
+        </q-card-actions>
+      </div>
 </template>
 
 <script>
@@ -138,15 +130,15 @@ import './docs-input.styl'
 // import axios from 'axios'
 // import Samplesheet from '../../components/samplesheet.vue'
 import Agschema from '../../components/agschema.vue'
-import Files from '../../components/files.vue'
+// import Files from '../../components/files.vue'
 import Vue from 'vue'
 
 export default {
-  name: 'submission',
+  // name: 'submission',
   props: ['id'],
   data () {
     return {
-      submission: {'sample_data': [{}, {}, {}]},
+      submission: {'sample_data': [{}]},
       errors: {},
       submission_types: [{ foo: 'bar' }],
       type_options: [{ 'label': 'test', 'value': 2 }],
@@ -199,30 +191,6 @@ export default {
           }
           throw error
         })
-    },
-    uploadFile (file, uploadProgress) {
-      var formData = new FormData()
-      formData.append('file', file)
-      formData.append('submission', this.submission.id)
-
-      return this.$axios.post('/api/submission_files/',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          },
-          onUploadProgress: function (progressEvent) {
-            var percentCompleted = progressEvent.loaded / progressEvent.total
-            // execute the callback
-            uploadProgress(percentCompleted)
-            return percentCompleted * 100.0
-          }
-        }
-      )
-      // .then(function (response) {
-      //   console.log('success', response.data)
-      //   uploadProgress(1.0)
-      // })
     }
   },
   watch: {
@@ -260,8 +228,12 @@ export default {
 
   },
   components: {
-    Files,
     Agschema
   }
 }
 </script>
+<style scoped>
+  .q-field {
+    padding: 0px 10px;
+  }
+</style>

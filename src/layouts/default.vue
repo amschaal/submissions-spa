@@ -33,7 +33,7 @@
         inset-delimiter
       >
         <q-list-header>Essential Links</q-list-header>
-        <q-item :to="{ name: 'submissions' }">
+        <q-item :to="{ name: 'submissions' }" v-if="$store.getters.isLoggedIn">
           <q-item-side icon="list" />
           <q-item-main label="Submissions"/>
           <!-- <q-item-side icon="school" />
@@ -45,7 +45,7 @@
           <!-- <q-item-side icon="school" />
           <q-item-main label="Docs" sublabel="quasar-framework.org" /> -->
         </q-item>
-        <q-item :to="{ name: 'submission_types' }">
+        <q-item :to="{ name: 'submission_types' }" v-if="$store.getters.isLoggedIn">
           <q-item-main label="Submission Types"/>
         </q-item>
         <q-item v-if="!$store.getters.isLoggedIn">

@@ -12,11 +12,11 @@ export default [
       },
       {
         path: '/submissions/:id',
-        component: () => import('pages/forms/submission'),
+        component: () => import('pages/submission'),
         name: 'submission',
         props: true
       },
-      { path: '/submissions/create', component: () => import('pages/forms/submission'), name: 'create_submission' },
+      { path: '/submissions/create', component: () => import('pages/submission'), name: 'create_submission' },
       {
         path: '/submission_types',
         component: () => import('pages/submission_types'),
