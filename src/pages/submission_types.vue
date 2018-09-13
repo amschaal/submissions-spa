@@ -51,9 +51,12 @@ export default {
 
       // we do the server data fetch, based on pagination and filter received
       // (using Axios here, but can be anything; parameters vary based on backend implementation)
-      console.log(pagination, filter)
+      var sortBy = pagination.sortBy
+      if (pagination.descending) {
+        sortBy = '-' + sortBy
+      }
       this.$axios
-        .get(`/api/submission_types/?ordering=${pagination.sortBy}&page=${pagination.page}&page_size=${pagination.rowsPerPage}`)// ${pagination.descending}&filter=${filter}
+        .get(`/api/submission_types/?ordering=${sortBy}&page=${pagination.page}&page_size=${pagination.rowsPerPage}`)// ${pagination.descending}&filter=${filter}
         .then(({ data }) => {
         /*
           // updating pagination to reflect in the UI

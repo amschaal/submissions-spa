@@ -1,6 +1,12 @@
 <template>
   <q-page padding class="docs-input row justify-center">
     <q-card style="width:800px">
+    <q-tabs>
+      <q-tab slot="title" name="submission" label="Submission" default/>
+      <q-tab slot="title" name="files" label="Files"  v-if="submission.id"/>
+
+    <q-tab-pane name="submission">
+
       <q-card-title>
         Create submission
       </q-card-title>
@@ -111,18 +117,16 @@
       <q-card-actions>
         <q-btn @click="submit" label="Submit"></q-btn>
       </q-card-actions>
-
-    </q-card>
-    <q-card style="width:800px" v-if="submission.id">
-      <q-card-title>
-        Files
-      </q-card-title>
-      <q-card-separator />
+    </q-tab-pane>
+    <q-tab-pane name="files"  v-if="submission.id">
       <q-card-main>
         <!-- <q-uploader url="/api/submission_files/" :upload-factory="uploadFile" multiple="true"/> -->
         <files :submission="submission"/>
       </q-card-main>
-    </q-card>
+
+  </q-tab-pane>
+  </q-tabs>
+  </q-card>
   </q-page>
 </template>
 
