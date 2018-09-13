@@ -22,7 +22,7 @@ export default Vue.extend({
       return this.number
     },
     getValue () {
-      return parseFloat(this.number)
+      return this.number ? parseFloat(this.number) : this.number
     },
     setValue (number) {
       console.log('setValue', number)

@@ -4,11 +4,12 @@
     <q-tabs>
       <q-tab slot="title" name="submission" label="Submission" default/>
       <q-tab slot="title" name="files" label="Files"  v-if="submission.id"/>
+      <q-tab slot="title" name="comments" label="comments"  v-if="submission.id"/>
 
     <q-tab-pane name="submission">
 
       <q-card-title>
-        Create submission
+        <span v-if="submission.id">Update submission</span><span v-else>Create submission</span>
       </q-card-title>
       <q-card-separator />
       <q-card-main>
@@ -102,7 +103,7 @@
           :error-label="errors.sample_data"
         >
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
-          <Agschema v-model="submission.sample_data" :type="type"/>
+          <Agschema v-model="submission.sample_data" :type="type" :editable="true"/>
         </q-field>
         <span v-if="debug">
           <p>SCHEMA:
@@ -124,6 +125,8 @@
         <files :submission="submission"/>
       </q-card-main>
 
+  </q-tab-pane>
+  <q-tab-pane name="comments" v-if="submission.id">
   </q-tab-pane>
   </q-tabs>
   </q-card>

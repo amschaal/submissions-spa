@@ -33,7 +33,7 @@
           </ag-grid-vue>
         </div>
         <q-toolbar slot="footer">
-          <q-toolbar-title>
+          <q-toolbar-title v-if="editable">
             <q-btn
               color="positive"
               label="Add Row"
@@ -58,6 +58,14 @@
               color="positive"
               label="Keep Changes"
               @click="validate(true)"
+              class="float-right"
+            />
+          </q-toolbar-title>
+          <q-toolbar-title v-else>
+            <q-btn
+              color="negative"
+              label="Close"
+              @click="close"
               class="float-right"
             />
           </q-toolbar-title>
@@ -108,7 +116,7 @@ import _ from 'lodash'
 // var clipboardService = null
 
 export default {
-  props: ['value', 'type'],
+  props: ['value', 'type', 'editable'],
   data () {
     return {
       opened: false,
@@ -122,7 +130,7 @@ export default {
       gridOptions: {
         enableRangeSelection: true,
         defaultColDef: {
-          editable: true
+          editable: this.editable
         },
         suppressMultiRangeSelection: true,
         suppressRowClickSelection: true,
@@ -167,9 +175,11 @@ export default {
           columnDefs.push(this.getColDef(prop, schema.properties[prop], schema))
         }
       }
-      columnDefs[0].headerCheckboxSelection = true
-      columnDefs[0].headerCheckboxSelectionFilteredOnly = true
-      columnDefs[0].checkboxSelection = true
+      if (this.editable) {
+        columnDefs[0].headerCheckboxSelection = true
+        columnDefs[0].headerCheckboxSelectionFilteredOnly = true
+        columnDefs[0].checkboxSelection = true
+      }
       return columnDefs
     },
     getColDef (id, definition, schema) {
@@ -202,16 +212,16 @@ export default {
       switch (definition.type) {
         case 'string':
           if (definition.enum) {
-            return {headerName: header, headerTooltip: tooltip, field: id, cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum}, editable: true, cellClass: cellClass, tooltip: cellTooltip} // cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum} // cellEditorFramework: AutocompleteComponent
+            return {headerName: header, headerTooltip: tooltip, field: id, cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum}, cellClass: cellClass, tooltip: cellTooltip} // cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum} // cellEditorFramework: AutocompleteComponent
           } else {
-            return {headerName: header, headerTooltip: tooltip, field: id, type: 'text', editable: true, cellClass: cellClass, tooltip: cellTooltip}
+            return {headerName: header, headerTooltip: tooltip, field: id, type: 'text', cellClass: cellClass, tooltip: cellTooltip}
           }
         case 'number':
-          return {headerName: header, headerTooltip: tooltip, field: id, editable: true, cellEditorFramework: NumericComponent, cellClass: cellClass, tooltip: cellTooltip, dataType: 'numeric'}
+          return {headerName: header, headerTooltip: tooltip, field: id, cellEditorFramework: NumericComponent, cellClass: cellClass, tooltip: cellTooltip, dataType: 'numeric'}
         case 'boolean':
-          return {headerName: header, headerTooltip: tooltip, field: id, type: 'checkbox', editable: true, cellEditorFramework: BooleanComponent, cellClass: cellClass, tooltip: cellTooltip, dataType: 'boolean'}
+          return {headerName: header, headerTooltip: tooltip, field: id, type: 'checkbox', cellEditorFramework: BooleanComponent, cellClass: cellClass, tooltip: cellTooltip, dataType: 'boolean'}
         case 'array':
-          var def = {headerName: header, field: id, type: 'dropdown', editable: true, cellClass: cellClass, tooltip: cellTooltip}
+          var def = {headerName: header, field: id, type: 'dropdown', cellClass: cellClass, tooltip: cellTooltip}
           if (definition.items && definition.items.enum) {
             def.source = definition.items.enum
           }
