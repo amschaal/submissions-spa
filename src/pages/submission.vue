@@ -24,7 +24,7 @@
     </q-tab-pane>
     <q-tab-pane name="comments" v-if="submission.id">
       <q-card-main>
-        <notes :submission="submission"/>
+        <notes-tree :submission="submission"/>
       </q-card-main>
     </q-tab-pane>
   </q-tabs>
@@ -39,7 +39,7 @@
 // import Agschema from '../components/agschema.vue'
 import Submission from './forms/submission.vue'
 import Files from '../components/files.vue'
-import Notes from '../components/notes.vue'
+import NotesTree from '../components/notesTree.vue'
 import Vue from 'vue'
 
 export default {
@@ -130,7 +130,7 @@ export default {
   components: {
     Files,
     Submission,
-    Notes
+    NotesTree
   }
 }
 </script>

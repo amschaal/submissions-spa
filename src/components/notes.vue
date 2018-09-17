@@ -1,8 +1,6 @@
 <template>
   <div>
-    {{getResponses()}}
-    <q-btn :click="newNote">Add note</q-btn>
-    <div v-for="note in getResponses(note)" :key="note.id">
+    <div v-for="note in notes" :key="note.id">
       <q-card inline class="q-ma-sm">
         <q-card-title>
            {{getTypeText(note)}} {{getEmailsText(note)}} ...
@@ -20,18 +18,17 @@
 import moment from 'moment'
 
 export default {
-  props: ['submission'],
+  props: ['notes', 'noteHash'],
   data () {
     return {
-      note: {},
-      noteHash: {}
+      // note: {}
       // notes: [{created: new Date(), user: 'Anonymous'}]
     }
   },
   mounted: function () {
-    console.log('mounted')
-    this.addNote({id: 1, created: new Date(), user: 'Anonymous', text: 'This is the content of the note.'})
-    this.note = null
+    console.log('notes', this.notes)
+    // this.addNote({id: 1, created: new Date(), user: 'Anonymous', text: 'This is the content of the note.'})
+    // this.note = null
     // var self = this
     // this.$axios
     //   .get('/api/notes/', {params: {submission: this.submission.id, page_size: 100}})
@@ -59,39 +56,39 @@ export default {
       // @todo: implement following in axios
       // note[method](function() { Materialize.toast('Note saved',5000)}, function(){ Materialize.toast('Error saving note',5000)})
     },
-    newNote () {
-      var note = {
-        type: 'NOTE',
-        submission: this.submission.id,
-        // created_by:{{request.user.id}},
-        send_email: true,
-        public: true,
-        editing: true,
-        parent: null
-      }
-      this.addNote(note)
-    },
+    // newNote () {
+    //   var note = {
+    //     type: 'NOTE',
+    //     submission: this.submission.id,
+    //     // created_by:{{request.user.id}},
+    //     send_email: true,
+    //     public: true,
+    //     editing: true,
+    //     parent: null
+    //   }
+    //   this.addNote(note)
+    // },
     deleteNote (note) {
-      if (note.id && !confirm('Are you sure you want to delete this note and all responses?')) {
-        return
-      }
-      var parent = note.parent
-      var id = note.id
-      var removeFunc = function () {
-        for (var i in this.noteHash[parent]) {
-          if (this.noteHash[parent][i].id === id) {
-            this.noteHash[parent].splice(i, 1)
-          }
-        }
-        this.$q.notify('Note deleted')
-      }
-      if (!id) {
-        removeFunc()
-        return
-      }
-      // @todo: implement this in axios
-      note.remove()
-      // note.$remove(removeFunc,function(){Materialize.toast('Error deleting note',5000);});
+      // if (note.id && !confirm('Are you sure you want to delete this note and all responses?')) {
+      //   return
+      // }
+      // var parent = note.parent
+      // var id = note.id
+      // var removeFunc = function () {
+      //   for (var i in this.noteHash[parent]) {
+      //     if (this.noteHash[parent][i].id === id) {
+      //       this.noteHash[parent].splice(i, 1)
+      //     }
+      //   }
+      //   this.$q.notify('Note deleted')
+      // }
+      // if (!id) {
+      //   removeFunc()
+      //   return
+      // }
+      // // @todo: implement this in axios
+      // note.remove()
+      // // note.$remove(removeFunc,function(){Materialize.toast('Error deleting note',5000);});
     },
     reply (parent) {
       var note = {
@@ -104,13 +101,13 @@ export default {
       }
       this.addNote(note)
     },
-    addNote (note) {
-      console.log('addNote', note)
-      if (!this.noteHash[note.parent]) {
-        this.noteHash[note.parent] = []
-      }
-      this.noteHash[note.parent].push(note)
-    },
+    // addNote (note) {
+    //   console.log('addNote', note)
+    //   if (!this.noteHash[note.parent]) {
+    //     this.noteHash[note.parent] = []
+    //   }
+    //   this.noteHash[note.parent].push(note)
+    // },
     getClasses (note) {
       if (!note.public) {
         return 'red lighten-4'
