@@ -1,7 +1,7 @@
 <template>
-  <div v-if="initialized">
-    <q-btn :click="newNote">Add note</q-btn>
-    <notes :notes="getNotes()" :notehash="noteHash"/>
+  <div>
+    <q-btn @click="newNote" color="primary">Add note</q-btn>
+    <notes :notes="getNotes" :noteHash="noteHash" :addNote="addNote" :deleteNote="deleteNote"/>
   </div>
 </template>
 
@@ -18,25 +18,37 @@ export default {
   },
   mounted: function () {
     console.log('mounted')
-    this.addNote({id: 1, created: new Date(), user: 'Anonymous', text: 'This is the content of the note.', parent: null})
-    this.addNote({id: 2, created: new Date(), user: 'Foo', text: 'This is the content of the note 2.', parent: null})
+    var self = this
     console.log('hash', this.noteHash)
-    this.initialized = true
+
     // this.note = null
     // var self = this
-    // this.$axios
-    //   .get('/api/notes/', {params: {submission: this.submission.id, page_size: 100}})
-    //   .then(function (response) {
-    //     self.notes = response.data.results
-    //   })
+    this.$axios
+      .get('/api/notes/', {params: {submission: this.submission.id, page_size: 100}})
+      .then(function (response) {
+        // self.notes = response.data.results
+        response.data.results.map(function (value, key) {
+          self.addNote(value)
+        })
+        // self.addNote({id: 1, created: new Date(), user: 'Anonymous', text: 'This is the content of the note.', parent: null, type: 'NOTE'})
+        // self.addNote({id: 2, created: new Date(), user: 'Foo', text: 'This is the content of the note 2.', parent: null, public: true, type: 'NOTE'})
+        // self.addNote({id: 3, created: new Date(), user: 'Foo 2', text: 'This is the content of the note 2-1.', parent: 2, type: 'NOTE'})
+        // self.addNote({id: 4, created: new Date(), user: 'Foo 3', text: 'This is the content of the note 2-2.', parent: 2, public: true, type: 'LOG'})
+        // self.addNote({id: 5, created: new Date(), user: 'Foo 4', text: 'This is the content of the note 2-1-1.', parent: 3, type: 'NOTE'})
+        // self.initialized = true
+      })
+  },
+  created () {
+    var self = this
+    this.$on('addNote', function (note) {
+      console.log('catch addNote', note)
+      self.addNote(note)
+    })
   },
   methods: {
     // formatDate (value) {
     //   return moment(String(value)).format('MM/DD/YYYY hh:mm')
     // },
-    getNotes (note) {
-      return this.noteHash[null]
-    },
     // save (note) {
     //   console.log('save', note.submission, note)
     //   // var method = note.id ? '$save' : '$create'
@@ -53,7 +65,7 @@ export default {
         // created_by:{{request.user.id}},
         send_email: true,
         public: true,
-        editing: true,
+        edit: true,
         parent: null
       }
       this.addNote(note)
@@ -62,22 +74,29 @@ export default {
       if (note.id && !confirm('Are you sure you want to delete this note and all responses?')) {
         return
       }
+      var self = this
       var parent = note.parent
       var id = note.id
       var removeFunc = function () {
-        for (var i in this.noteHash[parent]) {
-          if (this.noteHash[parent][i].id === id) {
-            this.noteHash[parent].splice(i, 1)
+        for (var i in self.noteHash[parent]) {
+          if (self.noteHash[parent][i].id === id) {
+            self.noteHash[parent].splice(i, 1)
           }
         }
-        this.$q.notify('Note deleted')
+        self.$q.notify({message: 'Note deleted', type: 'positive'})
       }
       if (!id) {
         removeFunc()
         return
       }
       // @todo: implement this in axios
-      note.remove()
+      // note.remove()
+      this.$axios.delete(`/api/notes/${note.id}`)
+        .then(removeFunc)
+        .catch(function (error) {
+          console.log('error', error)
+          self.$q.notify({message: 'Error deleting note', type: 'negative'})
+        })
       // note.$remove(removeFunc,function(){Materialize.toast('Error deleting note',5000);});
     },
     // reply (parent) {
@@ -94,7 +113,8 @@ export default {
     addNote (note) {
       console.log('addNote', note)
       if (!this.noteHash[note.parent]) {
-        this.noteHash[note.parent] = []
+        this.$set(this.noteHash, note.parent, [])
+        // this.noteHash[note.parent] = []
       }
       this.noteHash[note.parent].push(note)
     }// ,
@@ -125,6 +145,11 @@ export default {
     //     return '- Emailed to: ' + note.emails.join(', ')
     //   }
     // }
+  },
+  computed: {
+    getNotes: function () {
+      return this.noteHash[null]
+    }
   },
   components: {
     Notes
