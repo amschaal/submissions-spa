@@ -1,26 +1,36 @@
 <template>
   <div>
-        <p class="caption">Submitter</p>
+        <div class="row">
+          <div class="col-sm-12">
+            <p class="caption">Type</p>
+            {{submission.type.name}}
+          </div>
+        </div>
         <div class="row">
           <div class="col-sm-12 col-md-12 col-lg-4">
+            <p class="caption">Submitter</p>
             {{submission.name}}
           </div>
           <div class="col-sm-12 col-md-6 col-lg-4">
+            <p class="caption">Email</p>
             {{submission.email}}
           </div>
           <div class="col-sm-12 col-md-6 col-lg-4">
+            <p class="caption">Phone</p>
             {{submission.phone}}
           </div>
         </div>
-        <p class="caption">PI</p>
         <div class="row">
           <div class="col-sm-12 col-md-12 col-lg-4">
+            <p class="caption">PI</p>
             {{submission.pi_name}}
           </div>
           <div class="col-sm-12 col-md-6 col-lg-4">
+            <p class="caption">PI Email</p>
             {{submission.pi_email}}
           </div>
           <div class="col-sm-12 col-md-6 col-lg-4">
+            <p class="caption">Institute</p>
             {{submission.institute}}
           </div>
         </div>
@@ -30,6 +40,7 @@
             {{submission.payment_type}}
           </div>
           <div class="col-sm-12 col-md-6">
+            <p class="caption">Payment information</p>
             {{submission.payment_info}}
           </div>
         </div>

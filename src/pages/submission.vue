@@ -14,7 +14,6 @@
       </q-card-title>
       <q-card-separator />
       <q-card-main>
-        {{modify}}
         <SubmissionForm :id="id" v-if="modify" v-on:submission_updated="submissionUpdated"/>
         <Submission :id="id" v-if="!modify && id"/>
       </q-card-main>
