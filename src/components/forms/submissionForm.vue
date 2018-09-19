@@ -5,6 +5,20 @@
           {{errors}}
           {{submission}}
         </span>
+        <q-field
+          label="Participants"
+          label-width="2"
+          :error="errors.type"
+          :error-label="errors.type"
+          v-if="submission.participants && user_options"
+        >
+          <q-select
+            float-label="Select"
+            multiple
+            v-model="submission.participants"
+            :options="user_options"
+          />
+        </q-field>
         <p class="caption">Submitter</p>
         <div class="row">
           <div class="col-sm-12 col-md-12 col-lg-4">
@@ -143,7 +157,8 @@ export default {
       submission_types: [{ foo: 'bar' }],
       type_options: [{ 'label': 'test', 'value': 2 }],
       type: {},
-      debug: false
+      debug: false,
+      user_options: null
     }
   },
   mounted: function () {
@@ -165,6 +180,11 @@ export default {
               Vue.set(self.submission, 'type', response.data.type.id)
             })
         }
+      })
+    this.$axios
+      .get('/api/users/?show=true')
+      .then(function (response) {
+        self.user_options = response.data.results.map(opt => ({label: `${opt.first_name} ${opt.last_name}`, value: opt.id}))
       })
   },
   methods: {

@@ -10,7 +10,7 @@
 
       <q-card-title>
         <span v-if="!submission.id">Create</span>
-        <span v-else><q-btn v-if="submission.editable && !modify" label="Modify" class="align-right" @click="modify=true"/></span>
+        <span v-else><q-btn v-if="submission.editable && !modify" label="Modify" class="align-right" @click="modify=true"/> <Lock v-if="submission.id" :submission="submission"/></span>
       </q-card-title>
       <q-card-separator />
       <q-card-main>
@@ -42,6 +42,7 @@
 import SubmissionForm from '../components/forms/submissionForm.vue'
 import Files from '../components/files.vue'
 import NotesTree from '../components/notesTree.vue'
+import Lock from '../components/lock.vue'
 import Vue from 'vue'
 
 export default {
@@ -143,7 +144,8 @@ export default {
   components: {
     Files,
     SubmissionForm,
-    NotesTree
+    NotesTree,
+    Lock
   }
 }
 </script>
