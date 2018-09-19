@@ -15,7 +15,7 @@
       <q-card-separator />
       <q-card-main>
         {{modify}}
-        <Submission :id="id" v-if="modify"/>
+        <SubmissionForm :id="id" v-if="modify" v-on:submission_updated="submissionUpdated"/>
       </q-card-main>
     </q-tab-pane>
     <q-tab-pane name="files"  v-if="submission.id">
@@ -39,7 +39,7 @@
 // import axios from 'axios'
 // import Samplesheet from '../../components/samplesheet.vue'
 // import Agschema from '../components/agschema.vue'
-import Submission from './forms/submission.vue'
+import SubmissionForm from './forms/submissionForm.vue'
 import Files from '../components/files.vue'
 import NotesTree from '../components/notesTree.vue'
 import Vue from 'vue'
@@ -58,6 +58,12 @@ export default {
       modify: false
     }
   },
+  // created: function () {
+  //   console.log('created!!!')
+  //   this.$on('submission_updated', function (submission) {
+  //     console.log('submission_updated', submission)
+  //   })
+  // },
   mounted: function () {
     console.log('mounted')
     var self = this
@@ -79,7 +85,10 @@ export default {
         }
       })
   },
-  // methods: {
+  methods: {
+    submissionUpdated (submission) {
+      this.modify = false
+    }
   //   submit () {
   //     var self = this
   //     var id = this.submission.id
@@ -105,7 +114,7 @@ export default {
   //         throw error
   //       })
   //   }
-  // },
+  },
   watch: {
     'id': function (id) {
       var self = this
@@ -133,7 +142,7 @@ export default {
   },
   components: {
     Files,
-    Submission,
+    SubmissionForm,
     NotesTree
   }
 }

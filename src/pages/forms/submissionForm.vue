@@ -175,9 +175,11 @@ export default {
       var url = id ? '/api/submissions/' + id + '/update/' : '/api/submit/'
       this.$axios[action]('' + url, this.submission)
         .then(function (response) {
+          // console.log('submit', self.$emit)
           self.errors = {}
-          console.log(response)
+          // console.log(response)
           self.$q.notify({message: 'Submission successfully saved.', type: 'positive'})
+          self.$emit('submission_updated', self.submission)
           if (!id) {
             self.$router.push({name: 'submission', params: {id: response.data.id}})
           }
