@@ -16,6 +16,7 @@
       <q-card-main>
         {{modify}}
         <SubmissionForm :id="id" v-if="modify" v-on:submission_updated="submissionUpdated"/>
+        <Submission :id="id" v-if="!modify && id"/>
       </q-card-main>
     </q-tab-pane>
     <q-tab-pane name="files"  v-if="submission.id">
@@ -40,6 +41,7 @@
 // import Samplesheet from '../../components/samplesheet.vue'
 // import Agschema from '../components/agschema.vue'
 import SubmissionForm from '../components/forms/submissionForm.vue'
+import Submission from '../components/submission.vue'
 import Files from '../components/files.vue'
 import NotesTree from '../components/notesTree.vue'
 import Lock from '../components/lock.vue'
@@ -145,7 +147,8 @@ export default {
     Files,
     SubmissionForm,
     NotesTree,
-    Lock
+    Lock,
+    Submission
   }
 }
 </script>
