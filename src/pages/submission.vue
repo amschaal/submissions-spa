@@ -9,11 +9,13 @@
     <q-tab-pane name="submission">
 
       <q-card-title>
-        <span v-if="submission.id">Update submission</span><span v-else>Create submission</span>
+        <span v-if="!submission.id">Create</span>
+        <span v-else><q-btn v-if="submission.editable && !modify" label="Modify" class="align-right" @click="modify=true"/></span>
       </q-card-title>
       <q-card-separator />
       <q-card-main>
-        <Submission :id="id"/>
+        {{modify}}
+        <Submission :id="id" v-if="modify"/>
       </q-card-main>
     </q-tab-pane>
     <q-tab-pane name="files"  v-if="submission.id">
@@ -52,7 +54,8 @@ export default {
       submission_types: [{ foo: 'bar' }],
       type_options: [{ 'label': 'test', 'value': 2 }],
       type: {},
-      debug: false
+      debug: false,
+      modify: false
     }
   },
   mounted: function () {
@@ -76,32 +79,33 @@ export default {
         }
       })
   },
-  methods: {
-    submit () {
-      var self = this
-      var id = this.submission.id
-      var action = id ? 'put' : 'post'
-      var url = id ? '/api/submissions/' + id + '/update/' : '/api/submit/'
-      this.$axios[action]('' + url, this.submission)
-        .then(function (response) {
-          self.errors = {}
-          console.log(response)
-          self.$q.notify({message: 'Submission successfully saved.', type: 'positive'})
-          if (!id) {
-            self.$router.push({name: 'submission', params: {id: response.data.id}})
-          }
-        })
-        .catch(function (error, stuff) {
-          // raise different exception if due to invalid credentials
-          console.log('ERROR', error.response)
-          self.$q.notify({message: 'There were errors saving your submission.', type: 'negative'})
-          if (error.response) {
-            self.errors = error.response.data.errors
-          }
-          throw error
-        })
-    }
-  },
+  // methods: {
+  //   submit () {
+  //     var self = this
+  //     var id = this.submission.id
+  //     var action = id ? 'put' : 'post'
+  //     var url = id ? '/api/submissions/' + id + '/update/' : '/api/submit/'
+  //     this.$axios[action]('' + url, this.submission)
+  //       .then(function (response) {
+  //         self.errors = {}
+  //         console.log('submit', response)
+  //         self.$q.notify({message: 'Submission successfully saved.', type: 'positive'})
+  //         if (!id) {
+  //           self.$router.push({name: 'submission', params: {id: response.data.id}})
+  //         }
+  //         self.modify = false
+  //       })
+  //       .catch(function (error, stuff) {
+  //         // raise different exception if due to invalid credentials
+  //         console.log('ERROR', error.response)
+  //         self.$q.notify({message: 'There were errors saving your submission.', type: 'negative'})
+  //         if (error.response) {
+  //           self.errors = error.response.data.errors
+  //         }
+  //         throw error
+  //       })
+  //   }
+  // },
   watch: {
     'id': function (id) {
       var self = this

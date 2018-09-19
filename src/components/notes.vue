@@ -3,7 +3,7 @@
     <div v-for="note in notes" :key="note.id" class="notes">
       <q-card inline :class="getClasses(note)">
         <q-card-title>
-           {{getTypeText(note)}} {{getEmailsText(note)}} <span class="float-right"><q-icon name="edit" @click.native="$set(note, 'edit', true)"/> <q-icon name="delete" @click.native="deleteNote(note)"/> <q-icon v-if="note.id" name="reply" @click.native="reply(note)"/></span>
+           {{getTypeText(note)}} {{getEmailsText(note)}} <span class="float-right"><q-icon name="edit" @click.native="$set(note, 'edit', true)" v-if="note.can_modify"/> <q-icon name="delete" @click.native="deleteNote(note)" v-if="!note.id || note.can_modify"/> <q-icon v-if="note.id" name="reply" @click.native="reply(note)"/></span>
           <span slot="subtitle"><span v-if="note.user"><b>{{ note.user }}</b> wrote:</span> <span class="float-right" v-if="note.created">{{formatDate(note.created)}}</span></span>
         </q-card-title>
         <q-card-main v-if="!note.edit">
@@ -12,7 +12,7 @@
         <q-card-main v-if="note.edit">
           <form>
             <p><textarea v-model="note.text"></textarea></p>
-            <div class="float-left controls">
+            <div class="float-left controls" v-if="$store.getters.isLoggedIn">
               <q-checkbox v-model="note.public" label="Public" /> <q-checkbox v-model="note.send_email" label="Email submitter" v-if="note.public && !note.id" title="Select if you want to email the submitter."/>
             </div>
             <div class="float-right controls"><q-btn @click="save(note)" label="Save" color="primary"/></div>
