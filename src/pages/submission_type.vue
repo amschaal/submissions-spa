@@ -103,9 +103,9 @@
 </template>
 
 <script>
-import './docs-input.styl'
+import '../components/forms/docs-input.styl'
 import axios from 'axios'
-import Fieldoptions from '../../components/fieldoptions.vue'
+import Fieldoptions from '../components/fieldoptions.vue'
 import Vue from 'vue'
 export default {
   name: 'submission_type',

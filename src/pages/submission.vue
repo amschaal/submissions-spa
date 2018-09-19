@@ -39,7 +39,7 @@
 // import axios from 'axios'
 // import Samplesheet from '../../components/samplesheet.vue'
 // import Agschema from '../components/agschema.vue'
-import SubmissionForm from './forms/submissionForm.vue'
+import SubmissionForm from '../components/forms/submissionForm.vue'
 import Files from '../components/files.vue'
 import NotesTree from '../components/notesTree.vue'
 import Vue from 'vue'

@@ -24,7 +24,7 @@ export default [
       },
       {
         path: '/submission_type/:id',
-        component: () => import('pages/forms/submission_type'),
+        component: () => import('pages/submission_type'),
         name: 'submission_type',
         props: true
       }
