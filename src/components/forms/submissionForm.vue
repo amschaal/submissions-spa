@@ -158,12 +158,16 @@ export default {
       type_options: [{ 'label': 'test', 'value': 2 }],
       type: {},
       debug: false,
-      user_options: null
+      user_options: null,
+      create: false
     }
   },
   mounted: function () {
     console.log('mounted')
     var self = this
+    if (this.id === 'create') {
+      this.create = true
+    }
     this.$axios
       .get('/api/submission_types/?show=true')
       .then(function (response) {
@@ -171,7 +175,7 @@ export default {
         console.log('id', self.id)
         self.type_options = response.data.results.map(opt => ({label: opt.name, value: opt.id}))
         self.submission_types = response.data.results
-        if (self.id && self.id !== 'create') {
+        if (self.create) {
           self.$axios
             .get('/api/submissions/' + self.id)
             .then(function (response) {

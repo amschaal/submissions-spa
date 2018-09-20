@@ -8,13 +8,13 @@
 
     <q-tab-pane name="submission">
 
-      <q-card-title>
-        <span v-if="!submission.id">Create</span>
-        <span v-else><q-btn v-if="submission.editable && !modify" label="Modify" class="align-right" @click="modify=true"/> <Lock v-if="submission.id" :submission="submission"/></span>
+      <q-card-title v-if="!submission.id">
+        Create
       </q-card-title>
+      <span v-else><q-btn v-if="submission.editable && !modify" label="Modify" class="float-right" @click="modify=true"/> <Lock class="float-right" v-if="submission.id" :submission="submission"/></span>
       <q-card-separator />
       <q-card-main>
-        <SubmissionForm :id="id" v-if="modify" v-on:submission_updated="submissionUpdated"/>
+        <SubmissionForm :id="id" v-if="modify || create" v-on:submission_updated="submissionUpdated"/>
         <Submission :id="id" v-if="!modify && id"/>
       </q-card-main>
     </q-tab-pane>
@@ -57,7 +57,8 @@ export default {
       type_options: [{ 'label': 'test', 'value': 2 }],
       type: {},
       debug: false,
-      modify: false
+      modify: false,
+      create: false
     }
   },
   // created: function () {
@@ -69,6 +70,9 @@ export default {
   mounted: function () {
     console.log('mounted')
     var self = this
+    if (this.id === 'create') {
+      this.create = true
+    }
     this.$axios
       .get('/api/submission_types/?show=true')
       .then(function (response) {
@@ -76,7 +80,7 @@ export default {
         console.log('id', self.id)
         self.type_options = response.data.results.map(opt => ({label: opt.name, value: opt.id}))
         self.submission_types = response.data.results
-        if (self.id && self.id !== 'create') {
+        if (!self.create) {
           self.$axios
             .get('/api/submissions/' + self.id)
             .then(function (response) {
