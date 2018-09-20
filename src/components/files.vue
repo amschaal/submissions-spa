@@ -10,13 +10,14 @@
       :pagination.sync="serverPagination"
       :loading="loading"
       @request="request"
+      :refresh="true"
     >
       <!-- <template slot="top-right" slot-scope="props">
         <q-search hide-underline v-model="filter" />
       </template> -->
       <template slot="body" slot-scope="props">
         <q-tr :props="props">
-          <q-td key="file" :props="props"><a :href="props.row.file" target="_blank">{{ props.row.filename }}</a></q-td>
+          <q-td key="file" :props="props"><q-btn v-if="$store.getters.isLoggedIn" class="float-left" color="red" label="Delete" @click="deleteFile(props.row)"/><a :href="props.row.file" target="_blank">{{ props.row.filename }}</a></q-td>
           <q-td key="uploaded_at" :props="props">{{ formatDate(props.row.uploaded_at) }}</q-td>
         </q-tr>
       </template>
@@ -37,7 +38,9 @@ export default {
       serverPagination: {
         page: 1,
         rowsNumber: 0, // specifying this determines pagination is server-side
-        rowsPerPage: 10
+        rowsPerPage: 10,
+        sortBy: 'uploaded_at',
+        descending: true
       },
       serverData: [],
       columns: [
@@ -47,17 +50,14 @@ export default {
     }
   },
   mounted: function () {
-    console.log('mounted')
+    // console.log('mounted', this.$refs.table.refresh)
     // var self = this
     // this.$axios
     //   .get('/api/submission_files/', {params: {submission: this.submission.id, page_size: 100}})
     //   .then(function (response) {
     //     self.files = response.data.results
     //   })
-    this.request({
-      pagination: this.serverPagination,
-      filter: this.filter
-    })
+    this.refreshTable()
   },
   methods: {
     request ({ pagination, filter }) {
@@ -85,7 +85,28 @@ export default {
           this.loading = false
         })
     },
+    refreshTable () {
+      this.request({
+        pagination: this.serverPagination,
+        filter: this.filter
+      })
+    },
+    deleteFile (file) {
+      if (!confirm(`Are you sure you want to delete this file: '${file.filename}'?`)) {
+        return
+      }
+      var self = this
+      this.$axios.delete(`/api/submission_files/${file.id}/`)
+        .then(function () {
+          self.$q.notify({message: 'File deleted', type: 'positive'})
+          self.refreshTable()
+        })
+        .catch(function () {
+          self.$q.notify({message: 'Error deleting file', type: 'negative'})
+        })
+    },
     uploadFile (file, uploadProgress) {
+      var self = this
       var formData = new FormData()
       formData.append('file', file)
       formData.append('submission', this.submission.id)
@@ -104,6 +125,12 @@ export default {
           }
         }
       )
+        .then(function () {
+          console.log('uploaded', self.$refs)
+          self.$q.notify({message: 'File uploaded', type: 'positive'})
+          self.refreshTable()
+          // self.request(self.serverPagination, self.filter)
+        })
     },
     formatDate (value) {
       return moment(String(value)).format('MM/DD/YYYY hh:mm')
