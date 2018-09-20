@@ -2,20 +2,17 @@
   <q-page padding class="docs-input row justify-center">
     <q-card class="p90">
     <q-tabs>
-      <q-tab slot="title" name="submission" label="Submission" default/>
+      <q-tab slot="title" name="submission"  default><span v-if="submission.id">Submission</span><span v-else>Create Submission</span></q-tab>
       <q-tab slot="title" name="files" label="Files"  v-if="submission.id"/>
       <q-tab slot="title" name="comments" label="comments"  v-if="submission.id"/>
 
     <q-tab-pane name="submission">
 
-      <q-card-title v-if="!submission.id">
-        Create
-      </q-card-title>
-      <span v-else><q-btn v-if="submission.editable && !modify" label="Modify" class="float-right" @click="modify=true"/> <Lock class="float-right" v-if="submission.id" :submission="submission"/></span>
+      <q-btn v-if="submission.editable && !modify" label="Modify" class="float-right" @click="modify=true"/> <Lock class="float-right" v-if="submission.id" :submission="submission"/>
       <q-card-separator />
       <q-card-main>
-        <SubmissionForm :id="id" v-if="modify || create" v-on:submission_updated="submissionUpdated"/>
-        <Submission :id="id" v-if="!modify && id"/>
+        <SubmissionForm :submission="submission" :create="create" :submission_types="submission_types" :type_options="type_options" :id="id" v-if="modify || create" v-on:submission_updated="submissionUpdated"/>
+        <Submission :submission="submission" v-if="!modify && submission.id"/>
       </q-card-main>
     </q-tab-pane>
     <q-tab-pane name="files"  v-if="submission.id">
@@ -51,26 +48,20 @@ export default {
   props: ['id'],
   data () {
     return {
-      submission: {'sample_data': [{}, {}, {}]},
+      submission: {'sample_data': [{}]},
       errors: {},
-      submission_types: [{ foo: 'bar' }],
-      type_options: [{ 'label': 'test', 'value': 2 }],
-      type: {},
-      debug: false,
+      submission_types: [],
+      type_options: [],
+      // type: {},
+      // debug: false,
       modify: false,
       create: false
     }
   },
-  // created: function () {
-  //   console.log('created!!!')
-  //   this.$on('submission_updated', function (submission) {
-  //     console.log('submission_updated', submission)
-  //   })
-  // },
   mounted: function () {
     console.log('mounted')
     var self = this
-    if (this.id === 'create') {
+    if (!this.id || this.id === 'create') {
       this.create = true
     }
     this.$axios
@@ -80,49 +71,29 @@ export default {
         console.log('id', self.id)
         self.type_options = response.data.results.map(opt => ({label: opt.name, value: opt.id}))
         self.submission_types = response.data.results
-        if (!self.create) {
-          self.$axios
-            .get('/api/submissions/' + self.id)
-            .then(function (response) {
-              console.log('response', response)
-              self.submission = response.data
-              Vue.set(self.submission, 'type', response.data.type.id)
-            })
-        }
       })
+    if (!self.create) {
+      this.$axios
+        .get('/api/submissions/' + self.id)
+        .then(function (response) {
+          console.log('response', response)
+          self.submission = response.data
+          // Vue.set(self.submission, 'type', response.data.type.id)
+        })
+    }
   },
   methods: {
     submissionUpdated (submission) {
       this.modify = false
+      this.submission = submission
     }
-  //   submit () {
-  //     var self = this
-  //     var id = this.submission.id
-  //     var action = id ? 'put' : 'post'
-  //     var url = id ? '/api/submissions/' + id + '/update/' : '/api/submit/'
-  //     this.$axios[action]('' + url, this.submission)
-  //       .then(function (response) {
-  //         self.errors = {}
-  //         console.log('submit', response)
-  //         self.$q.notify({message: 'Submission successfully saved.', type: 'positive'})
-  //         if (!id) {
-  //           self.$router.push({name: 'submission', params: {id: response.data.id}})
-  //         }
-  //         self.modify = false
-  //       })
-  //       .catch(function (error, stuff) {
-  //         // raise different exception if due to invalid credentials
-  //         console.log('ERROR', error.response)
-  //         self.$q.notify({message: 'There were errors saving your submission.', type: 'negative'})
-  //         if (error.response) {
-  //           self.errors = error.response.data.errors
-  //         }
-  //         throw error
-  //       })
-  //   }
   },
   watch: {
     'id': function (id) {
+      console.log('id', id)
+      if (!id || id === 'create') {
+        this.create = true
+      }
       var self = this
       if (self.id && self.id !== 'create') {
         self.$axios

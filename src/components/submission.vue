@@ -2,8 +2,8 @@
   <div>
         <div class="row">
           <div class="col-sm-12">
-            <p class="caption">Type</p>
-            {{submission.type.name}}
+            <p class="caption">Type</p>Test
+            <span v-if="submission && submission.type">{{submission.type.name}}</span><span v-else>None</span>
           </div>
         </div>
         <div class="row">
@@ -56,29 +56,29 @@ import Agschema from './agschema.vue'
 
 export default {
   // name: 'submission',
-  props: ['id'],
-  data () {
-    return {
-      submission: {},
-      type: {}
-    }
-  },
-  mounted: function () {
-    console.log('mounted')
-    var self = this
-
-    self.$axios
-      .get('/api/submissions/' + self.id)
-      .then(function (response) {
-        console.log('response', response)
-        self.submission = response.data
-        // self.$axios
-        //   .get(`/api/submission_types/${self.submission.type}/`)
-        //   .then(function (response) {
-        //     self.type = response.data
-        //   })
-      })
-  },
+  props: ['id', 'submission'],
+  // data () {
+  //   return {
+  //     // submission: {},
+  //     // type: {}
+  //   }
+  // },
+  // mounted: function () {
+  //   console.log('mounted')
+  //   var self = this
+  //
+  //   self.$axios
+  //     .get('/api/submissions/' + self.id)
+  //     .then(function (response) {
+  //       console.log('response', response)
+  //       self.submission = response.data
+  //       // self.$axios
+  //       //   .get(`/api/submission_types/${self.submission.type}/`)
+  //       //   .then(function (response) {
+  //       //     self.type = response.data
+  //       //   })
+  //     })
+  // },
   components: {
     Agschema
   }

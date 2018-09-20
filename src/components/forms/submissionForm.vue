@@ -2,7 +2,8 @@
   <div>
       <q-checkbox v-model="debug" label="Debug" />
         <span v-if="debug">
-          {{errors}}
+          {{type}}
+          {{submission_types.length}}
           {{submission}}
         </span>
         <q-field
@@ -145,46 +146,56 @@ import './docs-input.styl'
 // import Samplesheet from '../../components/samplesheet.vue'
 import Agschema from '../../components/agschema.vue'
 // import Files from '../../components/files.vue'
-import Vue from 'vue'
+// import Vue from 'vue'
 
 export default {
   // name: 'submission',
-  props: ['id'],
+  props: ['submission', 'submission_types', 'type_options', 'create'],
   data () {
     return {
-      submission: {'sample_data': [{}]},
+      // submission: {'sample_data': [{}]},
       errors: {},
-      submission_types: [{ foo: 'bar' }],
-      type_options: [{ 'label': 'test', 'value': 2 }],
+      // submission_types: [{ foo: 'bar' }],
+      // type_options: [{ 'label': 'test', 'value': 2 }],
       type: {},
       debug: false,
-      user_options: null,
-      create: false
+      user_options: null
+      // create: false
     }
   },
   mounted: function () {
     console.log('mounted')
+    console.log('type', this.type)
+    console.log('submission.type', this.submission.type)
     var self = this
     if (this.id === 'create') {
       this.create = true
     }
-    this.$axios
-      .get('/api/submission_types/?show=true')
-      .then(function (response) {
-        console.log('response', response)
-        console.log('id', self.id)
-        self.type_options = response.data.results.map(opt => ({label: opt.name, value: opt.id}))
-        self.submission_types = response.data.results
-        if (self.create) {
-          self.$axios
-            .get('/api/submissions/' + self.id)
-            .then(function (response) {
-              console.log('response', response)
-              self.submission = response.data
-              Vue.set(self.submission, 'type', response.data.type.id)
-            })
-        }
-      })
+    if (this.submission.type) {
+      if (this.submission.type.id) {
+        this.submission.type = this.submission.type.id
+      } else {
+        this.assignType(this.submission.type)
+      }
+    }
+
+    // this.$axios
+    //   .get('/api/submission_types/?show=true')
+    //   .then(function (response) {
+    //     console.log('response', response)
+    //     console.log('id', self.id)
+    //     self.type_options = response.data.results.map(opt => ({label: opt.name, value: opt.id}))
+    //     self.submission_types = response.data.results
+    //     if (self.create) {
+    //       self.$axios
+    //         .get('/api/submissions/' + self.id)
+    //         .then(function (response) {
+    //           console.log('response', response)
+    //           self.submission = response.data
+    //           Vue.set(self.submission, 'type', response.data.type.id)
+    //         })
+    //     }
+    //   })
     this.$axios
       .get('/api/users/?show=true')
       .then(function (response) {
@@ -217,32 +228,36 @@ export default {
           }
           throw error
         })
-    }
-  },
-  watch: {
-    'submission.type': function (newType) {
-      console.log('type changed', newType)
+    },
+    assignType (id) {
       for (var i in this.submission_types) {
-        if (this.submission_types[i].id === newType) {
-          console.log('type', this.submission_types[i])
+        if (this.submission_types[i].id === id) {
+          // console.log('type', this.submission_types[i])
           this.type = this.submission_types[i]
         }
       }
-    },
-    'id': function (id) {
-      var self = this
-      if (self.id && self.id !== 'create') {
-        self.$axios
-          .get('/api/submissions/' + self.id)
-          .then(function (response) {
-            console.log('response', response)
-            self.submission = response.data
-            Vue.set(self.submission, 'type', response.data.type.id)
-          })
-      } else {
-        this.submission = {'sample_data': [{}, {}]}
-      }
     }
+  },
+  watch: {
+    'submission.type': function (id) {
+      this.assignType(id)
+      // this.type = this.submission.type
+      // this.submission.type = this.type.id
+    }
+    // 'id': function (id) {
+    //   var self = this
+    //   if (self.id && self.id !== 'create') {
+    //     self.$axios
+    //       .get('/api/submissions/' + self.id)
+    //       .then(function (response) {
+    //         console.log('response', response)
+    //         self.submission = response.data
+    //         Vue.set(self.submission, 'type', response.data.type.id)
+    //       })
+    //   } else {
+    //     this.submission = {'sample_data': [{}, {}]}
+    //   }
+    // }
   },
   computed: {
     error_message (field) {
