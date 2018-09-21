@@ -9,7 +9,6 @@
     <q-tab-pane name="submission">
 
       <q-btn v-if="submission.editable && !modify" label="Modify" class="float-right" @click="modify=true"/> <Lock class="float-right" v-if="submission.id" :submission="submission"/>
-      <q-card-separator />
       <q-card-main>
         <SubmissionForm :submission="submission" :create="create" :submission_types="submission_types" :type_options="type_options" :id="id" v-if="modify || create" v-on:submission_updated="submissionUpdated"/>
         <Submission :submission="submission" v-if="!modify && submission.id"/>

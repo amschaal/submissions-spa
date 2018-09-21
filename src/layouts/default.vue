@@ -32,7 +32,7 @@
         link
         inset-delimiter
       >
-        <q-list-header>Essential Links</q-list-header>
+        <q-list-header>Menu</q-list-header>
         <q-item :to="{ name: 'submissions' }" v-if="$store.getters.isLoggedIn">
           <q-item-side icon="list" />
           <q-item-main label="Submissions"/>

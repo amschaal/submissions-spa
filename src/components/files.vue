@@ -71,7 +71,7 @@ export default {
         sortBy = '-' + sortBy
       }
       this.$axios
-        .get(`/api/submission_files/?submission__id=${this.submission.id}&ordering=${sortBy}&page=${pagination.page}&page_size=${pagination.rowsPerPage}`)// ${pagination.descending}&filter=${filter}
+        .get(`/api/submission_files/?submission=${this.submission.id}&ordering=${sortBy}&page=${pagination.page}&page_size=${pagination.rowsPerPage}`)// ${pagination.descending}&filter=${filter}
         .then(({ data }) => {
           this.serverPagination = pagination
           this.serverPagination.rowsNumber = data.count
