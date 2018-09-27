@@ -82,6 +82,7 @@ module.exports = function (ctx) {
         'QCardActions',
         'QModal',
         'QModalLayout',
+        'QRouteTab',
         'QTooltip',
         'QEditor',
         'QTabs',
