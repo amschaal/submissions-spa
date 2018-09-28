@@ -170,11 +170,18 @@ export default {
     },
     schema2Columns (schema) {
       var columnDefs = []
-      for (var prop in schema.properties) {
-        if (schema.properties.hasOwnProperty(prop)) {
-          columnDefs.push(this.getColDef(prop, schema.properties[prop], schema))
+      if (schema.order) {
+        for (var i in schema.order) {
+          columnDefs.push(this.getColDef(schema.order[i], schema.properties[schema.order[i]], schema))
+        }
+      } else {
+        for (var prop in schema.properties) {
+          if (schema.properties.hasOwnProperty(prop)) {
+            columnDefs.push(this.getColDef(prop, schema.properties[prop], schema))
+          }
         }
       }
+
       if (this.editable) {
         columnDefs[0].headerCheckboxSelection = true
         columnDefs[0].headerCheckboxSelectionFilteredOnly = true
