@@ -19,7 +19,7 @@ export default {
   name: 'App',
   props: ['authenticated', 'blah'],
   mounted () {
-    this.$store.dispatch('checkAuth')
+    this.$store.dispatch('checkAuth', {axios: this.$axios})
     console.log('$store', this.$store)
     // once mounted, we need to trigger
     console.log('set axios defaults', [document.cookie, document])

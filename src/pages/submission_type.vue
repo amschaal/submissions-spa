@@ -104,7 +104,7 @@
 
 <script>
 import '../components/forms/docs-input.styl'
-import axios from 'axios'
+// import axios from 'axios'
 import Fieldoptions from '../components/fieldoptions.vue'
 import Vue from 'vue'
 export default {
@@ -122,7 +122,7 @@ export default {
   },
   mounted: function () {
     var self = this
-    axios
+    this.$axios
       .get('/api/submission_types/' + self.id + '/')
       .then(function (response) {
         self.type = response.data
@@ -169,7 +169,7 @@ export default {
       var id = this.id
       var action = id ? 'put' : 'post'
       var url = id ? '/api/submission_types/' + id + '/' : '/api/submission_types/'
-      axios[action](url, this.type)
+      this.$axios[action](url, this.type)
         .then(function (response) {
           console.log(response)
           self.$q.notify({message: 'Submission type successfully saved.', type: 'positive'})

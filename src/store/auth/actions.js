@@ -1,6 +1,8 @@
-import axios from 'axios'
+// Passing in this.$axios from application.  Seems like an antipattern, but I need to use same configuration for axios.
+// import axios from 'axios'
+// import axiosInstance from '../../plugins/axios'
 
-export const login = (context, {username, password}) => {
+export const login = (context, {username, password, axios}) => {
   return axios.post('/api/login/', {
     username: username,
     password: password
@@ -14,7 +16,8 @@ export const login = (context, {username, password}) => {
     })
 }
 
-export const checkAuth = (context) => {
+export const checkAuth = (context, {axios}) => {
+  console.log('context', context)
   return axios.post('/api/login/')
     .then(function (response) {
       context.commit('login', response.data.user)
@@ -24,7 +27,7 @@ export const checkAuth = (context) => {
     })
 }
 
-export const logout = (context) => {
+export const logout = (context, {axios}) => {
   return axios.post('/api/logout/', {
     // headers: auth.getAuthHeader(),
   })
@@ -34,9 +37,4 @@ export const logout = (context) => {
     .catch(function (error) {
       console.log('error!!!', error.message)
     })
-}
-
-export const foo = () => {
-  console.log('running foo')
-  return 'bar'
 }

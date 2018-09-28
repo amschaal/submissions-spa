@@ -8,7 +8,7 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 // Note that if we wouldn't set any config here we do not need
 // a named export, as we could just `import axios from 'axios'`
 const axiosInstance = axios.create({
-  baseURL: 'http://submission.ucdavis.edu'// ,
+  baseURL: '/server' //  'http://submission.ucdavis.edu'// ,
   // withCredentials: true,
   // xsrfCookieName: 'csrftoken',
   // xsrfHeaderName: 'X-CSRFToken'

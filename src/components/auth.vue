@@ -50,7 +50,7 @@ export default {
     login () {
       var self = this
       console.log('$auth', this.$store._actions)
-      this.$store.dispatch('login', {username: this.username, password: this.password}).then(
+      this.$store.dispatch('login', {username: this.username, password: this.password, axios: this.$axios}).then(
         function () {
           self.opened = false
         })
@@ -67,7 +67,7 @@ export default {
       //   })
     },
     logout () {
-      this.$store.dispatch('logout')
+      this.$store.dispatch('logout', {axios: this.$axios})
     }
   },
   mounted () {
