@@ -73,7 +73,7 @@ export default {
       })
     if (!self.create) {
       this.$axios
-        .get('/api/submissions/' + self.id)
+        .get(`/api/submissions/${self.id}/`)
         .then(function (response) {
           console.log('response', response)
           self.submission = response.data

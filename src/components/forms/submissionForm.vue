@@ -6,12 +6,13 @@
           {{submission_types.length}}
           {{submission}}
         </span>
+<!-- v-if="submission.participants && user_options && !create" -->
         <q-field
           label="Participants"
           label-width="2"
           :error="errors.type"
           :error-label="errors.type"
-          v-if="submission.participants && user_options"
+          v-if="$store.getters.isStaff && user_options && submission.participants"
         >
           <q-select
             float-label="Select"
@@ -196,11 +197,13 @@ export default {
     //         })
     //     }
     //   })
-    this.$axios
-      .get('/api/users/?show=true')
-      .then(function (response) {
-        self.user_options = response.data.results.map(opt => ({label: `${opt.first_name} ${opt.last_name}`, value: opt.id}))
-      })
+    if (this.$store.getters.isStaff) {
+      this.$axios
+        .get('/api/users/?show=true')
+        .then(function (response) {
+          self.user_options = response.data.results.map(opt => ({label: `${opt.first_name} ${opt.last_name}`, value: opt.id}))
+        })
+    }
   },
   methods: {
     submit () {
