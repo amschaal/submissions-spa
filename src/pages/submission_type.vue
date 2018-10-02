@@ -38,19 +38,20 @@
           />
         </q-field>
         <h6>Column Definitions</h6>
+        {{type_options_sorted}}
         <table v-if="type.schema" style="width:100%">
           <tr><th>Required</th><th>Variable</th><th>Type</th><th></th></tr>
-          <tr v-for="(p, variable) in type.schema.properties" :key="variable">
+          <tr v-for="variable in type_options_sorted" :key="variable.variable">
             <td><q-checkbox v-model="type.schema.required" :val="variable"/></td>
-            <td>{{variable}}</td>
+            <td>{{variable.variable}}</td>
             <td>
               <q-select
-                v-model="p.type"
+                v-model="variable.schema.type"
                 :options="type_options"
               />
             </td>
             <td class="row">
-              <fieldoptions v-model="type.schema.properties[variable]" :variable="variable"/> <q-btn label="Delete" color="negative" @click="deleteVariable(variable)"></q-btn>
+              <fieldoptions v-model="type.schema.properties[variable.variable]" :variable="variable.variable"/> <q-btn label="Delete" color="negative" @click="deleteVariable(variable.variable)"></q-btn>
             </td>
           </tr>
         </table>
@@ -112,7 +113,7 @@ export default {
   props: ['id'],
   data () {
     return {
-      type: {},
+      type: {help: ''},
       errors: {},
       type_options: [{ 'label': 'Text', 'value': 'string' }, { 'label': 'Number', 'value': 'number' }, { 'label': 'True / False', 'value': 'boolean' }],
       schema: [],
@@ -148,6 +149,7 @@ export default {
     },
     addVariable () {
       Vue.set(this.type.schema.properties, this.new_variable.name, {type: this.new_variable.type})
+      this.type.schema.order.push(this.new_variable.name)
       // // this.type.schema.properties['VARIABLE_NAME'] = {added: true}
       // console.log(this.type.schema.properties)
       this.variable_modal = false
@@ -160,6 +162,12 @@ export default {
         ok: 'Okay',
         cancel: 'Cancel'
       }).then(() => {
+        if (self.type.schema.order) {
+          var index = self.type.schema.order.indexOf(variable)
+          if (index) {
+            self.type.schema.order.splice(index, 1)
+          }
+        }
         Vue.delete(this.type.schema.properties, variable)
         self.$q.notify({message: 'Variable "' + variable + '" deleted.', type: 'negative'})
       })
@@ -208,10 +216,19 @@ export default {
   computed: {
     error_message (field) {
       return this.errors[field]
+    },
+    type_options_sorted () {
+      var self = this
+      if (!self.type.schema) {
+        return []
+      }
+      if (self.type.schema.order) {
+        return self.type.schema.order.map(function (variable) {
+          return {'variable': variable, 'schema': self.type.schema.properties[variable]}
+        })
+      }
+      // return this.submission_types.map(opt => ({label: opt.name, value: opt.id}))
     }
-    // type_options () {
-    //   return this.submission_types.map(opt => ({label: opt.name, value: opt.id}))
-    // }
 
   },
   components: {

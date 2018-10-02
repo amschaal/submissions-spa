@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page padding class="docs-input row justify-center">
     <q-table
       ref="table"
       :data="serverData"
@@ -39,7 +39,7 @@ export default {
       loading: false,
       serverPagination: {
         page: 1,
-        rowsNumber: 10, // specifying this determines pagination is server-side
+        rowsNumber: 0, // specifying this determines pagination is server-side
         rowsPerPage: 10,
         descending: true,
         sortBy: 'submitted'

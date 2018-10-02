@@ -18,6 +18,7 @@
         :inverted="$q.theme === 'ios'"
         :style="$q.theme === 'ios' ? { background: 'rgba(255,255,255,0.95' } : null"
       >
+        <q-route-tab slot="title" to="/" replace label="Home" />
         <q-route-tab slot="title" :to="{ name: 'create_submission' }" replace label="Create Submission" />
         <q-route-tab slot="title" :to="{ name: 'submissions' }" v-if="$store.getters.isLoggedIn" replace label="Submissions" />
         <q-route-tab slot="title" :to="{ name: 'submission_types' }" v-if="$store.getters.isLoggedIn" label="Submission Types"/>

@@ -4,7 +4,7 @@ export default [
     path: '/',
     component: () => import('layouts/base'),
     children: [
-      { path: '', component: () => import('pages/index') },
+      { path: '', name: 'index', component: () => import('pages/index') },
       {
         path: '/submissions',
         component: () => import('pages/submissions'),

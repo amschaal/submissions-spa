@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page padding class="docs-input row justify-center">
     <q-table
       ref="table"
       :data="serverData"
