@@ -113,7 +113,7 @@ export default {
   props: ['id'],
   data () {
     return {
-      type: {help: ''},
+      type: {help: '', schema: {properties: {}, order: []}},
       errors: {},
       type_options: [{ 'label': 'Text', 'value': 'string' }, { 'label': 'Number', 'value': 'number' }, { 'label': 'True / False', 'value': 'boolean' }],
       schema: [],
@@ -123,11 +123,15 @@ export default {
   },
   mounted: function () {
     var self = this
-    this.$axios
-      .get('/api/submission_types/' + self.id + '/')
-      .then(function (response) {
-        self.type = response.data
-      })
+    if (!this.id || this.id === 'create') {
+      this.create = true
+    } else {
+      this.$axios
+        .get('/api/submission_types/' + self.id + '/')
+        .then(function (response) {
+          self.type = response.data
+        })
+    }
   },
   methods: {
     openModal () {
@@ -180,18 +184,21 @@ export default {
     submit () {
       var self = this
       var id = this.id
-      var action = id ? 'put' : 'post'
-      var url = id ? '/api/submission_types/' + id + '/' : '/api/submission_types/'
+      var action = !this.create ? 'put' : 'post'
+      var url = !this.create ? '/api/submission_types/' + id + '/' : '/api/submission_types/'
       this.$axios[action](url, this.type)
         .then(function (response) {
           console.log(response)
           self.$q.notify({message: 'Submission type successfully saved.', type: 'positive'})
+          if (self.create) {
+            self.$router.push({name: 'submission_type', params: {id: response.data.id}})
+          }
         })
         .catch(function (error, stuff) {
           // raise different exception if due to invalid credentials
           console.log('ERROR', error.response)
           if (error.response) {
-            self.errors = error.response.data.errors
+            self.errors = error.response.data
           }
           self.$q.notify('Error saving submission type!')
         })

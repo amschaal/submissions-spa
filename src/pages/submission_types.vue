@@ -19,6 +19,9 @@
           <q-td key="description" :props="props">{{ props.row.description }}</q-td>
         </q-tr>
       </template>
+      <template slot="top-left" slot-scope="props">
+        <q-btn color="primary" label="Create" class="q-mr-sm" :to="{name: 'create_submission_type'}"/>
+      </template>
     </q-table>
   </q-page>
 </template>

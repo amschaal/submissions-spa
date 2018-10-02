@@ -16,7 +16,6 @@
         </q-toolbar>
 
         <div class="layout-padding">
-          {{data}}
           <q-field
             label="Title"
             helper="This will be displayed as the column header"
