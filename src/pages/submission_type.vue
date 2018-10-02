@@ -38,10 +38,10 @@
           />
         </q-field>
         <h6>Column Definitions</h6>
-        {{type_options_sorted}}
         <table v-if="type.schema" style="width:100%">
-          <tr><th>Required</th><th>Variable</th><th>Type</th><th></th></tr>
+          <tr><th></th><th>Required</th><th>Variable</th><th>Type</th><th></th></tr>
           <tr v-for="variable in type_options_sorted" :key="variable.variable">
+            <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1)" v-if="type.schema.order && type.schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1)" v-if="type.schema.order && type.schema.order.indexOf(variable.variable) != type.schema.order.length - 1"/>
             <td><q-checkbox v-model="type.schema.required" :val="variable"/></td>
             <td>{{variable.variable}}</td>
             <td>
@@ -153,6 +153,11 @@ export default {
       // // this.type.schema.properties['VARIABLE_NAME'] = {added: true}
       // console.log(this.type.schema.properties)
       this.variable_modal = false
+    },
+    move (variable, displacement) {
+      console.log('moveUp', variable)
+      var index = this.type.schema.order.indexOf(variable)
+      this.type.schema.order.splice(index + displacement, 0, this.type.schema.order.splice(index, 1)[0])
     },
     deleteVariable (variable) {
       var self = this
