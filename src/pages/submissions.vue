@@ -17,6 +17,7 @@
         <q-tr :props="props">
           <q-td key="id" :props="props"><router-link :to="{ name: 'submission', params: { id: props.row.id }}">{{ props.row.id }}</router-link></q-td>
           <q-td key="internal_id" :props="props">{{ props.row.internal_id }}</q-td>
+          <q-td key="type" :props="props"><router-link :to="{'name': 'submission_type', 'params': { id: props.row.type.id }}">{{ props.row.type.name }}</router-link></q-td>
           <q-td key="status" :props="props">{{ props.row.status }}</q-td>
           <q-td key="submitted" :props="props">{{ props.row.submitted }}</q-td>
           <q-td key="name" :props="props">{{ props.row.name }}</q-td>
@@ -48,6 +49,7 @@ export default {
       columns: [
         { name: 'id', label: 'Id', field: 'id', sortable: true },
         { name: 'internal_id', label: 'Internal Id', field: 'internal_id', sortable: true },
+        { name: 'type', label: 'Type', field: 'type' },
         { name: 'status', label: 'Status', field: 'status' },
         { name: 'submitted', label: 'Submitted', field: 'submitted', sortable: true },
         { name: 'name', label: 'Name', field: 'name' },
@@ -69,6 +71,7 @@ export default {
         sortBy = '-' + sortBy
       }
       var search = this.filter !== '' ? `&search=${this.filter}` : ''
+      // var type = this.$route.query.type ? `&type__name__icontains=${this.$route.query.type}` : ''
       this.$axios
         .get(`/api/submissions/?ordering=${sortBy}&page=${pagination.page}&page_size=${pagination.rowsPerPage}${search}`)// ${pagination.descending}&filter=${filter}
         .then(({ data }) => {
@@ -95,6 +98,10 @@ export default {
   },
   mounted () {
     // once mounted, we need to trigger the initial server data fetch
+    console.log(this.$route.query.search)
+    if (this.$route.query.search) {
+      this.filter = this.$route.query.search
+    }
     this.request({
       pagination: this.serverPagination,
       filter: this.filter

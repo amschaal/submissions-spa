@@ -18,6 +18,7 @@
           <q-td key="name" :props="props"><router-link :to="{ name: 'submission_type', params: { id: props.row.id }}">{{ props.row.name }}</router-link></q-td>
           <q-td key="description" :props="props">{{ props.row.description }}</q-td>
           <q-td key="updated" :props="props">{{ props.row.updated }}</q-td>
+          <q-td key="submission_count" :props="props"><router-link :to="{ name: 'submissions', query: { search: props.row.name }}">{{ props.row.submission_count }}</router-link></q-td>
         </q-tr>
       </template>
       <template slot="top-left" slot-scope="props">
@@ -47,7 +48,8 @@ export default {
       columns: [
         { name: 'name', label: 'Name', field: 'name', sortable: true },
         { name: 'description', label: 'Description', field: 'description' },
-        { name: 'updated', label: 'Updated', field: 'updated', sortable: true }
+        { name: 'updated', label: 'Updated', field: 'updated', sortable: true },
+        { name: 'submission_count', label: 'Submissions', field: 'submission_count', sortable: true }
       ]
     }
   },

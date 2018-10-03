@@ -2,7 +2,7 @@
   <q-page padding class="docs-input row justify-center">
     <q-card style="width:100%">
       <q-card-title>
-        Submission Type <q-btn @click="delete_type" color="negative" label="Delete" class="float-right" v-if="type.submission_count === 0"/><router-link :to="{'name': 'submissions'}" class="float-right" v-else>{{type.submission_count}} Submissions</router-link>
+        Submission Type <q-btn @click="delete_type" color="negative" label="Delete" class="float-right" v-if="type.submission_count === 0"/><router-link :to="{'name': 'submissions', 'query': { 'search': type.name }}" class="float-right" v-else>{{type.submission_count}} Submissions</router-link>
       </q-card-title>
       <q-card-separator />
       <q-card-main>
