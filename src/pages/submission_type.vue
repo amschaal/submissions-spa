@@ -2,7 +2,7 @@
   <q-page padding class="docs-input row justify-center">
     <q-card style="width:100%">
       <q-card-title>
-        Submission Type
+        Submission Type <q-btn @click="delete_type" color="negative" label="Delete" class="float-right" v-if="type.submission_count === 0"/><router-link :to="{'name': 'submissions'}" class="float-right" v-else>{{type.submission_count}} Submissions</router-link>
       </q-card-title>
       <q-card-separator />
       <q-card-main>
@@ -186,6 +186,7 @@ export default {
       var id = this.id
       var action = !this.create ? 'put' : 'post'
       var url = !this.create ? '/api/submission_types/' + id + '/' : '/api/submission_types/'
+      this.errors = {}
       this.$axios[action](url, this.type)
         .then(function (response) {
           console.log(response)
@@ -202,6 +203,18 @@ export default {
           }
           self.$q.notify('Error saving submission type!')
         })
+    },
+    delete_type () {
+      var self = this
+      if (this.type.id && this.type.submission_count === 0) {
+        this.$axios.delete(`/api/submission_types/${this.type.id}/`)
+          .then(function (response) {
+            self.$router.push({name: 'submission_types'})
+          })
+          .catch(function () {
+            self.$q.notify('Error deleting submission type!')
+          })
+      }
     }
     // removeOptions (property) {
     //   console.log(property)

@@ -21,7 +21,7 @@
           <q-td key="submitted" :props="props">{{ props.row.submitted }}</q-td>
           <q-td key="name" :props="props">{{ props.row.name }}</q-td>
           <q-td key="email" :props="props">{{ props.row.email }}</q-td>
-          <q-td key="pi" :props="props">{{ props.row.pi }}</q-td>
+          <q-td key="pi_email" :props="props">{{ props.row.pi_email }}</q-td>
         </q-tr>
       </template>
     </q-table>
@@ -52,7 +52,7 @@ export default {
         { name: 'submitted', label: 'Submitted', field: 'submitted', sortable: true },
         { name: 'name', label: 'Name', field: 'name' },
         { name: 'email', label: 'Email', field: 'email', sortable: true },
-        { name: 'pi_name', label: 'PI', field: 'pi_name', sortable: true }
+        { name: 'pi_email', label: 'PI', field: 'pi_email', sortable: true }
       ]
     }
   },
@@ -68,8 +68,9 @@ export default {
       if (pagination.descending) {
         sortBy = '-' + sortBy
       }
+      var search = this.filter !== '' ? `&search=${this.filter}` : ''
       this.$axios
-        .get(`/api/submissions/?ordering=${sortBy}&page=${pagination.page}&page_size=${pagination.rowsPerPage}`)// ${pagination.descending}&filter=${filter}
+        .get(`/api/submissions/?ordering=${sortBy}&page=${pagination.page}&page_size=${pagination.rowsPerPage}${search}`)// ${pagination.descending}&filter=${filter}
         .then(({ data }) => {
           console.log('data', data)
           // updating pagination to reflect in the UI
