@@ -16,6 +16,7 @@
         </q-toolbar>
 
         <div class="layout-padding">
+          {{data}}
           <q-field
             label="Title"
             helper="This will be displayed as the column header"
@@ -26,6 +27,13 @@
             label="Description"
           >
             <q-input v-model="data.description" type="textarea" placeholder="Enter description here."/>
+          </q-field>
+          <q-field
+            label="Unique"
+          >
+            <!-- <q-checkbox v-model="data.unique" :false-value="true" :true-value="false" indeterminate-icon="check_box_outline_blank" unchecked-icon="check_box" checked-icon="check_box_outline_blank" keep-color /> -->
+            <q-checkbox v-model="data.unique" indeterminate-icon="check_box_outline_blank"/>
+            <!-- :false-value="undefined" toggle-indeterminate="false" indeterminate-value="none"/> -->
           </q-field>
           <q-field v-if="data.type === 'string'"
             label="Regular Expression"

@@ -42,7 +42,7 @@
           <tr><th></th><th>Required</th><th>Variable</th><th>Type</th><th></th></tr>
           <tr v-for="variable in type_options_sorted" :key="variable.variable">
             <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1)" v-if="type.schema.order && type.schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1)" v-if="type.schema.order && type.schema.order.indexOf(variable.variable) != type.schema.order.length - 1"/>
-            <td><q-checkbox v-model="type.schema.required" :val="variable"/></td>
+            <td><q-checkbox v-model="type.schema.required" :val="variable.variable"/></td>
             <td>{{variable.variable}}</td>
             <td>
               <q-select
@@ -152,7 +152,7 @@ export default {
       return null
     },
     addVariable () {
-      Vue.set(this.type.schema.properties, this.new_variable.name, {type: this.new_variable.type})
+      Vue.set(this.type.schema.properties, this.new_variable.name, {type: this.new_variable.type, unique: false})
       this.type.schema.order.push(this.new_variable.name)
       // // this.type.schema.properties['VARIABLE_NAME'] = {added: true}
       // console.log(this.type.schema.properties)
