@@ -59,6 +59,20 @@
           >
             <q-input v-model="data.maximum" type="number"/>
           </q-field>
+          <q-field v-if="data.validators"
+            label="Custom validators"
+          >
+            <q-btn-dropdown label="Add validator">
+              <q-list link>
+                <q-item v-for="(v, id) in validators" :key="id" @click.native="addValidator(id)">
+                  <q-item-main>
+                    <q-item-tile label>{{v.name}}</q-item-tile>
+                  </q-item-main>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
+            <div v-for="(v, index) in data.validators" :key="index"><q-btn flat dense round icon="delete_outline" @click="removeValidator(index)"/> {{validators[v.id].name}} {{v}}</div>
+          </q-field>
           <!-- <td v-if="p.type == 'string'"><q-btn v-if="p.enum" @click="removeOptions(p)">Remove options</q-btn><q-btn v-if="!p.enum" @click="useOptions(p)">Use Options</q-btn><q-chips-input v-if="p.enum" v-model="p.enum" placeholder="Enter options" /></td>
           <td v-if="p.type == 'number'">Number stuff</td> -->
         </div>
@@ -92,7 +106,9 @@ export default {
   data () {
     return {
       opened: false,
-      data: {enum: []}
+      data: {enum: []},
+      validators: {unique: {id: 'unique', name: 'Unique'}, foo: {id: 'foo', name: 'Foo'}},
+      add_validator: null
       // options: this.value && this.value.enum ? this.value.enum : []
     }
   },
@@ -101,7 +117,10 @@ export default {
       this.data = _.cloneDeep(this.value)
 
       if (!this.data.enum) {
-        this.data.enum = []
+        this.$set(this.data, 'enum', [])
+      }
+      if (!this.data.validators) {
+        this.$set(this.data, 'validators', [])
       }
       console.log('openModal', this.value, this.data)
       this.$refs.modal.show().then(() => {
@@ -123,6 +142,13 @@ export default {
     },
     discard () {
       this.$refs.modal.hide()
+    },
+    addValidator (id) {
+      this.data.validators.push({id: id, options: {}})
+      console.log(id, this.data.validators)
+    },
+    removeValidator (index) {
+      this.data.validators.splice(index, 1)
     }
   }
 }
