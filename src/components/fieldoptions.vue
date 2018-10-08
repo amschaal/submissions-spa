@@ -17,6 +17,7 @@
 
         <div class="layout-padding">
           {{data}}
+          {{validators}}
           <q-field
             label="Title"
             helper="This will be displayed as the column header"
@@ -64,14 +65,14 @@
           >
             <q-btn-dropdown label="Add validator">
               <q-list link>
-                <q-item v-for="(v, id) in validators" :key="id" @click.native="addValidator(id)">
+                <q-item v-for="(v, id) in validators" :key="id" v-close-overlay @click.native="addValidator(id)">
                   <q-item-main>
                     <q-item-tile label>{{v.name}}</q-item-tile>
                   </q-item-main>
                 </q-item>
               </q-list>
             </q-btn-dropdown>
-            <div v-for="(v, index) in data.validators" :key="index"><q-btn flat dense round icon="delete_outline" @click="removeValidator(index)"/> {{validators[v.id].name}} {{v}}</div>
+            <div v-for="(v, index) in data.validators" :key="index"><q-btn flat dense round icon="delete_outline" @click="removeValidator(index)"/> {{validators[v.id].name}} <q-btn size="sm" v-if="validators[v.id].uses_options" label="Options"/></div>
           </q-field>
           <!-- <td v-if="p.type == 'string'"><q-btn v-if="p.enum" @click="removeOptions(p)">Remove options</q-btn><q-btn v-if="!p.enum" @click="useOptions(p)">Use Options</q-btn><q-chips-input v-if="p.enum" v-model="p.enum" placeholder="Enter options" /></td>
           <td v-if="p.type == 'number'">Number stuff</td> -->
@@ -86,7 +87,7 @@
             />
             <q-btn
               color="positive"
-              label="Save"
+              label="Keep"
               @click="save"
               class="float-right"
             />
@@ -107,13 +108,14 @@ export default {
     return {
       opened: false,
       data: {enum: []},
-      validators: {unique: {id: 'unique', name: 'Unique'}, foo: {id: 'foo', name: 'Foo'}},
+      validators: this.$store.getters.validatorDict, // t{unique: {id: 'unique', name: 'Unique'}, foo: {id: 'foo', name: 'Foo'}},
       add_validator: null
       // options: this.value && this.value.enum ? this.value.enum : []
     }
   },
   methods: {
     openModal () {
+      console.log('root', this.$root.validators)
       this.data = _.cloneDeep(this.value)
 
       if (!this.data.enum) {
