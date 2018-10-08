@@ -2,11 +2,11 @@
   <div>
     <!-- <HotTable :settings="settings"></HotTable> -->
     <!-- <q-select :value="value" :options="options" @change="handleChange" filter filter-placeholder="select"/> -->
-    <q-modal v-model="opened" :content-css="{minWidth: '90vw', minHeight: '90vh'}" ref="modal" no-backdrop-dismiss>
+    <q-modal v-model="opened" :content-css="{minWidth: '90vw', minHeight: '90vh'}" ref="modal" no-backdrop-dismiss no-esc-dismiss>
       <q-modal-layout>
         <q-toolbar slot="header">
           <q-toolbar-title>
-            Samplesheet
+            Samplesheet ({{type.name}})
           </q-toolbar-title>
         </q-toolbar>
 

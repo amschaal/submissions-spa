@@ -65,14 +65,14 @@
           >
             <q-btn-dropdown label="Add validator">
               <q-list link>
-                <q-item v-for="(v, id) in validators" :key="id" v-close-overlay @click.native="addValidator(id)">
+                <q-item v-for="(v, id) in validators" :key="id" v-close-overlay @click.native="addValidator(id)" :title="validators[v.id].description">
                   <q-item-main>
                     <q-item-tile label>{{v.name}}</q-item-tile>
                   </q-item-main>
                 </q-item>
               </q-list>
             </q-btn-dropdown>
-            <div v-for="(v, index) in data.validators" :key="index"><q-btn flat dense round icon="delete_outline" @click="removeValidator(index)"/> {{validators[v.id].name}} <q-btn size="sm" v-if="validators[v.id].uses_options" label="Options"/></div>
+            <div v-for="(v, index) in data.validators" :key="index" :title="validators[v.id].description"><q-btn flat dense round icon="delete_outline" @click="removeValidator(index)"/> {{validators[v.id].name}} <q-btn size="sm" v-if="validators[v.id].uses_options" label="Options"/></div>
           </q-field>
           <!-- <td v-if="p.type == 'string'"><q-btn v-if="p.enum" @click="removeOptions(p)">Remove options</q-btn><q-btn v-if="!p.enum" @click="useOptions(p)">Use Options</q-btn><q-chips-input v-if="p.enum" v-model="p.enum" placeholder="Enter options" /></td>
           <td v-if="p.type == 'number'">Number stuff</td> -->
