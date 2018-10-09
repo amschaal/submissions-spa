@@ -6,7 +6,7 @@
       <q-modal-layout>
         <q-toolbar slot="header">
           <q-toolbar-title>
-            Samplesheet ({{type.name}})
+            Samplesheet ({{type.name}}) <span class="float-right">{{rootNode.allChildrenCount}} samples</span>
           </q-toolbar-title>
         </q-toolbar>
 
@@ -142,6 +142,7 @@ export default {
         {headerName: 'Price', field: 'price'}
       ],
       rowData: this.value,
+      rootNode: {},
       gridOptions: {
         enableRangeSelection: true,
         defaultColDef: {
@@ -185,6 +186,7 @@ export default {
         if (self.value.length === 0) {
           self.addRow()
         }
+        this.rootNode = this.gridOptions.api.getModel().rootNode
       })
     },
     schema2Columns (schema) {
@@ -291,6 +293,9 @@ export default {
     getRowData (filterAndSort) {
       var data = []
       var method = filterAndSort ? 'forEachNodeAfterFilterAndSort' : 'forEachNode'
+      if (!this.gridOptions.api) {
+        return []
+      }
       this.gridOptions.api[method](function (node) {
         data.push(node.data)
       })
@@ -303,7 +308,8 @@ export default {
       }
       console.log('rows', rows)
       this.gridOptions.api.updateRowData({add: rows})
-      console.log('addRow', this.getRowData())
+      console.log('row count', this.gridOptions.api.getModel())
+      // console.log('addRow', this.getRowData())
     },
     removeRows () {
       console.log('grid', this.gridOptions)
@@ -325,6 +331,15 @@ export default {
     // beforeMount () {
     //   this.gridOptions.numericComponentFramework = NumericComponent
     // }
+  },
+  computed: {
+    sampleCount () {
+      if (this.gridOptions.api) {
+        return this.gridOptions.api.getModel().rootNode.allChildrenCount
+      }
+      return 0
+      // return this.getRowData().length
+    }
   },
   components: {
     QSelect,
