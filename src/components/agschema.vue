@@ -2,18 +2,18 @@
   <div>
     <!-- <HotTable :settings="settings"></HotTable> -->
     <!-- <q-select :value="value" :options="options" @change="handleChange" filter filter-placeholder="select"/> -->
-    <q-modal v-model="opened" :content-css="{minWidth: '90vw', minHeight: '90vh'}" ref="modal" no-backdrop-dismiss no-esc-dismiss>
+    <q-modal v-model="opened" :content-css="{minWidth: '90vw', minHeight: '90vh'}" ref="modal" no-backdrop-dismiss no-esc-dismiss :maximized="maximized">
       <q-modal-layout>
         <q-toolbar slot="header">
           <q-toolbar-title>
-            Samplesheet ({{type.name}}) <span class="float-right">{{rootNode.allChildrenCount}} samples</span>
+            Samplesheet ({{type.name}}) <span class="float-right">{{rootNode.allChildrenCount}} samples <q-btn color="white" text-color="dark" label="Maximize" @click="maximized=true" v-if="!maximized"/><q-btn color="white" text-color="dark" label="Minimize" @click="maximized=false" v-if="maximized"/></span>
           </q-toolbar-title>
         </q-toolbar>
 
         <!-- <q-toolbar slot="header">
         </q-toolbar> -->
 
-        <div class="layout-padding">
+        <div style="height:100%">
           <q-btn
             color="primary"
             @click="show_help = true"
@@ -21,15 +21,18 @@
             icon="fas fa-question-circle"
             v-if="type.help"
           />
-          <ag-grid-vue style="width: 100%; height: 350px;" class="ag-theme-balham"
-            rowHeight='22'
+          <q-checkbox v-model="showDescriptions" label="Show descriptions"/> <q-checkbox v-model="showExamples" label="Show examples"/>
+          <ag-grid-vue style="width: 100%; max-height: 400px;" class="ag-theme-balham"
+            domLayout='autoHeight'
             rowSelection='multiple'
             :enableColResize='true'
             :enableSorting='true'
             :gridOptions='gridOptions'
             :rowData='rowData'
             :columnDefs='columnDefs'
-            :ref="'grid'">
+            :ref="'grid'"
+            :pinnedTopRowData="getExampleRows"
+            >
           </ag-grid-vue>
         </div>
         <q-toolbar slot="footer">
@@ -136,6 +139,9 @@ export default {
     return {
       opened: false,
       show_help: false,
+      showExamples: false,
+      showDescriptions: true,
+      // exampleRows: [], // [{}, {}],
       columnDefs: [
         {headerName: 'Make', field: 'make'},
         {headerName: 'Model', field: 'model'},
@@ -147,6 +153,11 @@ export default {
         enableRangeSelection: true,
         defaultColDef: {
           editable: this.editable
+        },
+        getRowStyle: function (params) {
+          if (params.node.rowPinned) {
+            return {'font-weight': 'bold'}
+          }
         },
         suppressMultiRangeSelection: true,
         suppressRowClickSelection: true,
@@ -165,7 +176,8 @@ export default {
           }
         }
       },
-      errors: {}
+      errors: {},
+      maximized: false
     }
   },
   methods: {
@@ -210,11 +222,23 @@ export default {
       }
       return columnDefs
     },
+    getColDescriptions (schema) {
+      var descriptions = {}
+      for (var prop in schema.properties) {
+        if (schema.properties.hasOwnProperty(prop)) {
+          descriptions[prop] = schema.properties[prop].description
+        }
+      }
+      console.log('descriptions', this.columnDefs)
+      return descriptions
+    },
     getColDef (id, definition, schema) {
       var self = this
       function cellClass (params) {
-        console.log('cellClass', params, self.errors)
-        if (self.errors[params.rowIndex] && self.errors[params.rowIndex][params.colDef.field]) {
+        // console.log('cellClass', params, self.errors)
+        if (params.node.rowPinned) {
+          return ['example']
+        } else if (self.errors[params.rowIndex] && self.errors[params.rowIndex][params.colDef.field]) {
           return ['error']
         }
         return []
@@ -306,9 +330,7 @@ export default {
       for (var i = 0; i < number; i++) {
         rows.push({})
       }
-      console.log('rows', rows)
       this.gridOptions.api.updateRowData({add: rows})
-      console.log('row count', this.gridOptions.api.getModel())
       // console.log('addRow', this.getRowData())
     },
     removeRows () {
@@ -339,6 +361,16 @@ export default {
       }
       return 0
       // return this.getRowData().length
+    },
+    getExampleRows () {
+      var examples = []
+      if (this.showDescriptions) {
+        examples.push(this.getColDescriptions(this.type.schema))
+      }
+      if (this.showExamples) {
+        examples.push({sample_name: 'example_sample'})
+      }
+      return examples
     }
   },
   components: {
@@ -354,5 +386,8 @@ export default {
 <style>
   .ag-row .error {
     background-color: pink;
+  }
+  .ag-row .example {
+    background-color: lightgrey !important;
   }
 </style>
