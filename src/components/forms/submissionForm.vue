@@ -31,7 +31,7 @@
               :warning="errors.name"
               warning-label="Hey, we got a warning."
             >
-              <q-input v-model="submission.name" type="text" stack-label="Full name"/>
+              <q-input v-model="submission.name" type="text" stack-label="* Full name"/>
             </q-field>
           </div>
           <div class="col-sm-12 col-md-6 col-lg-4">
@@ -39,7 +39,7 @@
               :error="errors.email"
               :error-label="errors.email"
             >
-              <q-input v-model="submission.email" type="email" :disable="submission.id != undefined" stack-label="Email"/>
+              <q-input v-model="submission.email" type="email" :disable="submission.id != undefined" stack-label="* Email"/>
             </q-field>
           </div>
           <div class="col-sm-12 col-md-6 col-lg-4">
@@ -47,18 +47,18 @@
               :error="errors.phone"
               :error-label="errors.phone"
             >
-              <q-input v-model="submission.phone" type="text" stack-label="Submitter phone"/>
+              <q-input v-model="submission.phone" type="text" stack-label="* Submitter phone"/>
             </q-field>
           </div>
         </div>
-        <p class="caption">PI</p>
+        <p class="caption">PI (<a class="link" @click="copySubmitter">Copy from submitter</a>)</p>
         <div class="row">
           <div class="col-sm-12 col-md-12 col-lg-4">
             <q-field
               :error="errors.pi_name"
               :error-label="errors.pi_name"
             >
-              <q-input v-model="submission.pi_name" type="text" stack-label="PI Full Name"/>
+              <q-input v-model="submission.pi_name" type="text" stack-label="* PI Full Name"/>
             </q-field>
           </div>
           <div class="col-sm-12 col-md-6 col-lg-4">
@@ -66,7 +66,7 @@
               :error="errors.pi_email"
               :error-label="errors.pi_email"
             >
-              <q-input v-model="submission.pi_email" type="text" stack-label="PI Email"/>
+              <q-input v-model="submission.pi_email" type="text" stack-label="* PI Email"/>
             </q-field>
           </div>
           <div class="col-sm-12 col-md-6 col-lg-4">
@@ -74,7 +74,7 @@
               :error="errors.institute"
               :error-label="errors.institute"
             >
-            <q-input v-model="submission.institute" type="text" stack-label="Institute"/>
+            <q-input v-model="submission.institute" type="text" stack-label="* Institute"/>
             </q-field>
           </div>
         </div>
@@ -92,7 +92,7 @@
                   {label: 'Credit Card', value: 'Credit Card'},
                   {label: 'DaFIS', value: 'DaFIS'}
                 ]"
-                stack-label="Payment Type"
+                stack-label="* Payment Type"
               />
             </q-field>
           </div>
@@ -106,7 +106,7 @@
           </div>
         </div>
         <q-field
-          label="Submission Type"
+          label="* Submission Type"
           label-width="2"
           :error="errors.type"
           :error-label="errors.type"
@@ -119,7 +119,7 @@
           />
         </q-field>
         <q-field
-          label="Samples"
+          label="* Samples"
           label-width="2"
           :error="errors.sample_data"
           :error-label="errors.sample_data"
@@ -239,6 +239,10 @@ export default {
           this.type = this.submission_types[i]
         }
       }
+    },
+    copySubmitter () {
+      this.submission.pi_name = this.submission.name
+      this.submission.pi_email = this.submission.email
     }
   },
   watch: {
@@ -280,4 +284,10 @@ export default {
   .q-field {
     padding: 0px 10px;
   }
+  .link {
+    color: -webkit-link;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
 </style>

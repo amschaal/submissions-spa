@@ -47,7 +47,7 @@ export default {
   props: ['id'],
   data () {
     return {
-      submission: {'sample_data': [{}]},
+      submission: {'sample_data': []},
       errors: {},
       submission_types: [],
       type_options: [],
@@ -103,7 +103,7 @@ export default {
             Vue.set(self.submission, 'type', response.data.type.id)
           })
       } else {
-        this.submission = {'sample_data': [{}, {}]}
+        this.submission = {'sample_data': []}
       }
     }
   },

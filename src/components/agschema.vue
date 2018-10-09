@@ -34,11 +34,26 @@
         </div>
         <q-toolbar slot="footer">
           <q-toolbar-title v-if="editable">
-            <q-btn
+            <q-btn-dropdown split label="Add row" @click="addRow(1)" color="positive">
+              <!-- dropdown content -->
+              <q-list link>
+                <q-item v-close-overlay @click.native="addRow(10)">
+                  <q-item-main>
+                    <q-item-tile label>Add 10</q-item-tile>
+                  </q-item-main>
+                </q-item>
+                <q-item v-close-overlay @click.native="addRow(25)">
+                  <q-item-main>
+                    <q-item-tile label>Add 25</q-item-tile>
+                  </q-item-main>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
+            <!-- <q-btn
               color="positive"
               label="Add Row"
               @click="addRow"
-            />
+            /> -->
             <q-btn
               color="negative"
               label="Remove selected rows"
@@ -89,7 +104,7 @@
         </div>
       </q-modal-layout>
     </q-modal>
-    <q-btn label="Samplesheet"  @click="openSamplesheet"/>
+    <q-btn :label="'Samplesheet ('+rowData.length+')'"  @click="openSamplesheet"/>
   </div>
 </template>
 <!-- <link type="text/css" rel="stylesheet" href="https://docs.handsontable.com/4.0.0/components/handsontable/dist/handsontable.full.min.css"> -->
@@ -154,6 +169,8 @@ export default {
   },
   methods: {
     openSamplesheet () {
+      var self = this
+      this.errors = {}
       this.rowData = _.cloneDeep(this.value)
       if (!this.type || !this.type.schema) {
         this.$q.dialog({
@@ -165,7 +182,9 @@ export default {
       this.columnDefs = this.schema2Columns(this.type.schema)
       console.log('openSamplesheet', this.rowData, this.value, this.columnDefs)
       this.$refs.modal.show().then(() => {
-        // alert('do stuff')
+        if (self.value.length === 0) {
+          self.addRow()
+        }
       })
     },
     schema2Columns (schema) {
@@ -277,8 +296,13 @@ export default {
       })
       return data
     },
-    addRow () {
-      this.gridOptions.api.updateRowData({add: [{}]})
+    addRow (number) {
+      var rows = []
+      for (var i = 0; i < number; i++) {
+        rows.push({})
+      }
+      console.log('rows', rows)
+      this.gridOptions.api.updateRowData({add: rows})
       console.log('addRow', this.getRowData())
     },
     removeRows () {
