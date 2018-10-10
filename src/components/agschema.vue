@@ -14,6 +14,7 @@
         </q-toolbar> -->
 
         <div style="height:100%">
+          <!-- {{type}} -->
           <q-btn
             color="primary"
             @click="show_help = true"
@@ -21,7 +22,7 @@
             icon="fas fa-question-circle"
             v-if="type.help"
           />
-          <q-checkbox v-model="showDescriptions" label="Show descriptions"/> <q-checkbox v-model="showExamples" label="Show examples"/>
+          <q-checkbox v-model="showDescriptions" label="Show descriptions"/> <q-checkbox v-model="showExamples" label="Show examples" v-if="allowExamples"/>
           <ag-grid-vue style="width: 100%; max-height: 400px;" class="ag-theme-balham"
             domLayout='autoHeight'
             rowSelection='multiple'
@@ -134,7 +135,7 @@ import _ from 'lodash'
 // var clipboardService = null
 
 export default {
-  props: ['value', 'type', 'editable'],
+  props: ['value', 'type', 'editable', 'allowExamples'],
   data () {
     return {
       opened: false,
@@ -292,7 +293,8 @@ export default {
       console.log('validate', save)
       var self = this
       if (this.type) {
-        this.$axios.post('/api/submission_types/' + this.type.id + '/validate_data/', {data: this.getRowData(true)})
+        // this.$axios.post('/api/submission_types/' + this.type.id + '/validate_data/', {data: this.getRowData(true)})
+        this.$axios.post('/api/validate/', {schema: this.type.schema, data: this.getRowData(true)})
           .then(function (response) {
             console.log(response)
             self.errors = {}
@@ -368,7 +370,8 @@ export default {
         examples.push(this.getColDescriptions(this.type.schema))
       }
       if (this.showExamples) {
-        examples.push({sample_name: 'example_sample'})
+        console.log('examples', this.type.examples)
+        examples = examples.concat(this.type.examples)
       }
       return examples
     }

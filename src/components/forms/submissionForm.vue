@@ -125,7 +125,7 @@
           :error-label="errors.sample_data"
         >
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
-          <Agschema v-model="submission.sample_data" :type="type" :editable="true"/>
+          <Agschema v-model="submission.sample_data" :type="type" :editable="true" :allow-examples="true"/>
         </q-field>
         <span v-if="debug">
           <p>SCHEMA:

@@ -37,6 +37,7 @@
             ]"
           />
         </q-field>
+        <Agschema v-model="type.examples" :type="type" :editable="true" v-if="type.schema.properties"/>
         <h6>Column Definitions</h6>
         <table v-if="type.schema" style="width:100%">
           <tr><th></th><th>Required</th><th>Variable</th><th>Type</th><th></th></tr>
@@ -108,17 +109,19 @@ import '../components/forms/docs-input.styl'
 // import axios from 'axios'
 import Fieldoptions from '../components/fieldoptions.vue'
 import Vue from 'vue'
+import Agschema from '../components/agschema.vue'
 export default {
   name: 'submission_type',
   props: ['id'],
   data () {
     return {
-      type: {help: '', schema: {properties: {}, order: []}},
+      type: {help: '', examples: [], schema: {properties: {}, order: [], required: []}},
       errors: {},
       type_options: [{ 'label': 'Text', 'value': 'string' }, { 'label': 'Number', 'value': 'number' }, { 'label': 'True / False', 'value': 'boolean' }],
       schema: [],
       new_variable: {},
-      variable_modal: false
+      variable_modal: false,
+      examples: []
     }
   },
   mounted: function () {
@@ -130,6 +133,9 @@ export default {
         .get('/api/submission_types/' + self.id + '/')
         .then(function (response) {
           self.type = response.data
+          if (!self.type.examples) {
+            self.type.examples = []
+          }
         })
     }
   },
@@ -257,7 +263,8 @@ export default {
 
   },
   components: {
-    Fieldoptions
+    Fieldoptions,
+    Agschema
   }
 }
 </script>

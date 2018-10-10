@@ -2,7 +2,7 @@
   <div>
         <div class="row">
           <div class="col-sm-12">
-            <p class="caption">Type</p>Test
+            <p class="caption">Type</p>
             <span v-if="submission && submission.type">{{submission.type.name}}</span><span v-else>None</span>
           </div>
         </div>
