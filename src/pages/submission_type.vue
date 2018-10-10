@@ -37,7 +37,10 @@
             ]"
           />
         </q-field>
-        <Agschema v-model="type.examples" :type="type" :editable="true" v-if="type.schema.properties"/>
+        <div v-if="type.schema.properties">
+          <Agschema v-model="type.examples" :type="type" :editable="true"  ref="samplesheet"/>
+          <q-btn :label="'Examples ('+type.examples.length+')'"  @click="openExamples"/>
+        </div>
         <h6>Column Definitions</h6>
         <table v-if="type.schema" style="width:100%">
           <tr><th></th><th>Required</th><th>Variable</th><th>Type</th><th></th></tr>
@@ -143,6 +146,9 @@ export default {
     openModal () {
       this.new_variable = {}
       this.variable_modal = true
+    },
+    openExamples () {
+      this.$refs.samplesheet.openSamplesheet()
     },
     variableError (name) {
       return this.variableMessage(name) !== null

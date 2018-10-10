@@ -45,7 +45,8 @@
           </div>
         </div>
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
-          <Agschema v-model="submission.sample_data" :type="submission.type" :editable="false"/>
+          <Agschema v-model="submission.sample_data" :type="submission.type" :editable="false" ref="samplesheet"/>
+          <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet"/>
       </div>
 </template>
 
@@ -79,6 +80,11 @@ export default {
   //       //   })
   //     })
   // },
+  methods: {
+    openSamplesheet () {
+      this.$refs.samplesheet.openSamplesheet()
+    }
+  },
   components: {
     Agschema
   }

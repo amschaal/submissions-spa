@@ -108,7 +108,6 @@
         </div>
       </q-modal-layout>
     </q-modal>
-    <q-btn :label="'Samplesheet ('+rowData.length+')'"  @click="openSamplesheet"/>
   </div>
 </template>
 <!-- <link type="text/css" rel="stylesheet" href="https://docs.handsontable.com/4.0.0/components/handsontable/dist/handsontable.full.min.css"> -->

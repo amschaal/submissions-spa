@@ -125,7 +125,8 @@
           :error-label="errors.sample_data"
         >
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
-          <Agschema v-model="submission.sample_data" :type="type" :editable="true" :allow-examples="true"/>
+          <Agschema v-model="submission.sample_data" :type="type" :editable="true" :allow-examples="true" ref="samplesheet"/>
+          <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet"/>
         </q-field>
         <span v-if="debug">
           <p>SCHEMA:
@@ -206,11 +207,14 @@ export default {
     }
   },
   methods: {
+    openSamplesheet () {
+      this.$refs.samplesheet.openSamplesheet()
+    },
     submit () {
       var self = this
       var id = this.submission.id
-      var action = id ? 'put' : 'post'
-      var url = id ? '/api/submissions/' + id + '/update/' : '/api/submit/'
+      var action = this.create ? 'post' : 'put'
+      var url = !this.create ? '/api/submissions/' + id + '/update/' : '/api/submit/'
       this.$axios[action]('' + url, this.submission)
         .then(function (response) {
           // console.log('submit', self.$emit)
@@ -218,7 +222,7 @@ export default {
           // console.log(response)
           self.$q.notify({message: 'Submission successfully saved.', type: 'positive'})
           self.$emit('submission_updated', self.submission)
-          if (!id) {
+          if (self.create) {
             self.$router.push({name: 'submission', params: {id: response.data.id}})
           }
         })
