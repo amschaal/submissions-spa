@@ -7,8 +7,7 @@
       <q-tab slot="title" name="comments" label="comments"  v-if="submission.id"/>
 
     <q-tab-pane name="submission">
-
-      <q-btn v-if="submission.editable && !modify" label="Modify" class="float-right" @click="modify=true"/> <Lock class="float-right" v-if="submission.id" :submission="submission"/>
+      <q-btn v-if="submission.editable && !modify" label="Modify" class="float-right" @click="$router.push({name: 'modify_submission', params: {id: submission.id}})"/> <Lock class="float-right" v-if="submission.id" :submission="submission"/>
       <q-card-main>
         <SubmissionForm :submission="submission" :create="create" :submission_types="submission_types" :type_options="type_options" :id="id" v-if="modify || create" v-on:submission_updated="submissionUpdated"/>
         <Submission :submission="submission" v-if="!modify && submission.id"/>
@@ -44,34 +43,36 @@ import Vue from 'vue'
 
 export default {
   name: 'submission',
-  props: ['id'],
+  props: ['id', 'create', 'modify'],
   data () {
     return {
       submission: {'sample_data': []},
       errors: {},
       submission_types: [],
-      type_options: [],
+      type_options: this.$store.getters.typeOptions
       // type: {},
       // debug: false,
-      modify: false,
-      create: false
+      // modify: false,
+      // create: false
     }
   },
   mounted: function () {
     console.log('mounted')
     var self = this
-    if (!this.id || this.id === 'create') {
-      this.create = true
-    }
-    this.$axios
-      .get('/api/submission_types/?show=true')
-      .then(function (response) {
-        console.log('response', response)
-        console.log('id', self.id)
-        self.type_options = response.data.results.map(opt => ({label: opt.name, value: opt.id}))
-        self.submission_types = response.data.results
-      })
-    if (!self.create) {
+
+    // if (!this.id || this.id === 'create') {
+    //   this.create = true
+    // }
+    // this.$axios
+    //   .get('/api/submission_types/?show=true')
+    //   .then(function (response) {
+    //     console.log('response', response)
+    //     console.log('id', self.id)
+    //     self.type_options = response.data.results.map(opt => ({label: opt.name, value: opt.id}))
+    //     self.submission_types = response.data.results
+    //   })
+    if (this.id) {
+      console.log('id', this.id)
       this.$axios
         .get(`/api/submissions/${self.id}/`)
         .then(function (response) {
@@ -83,18 +84,18 @@ export default {
   },
   methods: {
     submissionUpdated (submission) {
-      this.modify = false
+      // this.modify = false
       this.submission = submission
     }
   },
   watch: {
     'id': function (id) {
       console.log('id', id)
-      if (!id || id === 'create') {
-        this.create = true
-      }
+      // if (!id || id === 'create') {
+      //   this.create = true
+      // }
       var self = this
-      if (self.id && self.id !== 'create') {
+      if (this.id) {
         self.$axios
           .get('/api/submissions/' + self.id)
           .then(function (response) {

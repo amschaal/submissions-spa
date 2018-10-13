@@ -11,3 +11,12 @@ export const fetchValidators = (context, {axios}) => {
       console.log(error.message)
     })
 }
+export const fetchTypes = (context, {axios}) => {
+  return axios.get('/api/submission_types/?page_size=100&show=true')
+    .then(function (response) {
+      context.commit('types', response.data.results)
+    })
+    .catch(function (error) {
+      console.log(error.message)
+    })
+}

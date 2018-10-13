@@ -137,7 +137,7 @@
           </p>
         </span>
         <q-card-actions>
-          <q-btn @click="submit" label="Submit"></q-btn>
+          <q-btn @click="submit" label="Submit"></q-btn> <q-btn v-if="submission.id" label="Cancel" color="negative" class="float-right" @click="$router.push({name: 'submission', params: {id: submission.id}})"/>
         </q-card-actions>
       </div>
 </template>
@@ -177,7 +177,7 @@ export default {
       if (this.submission.type.id) {
         this.submission.type = this.submission.type.id
       } else {
-        this.assignType(this.submission.type)
+        this.type = this.$store.getters.typesDict[this.submission.type]
       }
     }
 
@@ -217,14 +217,15 @@ export default {
       var url = !this.create ? '/api/submissions/' + id + '/update/' : '/api/submit/'
       this.$axios[action]('' + url, this.submission)
         .then(function (response) {
-          // console.log('submit', self.$emit)
+          console.log('submit', response)
           self.errors = {}
+          self.submission = response.data
           // console.log(response)
           self.$q.notify({message: 'Submission successfully saved.', type: 'positive'})
-          self.$emit('submission_updated', self.submission)
-          if (self.create) {
-            self.$router.push({name: 'submission', params: {id: response.data.id}})
-          }
+          // self.$emit('submission_updated', self.submission)
+          // if (self.create) {
+          self.$router.push({name: 'submission', params: {id: response.data.id}})
+          // }
         })
         .catch(function (error, stuff) {
           // raise different exception if due to invalid credentials
@@ -236,14 +237,14 @@ export default {
           throw error
         })
     },
-    assignType (id) {
-      for (var i in this.submission_types) {
-        if (this.submission_types[i].id === id) {
-          // console.log('type', this.submission_types[i])
-          this.type = this.submission_types[i]
-        }
-      }
-    },
+    // assignType (id) {
+    //   for (var i in this.submission_types) {
+    //     if (this.submission_types[i].id === id) {
+    //       // console.log('type', this.submission_types[i])
+    //       this.type = this.submission_types[i]
+    //     }
+    //   }
+    // },
     copySubmitter () {
       this.submission.pi_name = this.submission.name
       this.submission.pi_email = this.submission.email
@@ -251,7 +252,9 @@ export default {
   },
   watch: {
     'submission.type': function (id) {
-      this.assignType(id)
+      // this.assignType(id)
+      this.type = this.$store.getters.typesDict[id]
+      console.log('type', id, this.type, this.$store.getters.typesDict)
       // this.type = this.submission.type
       // this.submission.type = this.type.id
     }

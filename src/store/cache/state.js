@@ -1,3 +1,4 @@
 export default {
-  validators: null
+  validators: null,
+  types: []
 }

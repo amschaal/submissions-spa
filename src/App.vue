@@ -22,6 +22,7 @@ export default {
     // var self = this
     this.$store.dispatch('checkAuth', {axios: this.$axios})
     this.$store.dispatch('fetchValidators', {axios: this.$axios})
+    this.$store.dispatch('fetchTypes', {axios: this.$axios})
     console.log('$store', this.$store)
     // once mounted, we need to trigger
     // console.log('set axios defaults', [document.cookie, document])

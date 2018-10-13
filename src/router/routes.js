@@ -10,13 +10,23 @@ export default [
         component: () => import('pages/submissions'),
         name: 'submissions'
       },
+      { path: '/submissions/create',
+        component: () => import('pages/submission'),
+        name: 'create_submission',
+        props: {create: true, id: null}
+      },
       {
         path: '/submissions/:id',
         component: () => import('pages/submission'),
         name: 'submission',
         props: true
       },
-      { path: '/submissions/create', component: () => import('pages/submission'), name: 'create_submission' },
+      {
+        path: '/submissions/:id/modify/',
+        component: () => import('pages/submission'),
+        name: 'modify_submission',
+        props: (route) => ({ id: route.params.id, modify: true })
+      },
       {
         path: '/submission_types',
         component: () => import('pages/submission_types'),

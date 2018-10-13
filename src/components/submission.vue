@@ -3,7 +3,7 @@
         <div class="row">
           <div class="col-sm-12">
             <p class="caption">Type</p>
-            <span v-if="submission && submission.type">{{submission.type.name}}</span><span v-else>None</span>
+            {{submission_type.name}}
           </div>
         </div>
         <div class="row">
@@ -45,7 +45,7 @@
           </div>
         </div>
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
-          <Agschema v-model="submission.sample_data" :type="submission.type" :editable="false" ref="samplesheet"/>
+          <Agschema v-model="submission.sample_data" :type="submission_type" :editable="false" ref="samplesheet"/>
           <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet"/>
       </div>
 </template>
@@ -83,6 +83,16 @@ export default {
   methods: {
     openSamplesheet () {
       this.$refs.samplesheet.openSamplesheet()
+    }
+  },
+  computed: {
+    submission_type () {
+      if (this.submission && this.submission.type && this.submission.type.id) {
+        return this.submission.type
+      } else if (this.submission && this.submission.type) {
+        return this.$store.getters.typesDict[this.submission.type]
+      }
+      return {}
     }
   },
   components: {
