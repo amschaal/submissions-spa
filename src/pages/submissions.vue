@@ -23,6 +23,7 @@
           <q-td key="name" :props="props">{{ props.row.name }}</q-td>
           <q-td key="email" :props="props">{{ props.row.email }}</q-td>
           <q-td key="pi_email" :props="props">{{ props.row.pi_email }}</q-td>
+          <q-td key="sample_data" :props="props"><span v-if="props.row.sample_data">{{ props.row.sample_data.length }}</span></q-td>
         </q-tr>
       </template>
     </q-table>
@@ -54,7 +55,8 @@ export default {
         { name: 'submitted', label: 'Submitted', field: 'submitted', sortable: true },
         { name: 'name', label: 'Name', field: 'name' },
         { name: 'email', label: 'Email', field: 'email', sortable: true },
-        { name: 'pi_email', label: 'PI', field: 'pi_email', sortable: true }
+        { name: 'pi_email', label: 'PI', field: 'pi_email', sortable: true },
+        { name: 'sample_data', label: 'Samples', field: 'sample_data' }
       ]
     }
   },

@@ -43,11 +43,12 @@
         </div>
         <h6>Column Definitions</h6>
         <table v-if="type.schema" style="width:100%">
-          <tr><th></th><th>Required</th><th>Variable</th><th>Type</th><th></th></tr>
+          <tr><th></th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th></th></tr>
           <tr v-for="variable in type_options_sorted" :key="variable.variable">
             <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1)" v-if="type.schema.order && type.schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1)" v-if="type.schema.order && type.schema.order.indexOf(variable.variable) != type.schema.order.length - 1"/>
             <td><q-checkbox v-model="type.schema.required" :val="variable.variable"/></td>
             <td>{{variable.variable}}</td>
+            <td><q-input v-model="variable.schema.title" /></td>
             <td>
               <q-select
                 v-model="variable.schema.type"

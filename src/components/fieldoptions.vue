@@ -16,14 +16,8 @@
         </q-toolbar>
 
         <div class="layout-padding">
-          {{data}}
-          {{validators}}
-          <q-field
-            label="Title"
-            helper="This will be displayed as the column header"
-          >
-            <q-input v-model="data.title" />
-          </q-field>
+          <!-- {{data}}
+          {{validators}} -->
           <q-field
             label="Description"
           >
