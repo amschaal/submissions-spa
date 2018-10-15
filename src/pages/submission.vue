@@ -9,8 +9,8 @@
     <q-tab-pane name="submission">
       <q-btn v-if="submission.editable && !modify" label="Modify" class="float-right" @click="$router.push({name: 'modify_submission', params: {id: submission.id}})"/> <Lock class="float-right" v-if="submission.id" :submission="submission"/>
       <q-card-main>
-        <SubmissionForm :submission="submission" :create="create" :submission_types="submission_types" :type_options="type_options" :id="id" v-if="modify || create" v-on:submission_updated="submissionUpdated"/>
-        <Submission :submission="submission" v-if="!modify && submission.id"/>
+        <SubmissionForm :create="create" :submission_types="submission_types" :type_options="type_options" :id="id" v-if="(modify && id) || create" v-on:submission_updated="submissionUpdated"/>
+        <Submission :submission="submission" v-if="!modify && id"/>
       </q-card-main>
     </q-tab-pane>
     <q-tab-pane name="files"  v-if="submission.id">
@@ -77,15 +77,20 @@ export default {
         .get(`/api/submissions/${self.id}/`)
         .then(function (response) {
           console.log('response', response)
-          self.submission = response.data
-          // Vue.set(self.submission, 'type', response.data.type.id)
+          if (!response.data.sample_data) {
+            response.data.sample_data = []
+          }
+          // self.submission = response.data
+          Vue.set(self, 'submission', response.data)
         })
     }
   },
   methods: {
     submissionUpdated (submission) {
       // this.modify = false
-      this.submission = submission
+      console.log('submissionUpdated', submission)
+      Vue.set(this, 'submission', submission)
+      // this.submission = submission
     }
   },
   watch: {

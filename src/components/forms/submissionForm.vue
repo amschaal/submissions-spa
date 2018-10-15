@@ -148,14 +148,14 @@ import './docs-input.styl'
 // import Samplesheet from '../../components/samplesheet.vue'
 import Agschema from '../../components/agschema.vue'
 // import Files from '../../components/files.vue'
-// import Vue from 'vue'
+import Vue from 'vue'
 
 export default {
   // name: 'submission',
-  props: ['submission', 'submission_types', 'type_options', 'create'],
+  props: ['id', 'submission_types', 'type_options', 'create'],
   data () {
     return {
-      // submission: {'sample_data': [{}]},
+      submission: {'sample_data': []},
       errors: {},
       // submission_types: [{ foo: 'bar' }],
       // type_options: [{ 'label': 'test', 'value': 2 }],
@@ -170,8 +170,17 @@ export default {
     console.log('type', this.type)
     console.log('submission.type', this.submission.type)
     var self = this
-    if (this.id === 'create') {
-      this.create = true
+    if (!this.create) {
+      this.$axios
+        .get(`/api/submissions/${self.id}/`)
+        .then(function (response) {
+          console.log('response', response)
+          if (!response.data.sample_data) {
+            response.data.sample_data = []
+          }
+          self.submission = response.data
+          Vue.set(self.submission, 'type', response.data.type.id)
+        })
     }
     if (this.submission.type) {
       if (this.submission.type.id) {
@@ -222,7 +231,7 @@ export default {
           self.submission = response.data
           // console.log(response)
           self.$q.notify({message: 'Submission successfully saved.', type: 'positive'})
-          // self.$emit('submission_updated', self.submission)
+          self.$emit('submission_updated', self.submission)
           // if (self.create) {
           self.$router.push({name: 'submission', params: {id: response.data.id}})
           // }
@@ -246,8 +255,8 @@ export default {
     //   }
     // },
     copySubmitter () {
-      this.submission.pi_name = this.submission.name
-      this.submission.pi_email = this.submission.email
+      Vue.set(this.submission, 'pi_name', this.submission.name)
+      Vue.set(this.submission, 'pi_email', this.submission.email)
     }
   },
   watch: {
