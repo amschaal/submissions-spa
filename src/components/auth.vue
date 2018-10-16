@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-modal v-model="opened" :content-css="{minHeight: '90vh'}" ref="modal">
+    <q-modal v-model="opened" ref="modal" @hide="clear()">
       <q-modal-layout>
         <q-toolbar slot="header">
           <q-toolbar-title>
@@ -11,11 +11,14 @@
         <div class="layout-padding">
           <q-field
             label="Username"
+            :error="error"
           >
             <q-input v-model="username"/>
           </q-field>
           <q-field
             label="Password"
+            :error="error"
+            error-label="Authentication failed"
           >
             <q-input v-model="password" type="password"/>
           </q-field>
@@ -43,7 +46,8 @@ export default {
     return {
       opened: this.show_login,
       username: null,
-      password: null
+      password: null,
+      error: false
     }
   },
   methods: {
@@ -52,22 +56,21 @@ export default {
       console.log('$auth', this.$store._actions)
       this.$store.dispatch('login', {username: this.username, password: this.password, axios: this.$axios}).then(
         function () {
+          self.clear()
           self.opened = false
+        }).catch(
+        function (error) {
+          console.log('caught error', error)
+          self.error = true
         })
-      // console.log('login')
-      // this.opened = true
-      // // axios.defaults.withCredentials = true
-      // axios
-      //   .post(`http://127.0.0.1:8002/api/login/`, {username: this.username, password: this.password}) //, headers: {'X-CSRFToken': 'Bar'}
-      //   .then(({ data }) => {
-      //     console.log('login', data)
-      //   })
-      //   .catch(error => {
-      //     console.log('error', error)
-      //   })
     },
     logout () {
       this.$store.dispatch('logout', {axios: this.$axios})
+    },
+    clear () {
+      this.error = false
+      this.username = ''
+      this.password = ''
     }
   },
   mounted () {
