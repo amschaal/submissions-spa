@@ -30,6 +30,15 @@
             <q-checkbox v-model="data.unique" indeterminate-icon="check_box_outline_blank"/>
             <!-- :false-value="undefined" toggle-indeterminate="false" indeterminate-value="none"/> -->
           </q-field>
+          <q-field
+            label="Pin column"
+          >
+          <q-select
+            v-model="data.pinned"
+            radio
+           :options="[{label:'Not pinned',value:undefined},{label:'Pinned left',value:'left'},{label:'Pinned right',value:'right'}]"
+          />
+          </q-field>
           <q-field v-if="data.type === 'string'"
             label="Regular Expression"
             helper="Enter a valid regular expression to validate against. Example for matching values such as '20.3 ul': ^\d+(\.{1}\d+)? ul$"
