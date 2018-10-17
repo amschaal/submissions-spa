@@ -4,12 +4,21 @@
       ref="table"
       :data="serverData"
       :columns="columns"
+      :visible-columns="visibleColumns"
       :filter="filter"
       row-key="id"
       :pagination.sync="serverPagination"
       :loading="loading"
       @request="request"
     >
+      <template slot="top-left" slot-scope="props">
+        <q-table-columns
+          color="secondary"
+          class="q-mr-sm"
+          v-model="visibleColumns"
+          :columns="columns"
+        />
+      </template>
       <template slot="top-right" slot-scope="props">
         <q-search hide-underline v-model="filter" />
       </template>
@@ -59,7 +68,8 @@ export default {
         { name: 'email', label: 'Email', field: 'email', sortable: true },
         { name: 'pi_email', label: 'PI', field: 'pi_email', sortable: true },
         { name: 'sample_data', label: 'Samples', field: 'sample_data' }
-      ]
+      ],
+      visibleColumns: ['locked', 'id', 'internal_id', 'type', 'status__order', 'submitted', 'name', 'email', 'pi_email', 'sample_data']
     }
   },
   methods: {

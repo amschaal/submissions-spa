@@ -7,7 +7,6 @@
       <q-tab slot="title" name="comments" label="comments"  v-if="submission.id"/>
 
     <q-tab-pane name="submission">
-      <q-btn v-if="submission.editable && !modify" label="Modify" class="float-right" @click="$router.push({name: 'modify_submission', params: {id: submission.id}})"/> <Lock class="float-right" v-if="submission.id" :submission="submission"/>
       <q-card-main>
         <SubmissionForm :create="create" :submission_types="submission_types" :type_options="type_options" :id="id" v-if="(modify && id) || create" v-on:submission_updated="submissionUpdated"/>
         <Submission :submission="submission" v-if="!modify && id"/>
@@ -38,7 +37,6 @@ import SubmissionForm from '../components/forms/submissionForm.vue'
 import Submission from '../components/submission.vue'
 import Files from '../components/files.vue'
 import NotesTree from '../components/notesTree.vue'
-import Lock from '../components/lock.vue'
 import Vue from 'vue'
 
 export default {
@@ -126,7 +124,6 @@ export default {
     Files,
     SubmissionForm,
     NotesTree,
-    Lock,
     Submission
   }
 }
