@@ -1,5 +1,6 @@
 <template>
   <div>
+        <StatusSelector v-model="submission.status" :submission="submission" v-if="submission.id"/>
         <div class="row">
           <div class="col-sm-12">
             <p class="caption">Type</p>
@@ -53,6 +54,7 @@
 <script>
 // import './docs-input.styl'
 import Agschema from './agschema.vue'
+import StatusSelector from './statusSelector.vue'
 // import Vue from 'vue'
 
 export default {
@@ -96,7 +98,8 @@ export default {
     }
   },
   components: {
-    Agschema
+    Agschema,
+    StatusSelector
   }
 }
 </script>

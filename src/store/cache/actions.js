@@ -20,3 +20,12 @@ export const fetchTypes = (context, {axios}) => {
       console.log(error.message)
     })
 }
+export const fetchStatuses = (context, {axios}) => {
+  return axios.get('/api/statuses/?page_size=100&show=true')
+    .then(function (response) {
+      context.commit('statuses', response.data.results)
+    })
+    .catch(function (error) {
+      console.log(error.message)
+    })
+}

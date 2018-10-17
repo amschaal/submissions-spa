@@ -8,17 +8,31 @@ export const validatorDict = (state) => {
   }
   return validators
 }
+function createDict (objs, idField) {
+  var dict = {}
+  var id = idField || 'id'
+  for (var i in objs) {
+    dict[objs[i][id]] = objs[i]
+  }
+  return dict
+}
 export const types = (state) => {
   return state.types
 }
 export const typesDict = (state) => {
-  var types = {}
-  for (var i in state.types) {
-    types[state.types[i].id] = state.types[i]
-  }
-  return types
+  return createDict(state.types)
 }
 export const typeOptions = (state) => {
   console.log('typeOptions', state)
   return state.types.map(opt => ({label: opt.name, value: opt.id}))
+}
+export const statuses = (state) => {
+  return state.statuses
+}
+export const statusesDict = (state) => {
+  return createDict(state.statuses)
+}
+export const statusOptions = (state) => {
+  console.log('getting status options', state.statuses)
+  return state.statuses.map(opt => ({label: opt.name, value: opt.id}))
 }

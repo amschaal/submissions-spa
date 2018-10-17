@@ -19,7 +19,7 @@
           <q-td key="id" :props="props"><router-link :to="{ name: 'submission', params: { id: props.row.id }}">{{ props.row.id }}</router-link></q-td>
           <q-td key="internal_id" :props="props">{{ props.row.internal_id }}</q-td>
           <q-td key="type" :props="props"><router-link :to="{'name': 'submission_type', 'params': { id: props.row.type.id }}">{{ props.row.type.name }}</router-link></q-td>
-          <q-td key="status" :props="props">{{ props.row.status }}</q-td>
+          <q-td key="status__order" :props="props">{{ props.row.status ? props.row.status.name : '' }}</q-td>
           <q-td key="submitted" :props="props">{{ props.row.submitted }}</q-td>
           <q-td key="name" :props="props">{{ props.row.name }}</q-td>
           <q-td key="email" :props="props">{{ props.row.email }}</q-td>
@@ -53,7 +53,7 @@ export default {
         { name: 'id', label: 'Id', field: 'id', sortable: true },
         { name: 'internal_id', label: 'Internal Id', field: 'internal_id', sortable: true },
         { name: 'type', label: 'Type', field: 'type' },
-        { name: 'status', label: 'Status', field: 'status' },
+        { name: 'status__order', label: 'Status', field: 'status', sortable: true },
         { name: 'submitted', label: 'Submitted', field: 'submitted', sortable: true },
         { name: 'name', label: 'Name', field: 'name' },
         { name: 'email', label: 'Email', field: 'email', sortable: true },
