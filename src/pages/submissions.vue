@@ -24,8 +24,8 @@
         <q-search hide-underline v-model="filter" />
       </template>
       <template slot="body" slot-scope="props">
-        <q-tr :props="props">
-          <q-td key="locked" :props="props"><q-icon size="18px" name="lock" v-if="props.row.locked" color="red"/><q-icon size="18px" name="lock_open" v-else color="green"/></q-td>
+        <q-tr :props="props" v-bind:class="{'cancelled': props.row.cancelled}">
+          <q-td key="locked" :props="props"><q-icon size="18px" name="cancel" v-if="props.row.cancelled" color="red" title="Submission cancelled"/><q-icon size="18px" name="lock" v-if="props.row.locked" color="red"/><q-icon size="18px" name="lock_open" v-else color="green"/></q-td>
           <q-td key="id" :props="props"><router-link :to="{ name: 'submission', params: { id: props.row.id }}">{{ props.row.id }}</router-link></q-td>
           <q-td key="internal_id" :props="props">{{ props.row.internal_id }}</q-td>
           <q-td key="type" :props="props"><router-link :to="{'name': 'submission_type', 'params': { id: props.row.type.id }}">{{ props.row.type.name }}</router-link></q-td>
@@ -126,3 +126,8 @@ export default {
   }
 }
 </script>
+<style>
+tr.cancelled td, tr.cancelled td a {
+  color: red;
+}
+</style>

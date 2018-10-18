@@ -5,7 +5,6 @@
             <StatusSelector v-model="submission.status" :submission="submission" v-if="submission.id"/>
           </div>
           <div class="col-sm-12 col-lg-8">
-
             <q-btn v-if="submission.editable && !modify && !submission.cancelled" label="Modify" class="float-right" @click="$router.push({name: 'modify_submission', params: {id: submission.id}})"/>
             <Lock class="float-right" v-if="submission.id" :submission="submission"/>
             <Cancel class="float-right" v-if="submission.id" :submission="submission"/>

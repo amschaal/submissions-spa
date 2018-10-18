@@ -8,6 +8,7 @@
 
     <q-tab-pane name="submission">
       <q-card-main>
+        <h3 v-if="submission.cancelled" class="text-red">Submission cancelled</h3>
         <SubmissionForm :create="create" :submission_types="submission_types" :type_options="type_options" :id="id" v-if="(modify && id) || create" v-on:submission_updated="submissionUpdated"/>
         <Submission :submission="submission" v-if="!modify && id"/>
       </q-card-main>
