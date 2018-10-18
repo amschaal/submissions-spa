@@ -5,7 +5,10 @@
             <StatusSelector v-model="submission.status" :submission="submission" v-if="submission.id"/>
           </div>
           <div class="col-sm-12 col-lg-8">
-            <q-btn v-if="submission.editable && !modify" label="Modify" class="float-right" @click="$router.push({name: 'modify_submission', params: {id: submission.id}})"/> <Lock class="float-right" v-if="submission.id" :submission="submission"/>
+
+            <q-btn v-if="submission.editable && !modify && !submission.cancelled" label="Modify" class="float-right" @click="$router.push({name: 'modify_submission', params: {id: submission.id}})"/>
+            <Lock class="float-right" v-if="submission.id" :submission="submission"/>
+            <Cancel class="float-right" v-if="submission.id" :submission="submission"/>
           </div>
         </div>
         <div class="row">
@@ -69,6 +72,7 @@
 import Agschema from './agschema.vue'
 import StatusSelector from './statusSelector.vue'
 import Lock from './lock.vue'
+import Cancel from './cancel.vue'
 // import Vue from 'vue'
 
 export default {
@@ -114,7 +118,8 @@ export default {
   components: {
     Agschema,
     StatusSelector,
-    Lock
+    Lock,
+    Cancel
   }
 }
 </script>
