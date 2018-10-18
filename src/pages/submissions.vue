@@ -10,6 +10,7 @@
       :pagination.sync="serverPagination"
       :loading="loading"
       @request="request"
+      binary-state-sort
     >
       <template slot="top-left" slot-scope="props">
         <q-table-columns
@@ -24,16 +25,17 @@
       </template>
       <template slot="body" slot-scope="props">
         <q-tr :props="props">
-          <q-td key="locked" :props="props"><q-icon size="18px" name="lock" v-if="props.row.locked"/><q-icon size="18px" name="lock_open" v-else/></q-td>
+          <q-td key="locked" :props="props"><q-icon size="18px" name="lock" v-if="props.row.locked" color="red"/><q-icon size="18px" name="lock_open" v-else color="green"/></q-td>
           <q-td key="id" :props="props"><router-link :to="{ name: 'submission', params: { id: props.row.id }}">{{ props.row.id }}</router-link></q-td>
           <q-td key="internal_id" :props="props">{{ props.row.internal_id }}</q-td>
           <q-td key="type" :props="props"><router-link :to="{'name': 'submission_type', 'params': { id: props.row.type.id }}">{{ props.row.type.name }}</router-link></q-td>
           <q-td key="status__order" :props="props">{{ props.row.status ? props.row.status.name : '' }}</q-td>
-          <q-td key="submitted" :props="props">{{ props.row.submitted }}</q-td>
+          <q-td key="submitted" :props="props">{{ props.row.submitted.substring(0,10) }}</q-td>
           <q-td key="name" :props="props">{{ props.row.name }}</q-td>
           <q-td key="email" :props="props">{{ props.row.email }}</q-td>
           <q-td key="pi_email" :props="props">{{ props.row.pi_email }}</q-td>
           <q-td key="sample_data" :props="props"><span v-if="props.row.sample_data">{{ props.row.sample_data.length }}</span></q-td>
+          <q-td key="biocore" :props="props"><q-icon size="18px" name="check_circle" v-if="props.row.biocore" color="green"/></q-td>
         </q-tr>
       </template>
     </q-table>
@@ -58,7 +60,7 @@ export default {
       },
       serverData: [],
       columns: [
-        { name: 'locked', label: '', field: 'locked', sortable: true },
+        { name: 'locked', label: 'Locked', field: 'locked', sortable: true },
         { name: 'id', label: 'Id', field: 'id', sortable: true },
         { name: 'internal_id', label: 'Internal Id', field: 'internal_id', sortable: true },
         { name: 'type', label: 'Type', field: 'type' },
@@ -67,9 +69,10 @@ export default {
         { name: 'name', label: 'Name', field: 'name' },
         { name: 'email', label: 'Email', field: 'email', sortable: true },
         { name: 'pi_email', label: 'PI', field: 'pi_email', sortable: true },
-        { name: 'sample_data', label: 'Samples', field: 'sample_data' }
+        { name: 'sample_data', label: 'Samples', field: 'sample_data' },
+        { name: 'biocore', label: 'Biocore', field: 'biocore', sortable: true }
       ],
-      visibleColumns: ['locked', 'id', 'internal_id', 'type', 'status__order', 'submitted', 'name', 'email', 'pi_email', 'sample_data']
+      visibleColumns: ['locked', 'id', 'internal_id', 'type', 'status__order', 'submitted', 'name', 'email', 'pi_email', 'sample_data', 'biocore']
     }
   },
   methods: {

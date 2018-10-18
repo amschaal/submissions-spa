@@ -52,9 +52,15 @@
             {{submission.payment_info}}
           </div>
         </div>
+        <div class="row" v-if="submission.biocore">
+          <div class="col-sm-12">
+            <q-icon size="18px" name="check_circle" color="green"/> Bioinformatics Core to analyze data
+          </div>
+        </div>
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
           <Agschema v-model="submission.sample_data" :type="submission_type" :editable="false" ref="samplesheet"/>
           <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet"/>
+
       </div>
 </template>
 

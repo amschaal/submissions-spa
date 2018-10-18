@@ -9,6 +9,7 @@
       :pagination.sync="serverPagination"
       :loading="loading"
       @request="request"
+      binary-state-sort
     >
       <template slot="top-right" slot-scope="props">
         <q-search hide-underline v-model="filter" />

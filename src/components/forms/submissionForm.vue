@@ -128,6 +128,9 @@
           <Agschema v-model="submission.sample_data" :type="type" :editable="true" :allow-examples="true" ref="samplesheet"/>
           <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet"/>
         </q-field>
+        <q-field>
+          <q-checkbox v-model="submission.biocore" label="Do you want the Bioinformatics Core to analyze the data?" />
+        </q-field>
         <span v-if="debug">
           <p>SCHEMA:
             {{type.schema}}
@@ -155,7 +158,7 @@ export default {
   props: ['id', 'submission_types', 'type_options', 'create'],
   data () {
     return {
-      submission: {'sample_data': []},
+      submission: {'sample_data': [], biocore: false},
       errors: {},
       // submission_types: [{ foo: 'bar' }],
       // type_options: [{ 'label': 'test', 'value': 2 }],
