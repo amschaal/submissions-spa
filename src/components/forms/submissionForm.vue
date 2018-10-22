@@ -226,7 +226,8 @@ export default {
       var self = this
       var id = this.submission.id
       var action = this.create ? 'post' : 'put'
-      var url = !this.create ? '/api/submissions/' + id + '/update/' : '/api/submit/'
+      var url = !this.create ? `/api/submissions/${id}/` : '/api/submissions/'
+      // var url = !this.create ? '/api/submissions/' + id + '/update/' : '/api/submit/'
       this.$axios[action]('' + url, this.submission)
         .then(function (response) {
           console.log('submit', response)
@@ -244,7 +245,7 @@ export default {
           console.log('ERROR', error.response)
           self.$q.notify({message: 'There were errors saving your submission.', type: 'negative'})
           if (error.response) {
-            self.errors = error.response.data.errors
+            self.errors = error.response.data
           }
           throw error
         })
