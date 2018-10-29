@@ -78,6 +78,33 @@
             </q-field>
           </div>
         </div>
+        <p class="caption">Additional Contacts <q-btn @click="addContact" label="Add" color="positive"/></p>
+        <div class="row" v-for="(c, index) in submission.contacts" :key="index">
+          <div class="col-sm-12 col-md-4 col-lg-4">
+            <q-field
+              :error="hasContactError(index,'first_name')"
+              :error-label="getContactError(index,'first_name')"
+            >
+              <q-input v-model="c.first_name" type="text" stack-label="* First Name"/>
+            </q-field>
+          </div>
+          <div class="col-sm-12 col-md-4 col-lg-4">
+            <q-field
+              :error="hasContactError(index,'last_name')"
+              :error-label="getContactError(index,'last_name')"
+            >
+              <q-input v-model="c.last_name" type="text" stack-label="* Last Name"/>
+            </q-field>
+          </div>
+          <div class="col-sm-12 col-md-4 col-lg-4">
+            <q-field
+              :error="hasContactError(index,'email')"
+              :error-label="getContactError(index,'email')"
+            >
+              <q-input v-model="c.email" type="text" stack-label="* Email"/>
+            </q-field>
+          </div>
+        </div>
         <p class="caption">Payment</p>
         <div class="row">
           <div class="col-sm-12 col-md-6">
@@ -158,8 +185,8 @@ export default {
   props: ['id', 'submission_types', 'type_options', 'create'],
   data () {
     return {
-      submission: {'sample_data': [], biocore: false},
-      errors: {},
+      submission: {'sample_data': [], 'contacts': [], biocore: false},
+      errors: {contacts: []},
       // submission_types: [{ foo: 'bar' }],
       // type_options: [{ 'label': 'test', 'value': 2 }],
       type: {},
@@ -249,6 +276,19 @@ export default {
           }
           throw error
         })
+    },
+    addContact () {
+      this.submission.contacts.push({})
+      console.log('contacts', this.submission.contacts)
+    },
+    hasContactError (index, field) {
+      return this.getContactError(index, field) !== ''
+    },
+    getContactError (index, field) {
+      if (this.errors && this.errors.contacts && this.errors.contacts[index] && this.errors.contacts[index][field]) {
+        return this.errors.contacts[index][field].join(', ')
+      }
+      return ''
     },
     // assignType (id) {
     //   for (var i in this.submission_types) {
