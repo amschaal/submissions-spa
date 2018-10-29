@@ -2,7 +2,7 @@
 // import axios from 'axios'
 // import axiosInstance from '../../plugins/axios'
 
-export const login = (context, {username, password, axios}) => {
+export const login = (context, {username, password, axios, dispatch}) => {
   return new Promise((resolve, reject) => {
     axios.post('/api/login/', {
       username: username,
@@ -11,6 +11,7 @@ export const login = (context, {username, password, axios}) => {
     })
       .then(function (response) {
         context.commit('login', response.data.user)
+        // dispatch('fetchAll', {axios: axios})
         resolve(response)
       })
       .catch(function (error) {

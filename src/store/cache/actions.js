@@ -29,3 +29,9 @@ export const fetchStatuses = (context, {axios}) => {
       console.log(error.message)
     })
 }
+
+export const fetchAll = (context, {axios}) => {
+  fetchValidators(context, {axios})
+  fetchTypes(context, {axios})
+  fetchStatuses(context, {axios})
+}
