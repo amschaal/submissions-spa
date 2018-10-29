@@ -103,6 +103,7 @@
             >
               <q-input v-model="c.email" type="text" stack-label="* Email"/>
             </q-field>
+            <q-btn @click="removeContact(index)" color="negative" label="remove"/>
           </div>
         </div>
         <p class="caption">Payment</p>
@@ -280,6 +281,9 @@ export default {
     addContact () {
       this.submission.contacts.push({})
       console.log('contacts', this.submission.contacts)
+    },
+    removeContact (index) {
+      this.submission.contacts.splice(index, 1)
     },
     hasContactError (index, field) {
       return this.getContactError(index, field) !== ''
