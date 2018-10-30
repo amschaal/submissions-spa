@@ -44,6 +44,21 @@
             {{submission.institute}}
           </div>
         </div>
+        <p class="caption" v-if="submission.contacts.length">Additional Contacts</p>
+        <div class="row" v-for="(c, index) in submission.contacts" :key="index">
+          <div class="col-sm-12 col-md-12 col-lg-4">
+            <p class="caption">First name</p>
+            {{c.first_name}}
+          </div>
+          <div class="col-sm-12 col-md-12 col-lg-4">
+            <p class="caption">Last name</p>
+            {{c.last_name}}
+          </div>
+          <div class="col-sm-12 col-md-12 col-lg-4">
+            <p class="caption">Email</p>
+            {{c.email}}
+          </div>
+        </div>
         <p class="caption">Payment</p>
         <div class="row">
           <div class="col-sm-12 col-md-6">
