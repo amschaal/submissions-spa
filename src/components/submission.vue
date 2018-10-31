@@ -75,7 +75,7 @@
           </div>
         </div>
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
-          <Agschema v-model="submission.sample_data" :type="submission_type" :editable="false" ref="samplesheet"/>
+          <Agschema v-model="submission.sample_data" :type="submission_type" :editable="false" ref="samplesheet" v-if="submission_type && submission_type.schema"/>
           <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet"/>
 
       </div>

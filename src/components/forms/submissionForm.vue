@@ -153,7 +153,7 @@
           :error-label="errors.sample_data"
         >
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
-          <Agschema v-model="submission.sample_data" :type="type" :editable="true" :allow-examples="true" ref="samplesheet"/>
+          <Agschema v-model="submission.sample_data" :type="type" :editable="true" :allow-examples="true" ref="samplesheet" v-if="type && type.schema"/>
           <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet"/>
         </q-field>
         <q-field>
@@ -202,16 +202,17 @@ export default {
     console.log('submission.type', this.submission.type)
     var self = this
     if (!this.create) {
-      this.$axios
-        .get(`/api/submissions/${self.id}/`)
-        .then(function (response) {
-          console.log('response', response)
-          if (!response.data.sample_data) {
-            response.data.sample_data = []
-          }
-          self.submission = response.data
-          Vue.set(self.submission, 'type', response.data.type.id)
-        })
+      // this.$axios
+      //   .get(`/api/submissions/${self.id}/`)
+      //   .then(function (response) {
+      //     console.log('response', response)
+      //     if (!response.data.sample_data) {
+      //       response.data.sample_data = []
+      //     }
+      //     self.submission = response.data
+      //     Vue.set(self.submission, 'type', response.data.type.id)
+      //   })
+      this.loadSubmission(this.id)
     }
     if (this.submission.type) {
       if (this.submission.type.id) {
@@ -278,6 +279,23 @@ export default {
           throw error
         })
     },
+    loadSubmission: function (id) {
+      var self = this
+      if (id) {
+        this.$axios
+          .get(`/api/submissions/${id}/`)
+          .then(function (response) {
+            console.log('response', response)
+            if (!response.data.sample_data) {
+              response.data.sample_data = []
+            }
+            self.submission = response.data
+            Vue.set(self.submission, 'type', response.data.type.id)
+          })
+      } else {
+        Vue.set(this, 'submission', {'sample_data': [], 'contacts': [], biocore: false})
+      }
+    },
     addContact () {
       this.submission.contacts.push({})
       console.log('contacts', this.submission.contacts)
@@ -314,6 +332,14 @@ export default {
       console.log('type', id, this.type, this.$store.getters.typesDict)
       // this.type = this.submission.type
       // this.submission.type = this.type.id
+    },
+    'id': function (id) {
+      console.log('form id', id)
+      this.loadSubmission(id)
+    },
+    'create': function (create) {
+      console.log('form create', create)
+      this.loadSubmission(create ? null : this.id)
     }
     // 'id': function (id) {
     //   var self = this

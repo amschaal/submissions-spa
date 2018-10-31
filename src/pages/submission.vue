@@ -108,7 +108,8 @@ export default {
             Vue.set(self.submission, 'type', response.data.type.id)
           })
       } else {
-        this.submission = {'sample_data': []}
+        Vue.set(this, 'submission', {'sample_data': [], 'contacts': [], biocore: false})
+        // this.submission = {'sample_data': [], 'contacts': [], biocore: false}
       }
     }
   },
