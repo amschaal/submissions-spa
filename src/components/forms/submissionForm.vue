@@ -249,7 +249,14 @@ export default {
   },
   methods: {
     openSamplesheet () {
-      this.$refs.samplesheet.openSamplesheet()
+      if (!this.type || !this.type.schema) {
+        this.$q.dialog({
+          title: 'Alert',
+          message: 'Please select a submission type first.'
+        })
+      } else {
+        this.$refs.samplesheet.openSamplesheet()
+      }
     },
     submit () {
       var self = this
