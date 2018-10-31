@@ -37,16 +37,16 @@
             ]"
           />
         </q-field>
-        <div v-if="type.schema.properties">
+        <div v-if="type && type.sample_schema && type.sample_schema.properties">
           <Agschema v-model="type.examples" :type="type" :editable="true"  ref="samplesheet"/>
           <q-btn :label="'Examples ('+type.examples.length+')'"  @click="openExamples"/>
         </div>
-        <h6>Column Definitions</h6>
-        <table v-if="type.schema" style="width:100%">
+        <h6>Samplesheet Definitions</h6>
+        <table v-if="type.sample_schema" style="width:100%">
           <tr><th></th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th></th></tr>
           <tr v-for="variable in type_options_sorted" :key="variable.variable">
-            <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1)" v-if="type.schema.order && type.schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1)" v-if="type.schema.order && type.schema.order.indexOf(variable.variable) != type.schema.order.length - 1"/>
-            <td><q-checkbox v-model="type.schema.required" :val="variable.variable"/></td>
+            <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1)" v-if="type.sample_schema.order && type.sample_schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1)" v-if="type.sample_schema.order && type.sample_schema.order.indexOf(variable.variable) != type.sample_schema.order.length - 1"/>
+            <td><q-checkbox v-model="type.sample_schema.required" :val="variable.variable"/></td>
             <td>{{variable.variable}}</td>
             <td><q-input v-model="variable.schema.title" /></td>
             <td>
@@ -56,7 +56,7 @@
               />
             </td>
             <td class="row">
-              <fieldoptions v-model="type.schema.properties[variable.variable]" :variable="variable.variable"/> <q-btn label="Delete" color="negative" @click="deleteVariable(variable.variable)"></q-btn>
+              <fieldoptions v-model="type.sample_schema.properties[variable.variable]" :variable="variable.variable"/> <q-btn label="Delete" color="negative" @click="deleteVariable(variable.variable)"></q-btn>
             </td>
           </tr>
         </table>
@@ -119,7 +119,7 @@ export default {
   props: ['id'],
   data () {
     return {
-      type: {help: '', examples: [], schema: {properties: {}, order: [], required: []}},
+      type: {help: '', examples: [], sample_schema: {properties: {}, order: [], required: []}},
       errors: {},
       type_options: [{ 'label': 'Text', 'value': 'string' }, { 'label': 'Number', 'value': 'number' }, { 'label': 'True / False', 'value': 'boolean' }],
       schema: [],
@@ -155,8 +155,8 @@ export default {
       return this.variableMessage(name) !== null
     },
     variableMessage (name) {
-      if (name) {
-        for (var n in this.type.schema.properties) {
+      if (name && this.type && this.type.sample_schema) {
+        for (var n in this.type.sample_schema.properties) {
           if (n.toLowerCase() === name.toLowerCase()) {
             return 'That variable name exists'
           }
@@ -165,16 +165,16 @@ export default {
       return null
     },
     addVariable () {
-      Vue.set(this.type.schema.properties, this.new_variable.name, {type: this.new_variable.type, unique: false})
-      this.type.schema.order.push(this.new_variable.name)
+      Vue.set(this.type.sample_schema.properties, this.new_variable.name, {type: this.new_variable.type, unique: false})
+      this.type.sample_schema.order.push(this.new_variable.name)
       // // this.type.schema.properties['VARIABLE_NAME'] = {added: true}
       // console.log(this.type.schema.properties)
       this.variable_modal = false
     },
     move (variable, displacement) {
       console.log('moveUp', variable)
-      var index = this.type.schema.order.indexOf(variable)
-      this.type.schema.order.splice(index + displacement, 0, this.type.schema.order.splice(index, 1)[0])
+      var index = this.type.sample_schema.order.indexOf(variable)
+      this.type.sample_schema.order.splice(index + displacement, 0, this.type.sample_schema.order.splice(index, 1)[0])
     },
     deleteVariable (variable) {
       var self = this
@@ -184,13 +184,13 @@ export default {
         ok: 'Okay',
         cancel: 'Cancel'
       }).then(() => {
-        if (self.type.schema.order) {
-          var index = self.type.schema.order.indexOf(variable)
+        if (self.type.sample_schema.order) {
+          var index = self.type.sample_schema.order.indexOf(variable)
           if (index) {
-            self.type.schema.order.splice(index, 1)
+            self.type.sample_schema.order.splice(index, 1)
           }
         }
-        Vue.delete(this.type.schema.properties, variable)
+        Vue.delete(this.type.sample_schema.properties, variable)
         self.$q.notify({message: 'Variable "' + variable + '" deleted.', type: 'negative'})
       })
     },
@@ -240,29 +240,29 @@ export default {
     //   property.enum = []
     // }
   },
-  watch: {
-    'submission.type': function (newType) {
-      console.log('type changed', newType)
-      for (var i in this.submission_types) {
-        if (this.submission_types[i].id === newType) {
-          console.log('type', this.submission_types[i])
-          this.schema = this.submission_types[i].schema
-        }
-      }
-    }
-  },
+  // watch: {
+  //   'submission.type': function (newType) {
+  //     console.log('type changed', newType)
+  //     for (var i in this.submission_types) {
+  //       if (this.submission_types[i].id === newType) {
+  //         console.log('type', this.submission_types[i])
+  //         this.schema = this.submission_types[i].sample_schema
+  //       }
+  //     }
+  //   }
+  // },
   computed: {
     error_message (field) {
       return this.errors[field]
     },
     type_options_sorted () {
       var self = this
-      if (!self.type.schema) {
+      if (!self.type.sample_schema) {
         return []
       }
-      if (self.type.schema.order) {
-        return self.type.schema.order.map(function (variable) {
-          return {'variable': variable, 'schema': self.type.schema.properties[variable]}
+      if (self.type.sample_schema.order) {
+        return self.type.sample_schema.order.map(function (variable) {
+          return {'variable': variable, 'schema': self.type.sample_schema.properties[variable]}
         })
       }
       // return this.submission_types.map(opt => ({label: opt.name, value: opt.id}))

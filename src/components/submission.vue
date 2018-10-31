@@ -75,7 +75,7 @@
           </div>
         </div>
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
-          <Agschema v-model="submission.sample_data" :type="submission_type" :editable="false" ref="samplesheet" v-if="submission_type && submission_type.schema"/>
+          <Agschema v-model="submission.sample_data" :type="submission_type" :editable="false" ref="samplesheet" v-if="submission_type && submission_type.sample_schema"/>
           <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet"/>
 
       </div>
@@ -116,7 +116,7 @@ export default {
   // },
   methods: {
     openSamplesheet () {
-      if (!this.submission_type || !this.submission_type.schema) {
+      if (!this.submission_type || !this.submission_type.sample_schema) {
         this.$q.dialog({
           title: 'Alert',
           message: 'Please select a submission type first.'

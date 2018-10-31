@@ -185,14 +185,14 @@ export default {
       var self = this
       this.errors = {}
       this.rowData = _.cloneDeep(this.value)
-      if (!this.type || !this.type.schema) {
+      if (!this.type || !this.type.sample_schema) {
         this.$q.dialog({
           title: 'Alert',
           message: 'Please select a submission type first.'
         })
         return
       }
-      this.columnDefs = this.schema2Columns(this.type.schema)
+      this.columnDefs = this.schema2Columns(this.type.sample_schema)
       console.log('openSamplesheet', this.rowData, this.value, this.columnDefs)
       this.$refs.modal.show().then(() => {
         if (self.value.length === 0) {
@@ -293,7 +293,7 @@ export default {
       var self = this
       if (this.type) {
         // this.$axios.post('/api/submission_types/' + this.type.id + '/validate_data/', {data: this.getRowData(true)})
-        this.$axios.post('/api/validate/', {schema: this.type.schema, data: this.getRowData(true)})
+        this.$axios.post('/api/validate/', {schema: this.type.sample_schema, data: this.getRowData(true)})
           .then(function (response) {
             console.log(response)
             self.errors = {}
@@ -366,7 +366,7 @@ export default {
     getExampleRows () {
       var examples = []
       if (this.showDescriptions) {
-        examples.push(this.getColDescriptions(this.type.schema))
+        examples.push(this.getColDescriptions(this.type.sample_schema))
       }
       if (this.showExamples) {
         console.log('examples', this.type.examples)
