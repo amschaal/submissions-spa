@@ -293,7 +293,7 @@ export default {
       var self = this
       if (this.type) {
         // this.$axios.post('/api/submission_types/' + this.type.id + '/validate_data/', {data: this.getRowData(true)})
-        this.$axios.post('/api/validate/', {schema: this.type.sample_schema, data: this.getRowData(true)})
+        this.$axios.post('/api/validate/', {sample_schema: this.type.sample_schema, data: this.getRowData(true)})
           .then(function (response) {
             console.log(response)
             self.errors = {}

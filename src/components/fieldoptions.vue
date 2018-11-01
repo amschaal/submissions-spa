@@ -25,6 +25,7 @@
           </q-field>
           <q-field
             label="Unique"
+            v-if="type!='submission'"
           >
             <!-- <q-checkbox v-model="data.unique" :false-value="true" :true-value="false" indeterminate-icon="check_box_outline_blank" unchecked-icon="check_box" checked-icon="check_box_outline_blank" keep-color /> -->
             <q-checkbox v-model="data.unique" indeterminate-icon="check_box_outline_blank"/>
@@ -32,6 +33,7 @@
           </q-field>
           <q-field
             label="Pin column"
+            v-if="type!='submission'"
           >
           <q-select
             v-model="data.pinned"
@@ -106,7 +108,7 @@
 import _ from 'lodash'
 
 export default {
-  props: ['value', 'variable'],
+  props: ['value', 'variable', 'type'],
   data () {
     return {
       opened: false,
