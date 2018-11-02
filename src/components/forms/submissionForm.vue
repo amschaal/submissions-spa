@@ -146,6 +146,7 @@
             :disable="submission.id != undefined"
           />
         </q-field>
+        <SubmissionFields v-model="submission.submission_data" :type="type" :editable="true" ref="submission_fields" v-if="type && type.schema" :errors="errors.submission_data"/>
         <q-field
           label="* Samples"
           label-width="2"
@@ -178,6 +179,7 @@ import './docs-input.styl'
 // import axios from 'axios'
 // import Samplesheet from '../../components/samplesheet.vue'
 import Agschema from '../../components/agschema.vue'
+import SubmissionFields from '../../components/submissionFields.vue'
 // import Files from '../../components/files.vue'
 import Vue from 'vue'
 
@@ -186,7 +188,7 @@ export default {
   props: ['id', 'submission_types', 'type_options', 'create'],
   data () {
     return {
-      submission: {'sample_data': [], 'contacts': [], biocore: false},
+      submission: {'submission_data': {}, 'sample_data': [], 'contacts': [], biocore: false},
       errors: {contacts: []},
       // submission_types: [{ foo: 'bar' }],
       // type_options: [{ 'label': 'test', 'value': 2 }],
@@ -373,7 +375,8 @@ export default {
 
   },
   components: {
-    Agschema
+    Agschema,
+    SubmissionFields
   }
 }
 </script>
