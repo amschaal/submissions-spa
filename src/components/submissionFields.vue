@@ -6,7 +6,7 @@
           :error="errors && errors[v.variable]"
           :error-label="errors ? errors[v.variable] : ''"
         >
-          <q-input v-model="data[v.variable]" type="text" :stack-label="v.schema.title ? v.schema.title : v.variable"/>
+          <q-input v-model="value[v.variable]" type="text" :stack-label="v.schema.title ? v.schema.title : v.variable"/>
         </q-field>
     </div>
   </div>

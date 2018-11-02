@@ -15,7 +15,7 @@
           </q-toolbar-title>
         </q-toolbar>
 
-        <div class="layout-padding">
+        <div class="layout-padding">{{widgetOptions}}
           <!-- {{data}}
           {{validators}} -->
           <q-field
@@ -65,6 +65,15 @@
           >
             <q-input v-model="data.maximum" type="number"/>
           </q-field>
+          <q-field v-if="type=='submission'"
+            label="Widget"
+          >
+          <q-select
+            v-model="data.widget.type"
+            float-label="Select widget type"
+            :options="widgetOptions"
+          />
+          </q-field>
           <q-field v-if="data.validators"
             label="Custom validators"
           >
@@ -112,23 +121,29 @@ export default {
   data () {
     return {
       opened: false,
-      data: {enum: []},
+      data: {enum: [], widget: {}},
       validators: this.$store.getters.validatorDict, // t{unique: {id: 'unique', name: 'Unique'}, foo: {id: 'foo', name: 'Foo'}},
       add_validator: null
       // options: this.value && this.value.enum ? this.value.enum : []
     }
   },
+  mounted () {
+    this.data = _.cloneDeep(this.value)
+
+    if (!this.data.enum) {
+      this.$set(this.data, 'enum', [])
+    }
+    if (!this.data.widget) {
+      this.$set(this.data, 'widget', {'type': null, 'options': {}})
+    }
+    if (!this.data.validators) {
+      this.$set(this.data, 'validators', [])
+    }
+  },
   methods: {
     openModal () {
       console.log('root', this.$root.validators)
-      this.data = _.cloneDeep(this.value)
 
-      if (!this.data.enum) {
-        this.$set(this.data, 'enum', [])
-      }
-      if (!this.data.validators) {
-        this.$set(this.data, 'validators', [])
-      }
       console.log('openModal', this.value, this.data)
       this.$refs.modal.show().then(() => {
 
@@ -156,6 +171,20 @@ export default {
     },
     removeValidator (index) {
       this.data.validators.splice(index, 1)
+    }
+
+  },
+  computed: {
+    widgetOptions () {
+      console.log('widgetOptions', this.data)
+      switch (this.data.type) {
+        case 'boolean':
+          return [{label: 'Checkbox', value: 'checkbox'}, {label: 'Toggle switch', value: 'toggle'}]
+        case 'number':
+          return [{label: 'Number', value: 'number'}]
+        default:
+          return [{label: 'Text', value: 'text'}]
+      }
     }
   }
 }
