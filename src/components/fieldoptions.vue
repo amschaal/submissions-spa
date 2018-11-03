@@ -15,7 +15,7 @@
           </q-toolbar-title>
         </q-toolbar>
 
-        <div class="layout-padding">{{widgetOptions}}
+        <div class="layout-padding">{{widgetOptions}}{{data}}
           <!-- {{data}}
           {{validators}} -->
           <q-field
@@ -115,7 +115,7 @@
 
 <script>
 import _ from 'lodash'
-
+import widgetFactory from './forms/widgets.js'
 export default {
   props: ['value', 'variable', 'type'],
   data () {
@@ -128,6 +128,7 @@ export default {
     }
   },
   mounted () {
+    // console.log('widgetFactory', widgetFactory.getWidgetOptions('text'))
     this.data = _.cloneDeep(this.value)
 
     if (!this.data.enum) {
@@ -176,15 +177,16 @@ export default {
   },
   computed: {
     widgetOptions () {
-      console.log('widgetOptions', this.data)
-      switch (this.data.type) {
-        case 'boolean':
-          return [{label: 'Checkbox', value: 'checkbox'}, {label: 'Toggle switch', value: 'toggle'}]
-        case 'number':
-          return [{label: 'Number', value: 'number'}]
-        default:
-          return [{label: 'Text', value: 'text'}]
-      }
+      console.log('widgetOptions', this.data.type, widgetFactory.getWidgetOptions(this.data.type))
+      return widgetFactory.getWidgetOptions(this.data.type)
+      // switch (this.data.type) {
+      //   case 'boolean':
+      //     return widgetFactory.getWidgetOptions('text')// [{label: 'Checkbox', value: 'checkbox'}, {label: 'Toggle switch', value: 'toggle'}]
+      //   case 'number':
+      //     return [{label: 'Number', value: 'number'}]
+      //   default:
+      //     return [{label: 'Text', value: 'text'}]
+      // }
     }
   }
 }

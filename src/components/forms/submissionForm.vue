@@ -146,7 +146,7 @@
             :disable="submission.id != undefined"
           />
         </q-field>
-        <SubmissionFields v-model="submission.submission_data" :type="type" :editable="true" ref="submission_fields" v-if="type && type.schema" :errors="errors.submission_data"/>
+        <CustomFields v-model="submission.submission_data" :schema="type.schema" :editable="true" ref="submission_fields" v-if="type && type.schema" :errors="errors.submission_data"/>
         <q-field
           label="* Samples"
           label-width="2"
@@ -179,7 +179,7 @@ import './docs-input.styl'
 // import axios from 'axios'
 // import Samplesheet from '../../components/samplesheet.vue'
 import Agschema from '../../components/agschema.vue'
-import SubmissionFields from '../../components/submissionFields.vue'
+import CustomFields from '../../components/forms/customFields.vue'
 // import Files from '../../components/files.vue'
 import Vue from 'vue'
 
@@ -376,7 +376,7 @@ export default {
   },
   components: {
     Agschema,
-    SubmissionFields
+    CustomFields
   }
 }
 </script>
