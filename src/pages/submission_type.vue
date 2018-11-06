@@ -23,7 +23,7 @@
         </q-field>
         <h6>Submission Fields</h6>
         <table v-if="type.schema" style="width:100%">
-          <tr><th></th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th></th></tr>
+          <tr><th></th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th>Column Width</th><th></th></tr>
           <tr v-for="variable in submission_fields_sorted" :key="variable.variable">
             <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1, 'schema')" v-if="type.schema.order && type.schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1, 'schema')" v-if="type.schema.order && type.schema.order.indexOf(variable.variable) != type.schema.order.length - 1"/>
             <td><q-checkbox v-model="type.schema.required" :val="variable.variable"/></td>
@@ -34,6 +34,20 @@
                 v-model="variable.schema.type"
                 :options="type_options"
               />
+            </td>
+            <td>
+              <!-- <q-select
+                v-model="type.schema.layout[variable.variable].width"
+                :options="width_options"
+                v-if="type.schema.layout[variable.variable]"
+              /> -->
+              <q-select
+                :options="width_options"
+                v-if="!type.schema.layout[variable.variable]"
+                @input="setNested(`type.schema.layout.${variable.variable}`,$event)"
+              />
+              <!-- @input="$set(item,'prop',$event.target.value)" -->
+
             </td>
             <td class="row">
               <fieldoptions v-model="type.schema.properties[variable.variable]" :variable="variable.variable" type="submission"/> <q-btn label="Delete" color="negative" @click="deleteVariable(variable.variable, 'schema')"></q-btn>
@@ -149,13 +163,15 @@ export default {
   props: ['id'],
   data () {
     return {
-      type: {help: '', examples: [], schema: {properties: {}, order: [], required: []}, sample_schema: {properties: {}, order: [], required: []}},
+      type: {help: '', examples: [], schema: {properties: {}, order: [], required: [], layout: {}}, sample_schema: {properties: {}, order: [], required: []}},
       errors: {},
       type_options: [{ 'label': 'Text', 'value': 'string' }, { 'label': 'Number', 'value': 'number' }, { 'label': 'True / False', 'value': 'boolean' }],
+      width_options: [{ 'label': '100%', 'value': 'col-12' }, { 'label': '3/4', 'value': 'col-9' }, { 'label': '2/3', 'value': 'col-8' }, { 'label': '1/2', 'value': 'col-6' }, { 'label': '1/3', 'value': 'col-4' }, { 'label': '1/4', 'value': 'col-3' }],
       schema: [],
       new_variable: {},
       variable_modal: false,
-      examples: []
+      examples: [],
+      foo: null
     }
   },
   mounted: function () {
@@ -205,6 +221,19 @@ export default {
       console.log('moveUp', variable)
       var index = this.type[schema].order.indexOf(variable)
       this.type[schema].order.splice(index + displacement, 0, this.type[schema].order.splice(index, 1)[0])
+    },
+    setNested (path, value) {
+      console.log('setNested', path, value)
+      var self = this
+      var last = this
+      path.split('.').forEach(function (prop) {
+        if (!last[prop]) {
+          console.log('set', last, prop)
+          self.$set(last, prop, {})
+        }
+        last = last[prop]
+      })
+      self.$set(last, prop, value)
     },
     deleteVariable (variable, schema) {
       var self = this
