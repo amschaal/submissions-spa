@@ -36,15 +36,18 @@
               />
             </td>
             <td>
-              <!-- <q-select
+              <!-- v-bind:value="getNested(`type.schema.layout.${variable.variable}.width`)" -->
+              <q-select
+
                 v-model="type.schema.layout[variable.variable].width"
                 :options="width_options"
                 v-if="type.schema.layout[variable.variable]"
-              /> -->
+                @input="setNested(`type.schema.layout.${variable.variable}.width`,$event)"
+              />
               <q-select
                 :options="width_options"
                 v-if="!type.schema.layout[variable.variable]"
-                @input="setNested(`type.schema.layout.${variable.variable}`,$event)"
+                @input="setNested(`type.schema.layout.${variable.variable}.width`,$event)"
               />
               <!-- @input="$set(item,'prop',$event.target.value)" -->
 
@@ -223,17 +226,35 @@ export default {
       this.type[schema].order.splice(index + displacement, 0, this.type[schema].order.splice(index, 1)[0])
     },
     setNested (path, value) {
-      console.log('setNested', path, value)
+      var props = path.split('.')
+      console.log('setNested', props, value)
       var self = this
       var last = this
-      path.split('.').forEach(function (prop) {
-        if (!last[prop]) {
-          console.log('set', last, prop)
+
+      props.forEach(function (prop, index) {
+        if (!last[prop] && index < props.length - 1) {
+          console.log('set blank', last, prop)
           self.$set(last, prop, {})
+        }
+        if (index === props.length - 1) {
+          console.log('set value', last, prop, value)
+          self.$set(last, prop, value)
         }
         last = last[prop]
       })
-      self.$set(last, prop, value)
+    },
+    getNested (path) {
+      var props = path.split('.')
+      console.log('getNested', props)
+      var last = this
+      props.forEach(function (prop, index) {
+        if (index < props.length - 1 && !last[prop]) {
+          return undefined
+        } else if (index === props.length - 1) {
+          return last[prop]
+        }
+        last = last[prop]
+      })
     },
     deleteVariable (variable, schema) {
       var self = this
@@ -336,7 +357,22 @@ export default {
       return this.fields_sorted('schema')
       // return this.submission_types.map(opt => ({label: opt.name, value: opt.id}))
     }
-
+    // nested: {
+    //   // return {
+    //   // getter
+    //   get: function (path) {
+    //     console.log('get', path)
+    //     return this.getNested(path)
+    //   },
+    //   // setter
+    //   set: function (path, newValue) {
+    //     this.setNested(path, newValue)
+    //   }
+    //   // }
+    // }
+    // nested () {
+    //   return path => this.getNested(path)
+    // }
   },
   components: {
     Fieldoptions,

@@ -1,7 +1,6 @@
 <template>
-  <div>
-      <div v-for="v in fields" :key="v.variable">
-        {{v}}
+  <div class="row">
+      <div v-for="v in fields" :key="v.variable" v-bind:class="colWidth(v.variable)">
         <q-field
           :error="errors && errors[v.variable]"
           :error-label="errors ? errors[v.variable] : ''"
@@ -35,8 +34,10 @@ export default {
       var options = v.schema.widget && v.schema.widget.options ? v.schema.widget.options : {}
       var WidgetClass = this.widgetClass(v)
       return new WidgetClass(options)
+    },
+    colWidth (variable) {
+      return this.schema.layout[variable] && this.schema.layout[variable].width ? [this.schema.layout[variable].width] : ['col-12']
     }
-
   },
   computed: {
     fields () {
