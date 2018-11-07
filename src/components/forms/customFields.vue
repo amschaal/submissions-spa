@@ -5,8 +5,9 @@
           :error="errors && errors[v.variable]"
           :error-label="errors ? errors[v.variable] : ''"
         >
+        {{widget(v).getOptions()}}
           <!-- <q-input v-model="value[v.variable]" type="text" :stack-label="v.schema.title ? v.schema.title : v.variable"/> -->
-          <component :is="widgetClass(v).id" v-model="value[v.variable]" v-bind="{ 'type': 'text', 'stack-label': v.schema.title ? v.schema.title : v.variable }" />
+          <component :is="widgetClass(v).id" v-model="value[v.variable]" v-bind="widget(v).getOptions()" />
 
         </q-field>
     </div>
@@ -33,7 +34,7 @@ export default {
     widget (v) {
       var options = v.schema.widget && v.schema.widget.options ? v.schema.widget.options : {}
       var WidgetClass = this.widgetClass(v)
-      return new WidgetClass(options)
+      return new WidgetClass(v, options)
     },
     colWidth (variable) {
       return this.schema.layout[variable] && this.schema.layout[variable].width ? [this.schema.layout[variable].width] : ['col-12']

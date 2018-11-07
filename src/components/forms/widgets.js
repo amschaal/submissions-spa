@@ -1,7 +1,9 @@
+import _ from 'lodash'
 
 class Widget {
-  constructor (options) {
-    this.options = options
+  constructor (variable, options) {
+    this.variable = variable
+    this.options = options || {}
   }
   /*
   static schema = {
@@ -38,6 +40,9 @@ class Widget {
   validate () {
     // TODO: use JSON schema to validate this.options against schema
     return true
+  }
+  getOptions () {
+    return _.merge(this.options, {'stack-label': this.variable.schema.title || this.variable.variable})
   }
 }
 
@@ -102,6 +107,31 @@ class WYSIWYGWidget extends Widget {
   }
 }
 
+class EnumWidget extends Widget {
+  getOptions () {
+    return _.merge(this.options, this.getSelectOptions())
+  }
+  getSelectOptions () {
+    var options = this.variable.schema.enum || []
+    return {options: options.map(function (val) { return {'label': val, 'value': val} })}
+  }
+}
+
+class ChipsWidget extends EnumWidget {
+  static type = 'string'
+  static id = 'q-chips-input'
+  static name = 'Chips Input'
+  static schema = {
+  }
+}
+class SelectWidget extends EnumWidget {
+  static type = 'string'
+  static id = 'q-select'
+  static name = 'Select Input'
+  static schema = {
+  }
+}
+
 class WidgetFactory {
   constructor (widgets) {
     this.widgets = widgets
@@ -138,6 +168,6 @@ class WidgetFactory {
   }
 }
 
-var widgetFactory = new WidgetFactory([TextWidget, WYSIWYGWidget])
+var widgetFactory = new WidgetFactory([TextWidget, WYSIWYGWidget, ChipsWidget, SelectWidget])
 
 export default widgetFactory
