@@ -1,6 +1,7 @@
 import _ from 'lodash'
 
 class Widget {
+  defaultValue = null
   constructor (variable, options) {
     this.variable = variable
     this.options = options || {}
@@ -44,6 +45,9 @@ class Widget {
   getOptions () {
     return _.merge(this.options, {'stack-label': this.variable.schema.title || this.variable.variable})
   }
+  getDefault () {
+    return this.defaultValue
+  }
 }
 
 class TextWidget extends Widget {
@@ -81,6 +85,7 @@ class WYSIWYGWidget extends Widget {
   static type = 'string'
   static id = 'q-editor'
   static name = 'WYSIWYG'
+  defaultValue = ''
   static schema = {
     'order': [
       'organism',
@@ -108,6 +113,7 @@ class WYSIWYGWidget extends Widget {
 }
 
 class EnumWidget extends Widget {
+  defaultValue = []
   getOptions () {
     return _.merge(this.options, this.getSelectOptions())
   }
@@ -123,6 +129,7 @@ class ChipsWidget extends EnumWidget {
   static name = 'Chips Input'
   static schema = {
   }
+  // static defaultValue = []
 }
 class SelectWidget extends EnumWidget {
   static type = 'string'
