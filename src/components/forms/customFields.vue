@@ -4,17 +4,21 @@
         <q-field
           :error="errors && errors[v.variable]"
           :error-label="errors ? errors[v.variable] : ''"
+          :label="v.schema.title ? v.schema.title : v.variable"
+          orientation="vertical"
         >
-        {{widget(v).getOptions()}} {{widget(v).getDefault()}} value: "{{value[v.variable]}}"
+        <!-- {{widget(v).getOptions()}} {{widget(v).getDefault()}} value: "{{value[v.variable]}}" -->
           <!-- <q-input v-model="value[v.variable]" type="text" :stack-label="v.schema.title ? v.schema.title : v.variable"/> -->
-          <component :is="widgetClass(v).id"
+          <component :is="widgetClass(v).component"
           :value="value[v.variable] || widget(v).getDefault()"
           @input="val => {$q.notify('input: '+val); $set(value, v.variable, val)}"
           @change="val => {$q.notify('change: '+val); $set(value, v.variable, val)}"
             v-bind="widget(v).getOptions()"
+
           />
 
 <!--
+:stack-label="v.schema.title ? v.schema.title : v.variable"
 v-model="value[v.variable]"
 :value="value[v.variable] || widgetClass(v).default"
 @change="val => { value[v.variable] = val }"

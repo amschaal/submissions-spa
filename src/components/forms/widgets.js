@@ -52,7 +52,8 @@ class Widget {
 
 class TextWidget extends Widget {
   static type = 'string'
-  static id = 'q-input'
+  static id = 'input'
+  static component = 'q-input'
   static name = 'Text input'
   static default = true
   static schema = {
@@ -83,7 +84,8 @@ class TextWidget extends Widget {
 
 class WYSIWYGWidget extends Widget {
   static type = 'string'
-  static id = 'q-editor'
+  static id = 'wysiwyg'
+  static component = 'q-editor'
   static name = 'WYSIWYG'
   defaultValue = ''
   static schema = {
@@ -125,7 +127,8 @@ class EnumWidget extends Widget {
 
 class ChipsWidget extends EnumWidget {
   static type = 'string'
-  static id = 'q-chips-input'
+  static id = 'chips'
+  static component = 'q-chips-input'
   static name = 'Chips Input'
   static schema = {
   }
@@ -133,9 +136,21 @@ class ChipsWidget extends EnumWidget {
 }
 class SelectWidget extends EnumWidget {
   static type = 'string'
-  static id = 'q-select'
+  static id = 'select'
+  static component = 'q-select'
   static name = 'Select Input'
   static schema = {
+  }
+  getOptions () {
+    return _.merge(this.options, this.getSelectOptions(), {clearable: true})
+  }
+}
+class MultiSelectWidget extends SelectWidget {
+  static id = 'multi-select'
+  static component = 'q-select'
+  static name = 'MultiSelect'
+  getOptions () {
+    return _.merge(this.options, this.getSelectOptions(), {multiple: true, clearable: true})
   }
 }
 
@@ -175,6 +190,6 @@ class WidgetFactory {
   }
 }
 
-var widgetFactory = new WidgetFactory([TextWidget, WYSIWYGWidget, ChipsWidget, SelectWidget])
+var widgetFactory = new WidgetFactory([TextWidget, WYSIWYGWidget, ChipsWidget, SelectWidget, MultiSelectWidget])
 
 export default widgetFactory
