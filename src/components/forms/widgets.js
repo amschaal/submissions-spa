@@ -114,6 +114,15 @@ class WYSIWYGWidget extends Widget {
   }
 }
 
+class CheckboxWidget extends Widget {
+  static type = 'boolean'
+  static id = 'checkbox'
+  static component = 'q-checkbox'
+  static name = 'Checkbox'
+  static default = true
+  defaultValue = false
+}
+
 class EnumWidget extends Widget {
   defaultValue = []
   getOptions () {
@@ -143,6 +152,22 @@ class SelectWidget extends EnumWidget {
   }
   getOptions () {
     return _.merge(this.options, this.getSelectOptions(), {clearable: true})
+  }
+}
+class AutocompleteWidget extends EnumWidget {
+  // @TODO: wrap this in another component as in the guide https://quasar-framework.org/components/autocomplete.html
+  static type = 'string'
+  static id = 'autocomplete'
+  static component = 'q-autocomplete'
+  static name = 'Autocomplete'
+  static schema = {
+  }
+  getStaticData () {
+    var staticData = this.variable.schema.enum || []
+    return {field: 'value', list: staticData.map(function (val) { return {'label': val, 'value': val} })}
+  }
+  getOptions () {
+    return _.merge(this.options, {'static-data': this.getStaticData(), clearable: true})
   }
 }
 class MultiSelectWidget extends SelectWidget {
@@ -190,6 +215,6 @@ class WidgetFactory {
   }
 }
 
-var widgetFactory = new WidgetFactory([TextWidget, WYSIWYGWidget, ChipsWidget, SelectWidget, MultiSelectWidget])
+var widgetFactory = new WidgetFactory([TextWidget, WYSIWYGWidget, ChipsWidget, SelectWidget, MultiSelectWidget, CheckboxWidget, AutocompleteWidget])
 
 export default widgetFactory
