@@ -11,8 +11,8 @@
           <!-- <q-input v-model="value[v.variable]" type="text" :stack-label="v.schema.title ? v.schema.title : v.variable"/> -->
           <component :is="widgetClass(v).component"
           :value="value[v.variable] || widget(v).getDefault()"
-          @input="val => {$q.notify('input: '+val); $set(value, v.variable, val)}"
-          @change="val => {$q.notify('change: '+val); $set(value, v.variable, val)}"
+          @input="val => {$set(value, v.variable, val)}"
+          @change="val => {$set(value, v.variable, val)}"
             v-bind="widget(v).getOptions()"
 
           />
@@ -74,3 +74,8 @@ export default {
   }
 }
 </script>
+<style>
+.q-field {
+  padding: 3px !important;
+}
+</style>

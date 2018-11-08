@@ -169,7 +169,7 @@ export default {
       type: {help: '', examples: [], schema: {properties: {}, order: [], required: [], layout: {}}, sample_schema: {properties: {}, order: [], required: []}},
       errors: {},
       type_options: [{ 'label': 'Text', 'value': 'string' }, { 'label': 'Number', 'value': 'number' }, { 'label': 'True / False', 'value': 'boolean' }],
-      width_options: [{ 'label': '100%', 'value': 'col-12' }, { 'label': '3/4', 'value': 'col-9' }, { 'label': '2/3', 'value': 'col-8' }, { 'label': '1/2', 'value': 'col-6' }, { 'label': '1/3', 'value': 'col-4' }, { 'label': '1/4', 'value': 'col-3' }],
+      width_options: [{ 'label': '100%', 'value': 'col-md-12 col-sm-12 col-xs-auto' }, { 'label': '5/6', 'value': 'col-md-10 col-sm-12 col-xs-auto' }, { 'label': '3/4', 'value': 'col-md-9 col-sm-12 col-xs-auto' }, { 'label': '2/3', 'value': 'col-md-8 col-sm-12 col-xs-auto' }, { 'label': '1/2', 'value': 'col-md-6 col-sm-12 col-xs-auto' }, { 'label': '1/3', 'value': 'col-md-4 col-sm-6 col-xs-auto' }, { 'label': '1/4', 'value': 'col-md-3 col-sm-6 col-xs-auto' }, { 'label': '1/6', 'value': 'col-md-2 col-sm-4 col-xs-auto' }],
       schema: [],
       new_variable: {},
       variable_modal: false,
