@@ -48,6 +48,12 @@ class Widget {
   getDefault () {
     return this.defaultValue
   }
+  formatValue (value) {
+    if (value instanceof Array) {
+      return value.join(', ')
+    }
+    return value
+  }
 }
 
 class TextWidget extends Widget {

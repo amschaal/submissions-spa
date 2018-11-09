@@ -1,7 +1,13 @@
 <template>
   <div class="row">
-      <div v-for="v in fields" :key="v.variable" v-bind:class="colWidth(v.variable)">
+      <div v-for="v in fields" :key="v.variable" class="field" v-bind:class="colWidth(v.variable)">
+        <span v-if="!modify">
+          <p class="caption">{{v.schema.title ? v.schema.title : v.variable}}</p>
+
+          {{widget(v).formatValue(value[v.variable])}}
+        </span>
         <q-field
+          v-else
           :error="errors && errors[v.variable]"
           :error-label="errors ? errors[v.variable] : ''"
           :label="v.schema.title ? v.schema.title : v.variable"
@@ -34,7 +40,7 @@ import { QSelect } from 'quasar'
 // import _ from 'lodash'
 
 export default {
-  props: ['value', 'schema', 'editable', 'errors'],
+  props: ['value', 'schema', 'editable', 'errors', 'modify'],
   data () {
     return {
       data: this.value ? this.value : {}
