@@ -170,8 +170,27 @@
           </p>
         </span>
         <q-card-actions>
-          <q-btn @click="submit" label="Submit"></q-btn> <q-btn v-if="submission.id" label="Cancel" color="negative" class="float-right" @click="$router.push({name: 'submission', params: {id: submission.id}})"/>
+          <q-btn @click="submit" label="Submit"></q-btn>
+          <q-btn v-if="submission.id" label="Cancel" color="negative" class="float-right" @click="$router.push({name: 'submission', params: {id: submission.id}})"/>
+          <q-btn color="primary" @click="show_help = true" label="Help" icon="fas fa-question-circle" v-if="type.submission_help"/>
         </q-card-actions>
+        <q-modal v-model="show_help">
+          <q-modal-layout>
+            <q-toolbar slot="header">
+              <q-toolbar-title>
+                Submission Help
+              </q-toolbar-title>
+            </q-toolbar>
+            <div class="layout-padding">
+              <div v-html="type.submission_help" v-if="type.submission_help"></div>
+              <q-btn
+                color="primary"
+                @click="show_help = false"
+                label="Close"
+              />
+            </div>
+          </q-modal-layout>
+        </q-modal>
       </div>
 </template>
 
@@ -195,7 +214,8 @@ export default {
       // type_options: [{ 'label': 'test', 'value': 2 }],
       type: {},
       debug: false,
-      user_options: null
+      user_options: null,
+      show_help: false
       // create: false
     }
   },

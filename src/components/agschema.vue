@@ -20,7 +20,7 @@
             @click="show_help = true"
             label="Help"
             icon="fas fa-question-circle"
-            v-if="type.help"
+            v-if="type.sample_help"
           />
           <q-checkbox v-model="showDescriptions" label="Show descriptions"/> <q-checkbox v-model="showExamples" label="Show examples" v-if="allowExamples"/>
           <ag-grid-vue style="width: 100%; max-height: 400px;" class="ag-theme-balham"
@@ -99,7 +99,7 @@
           </q-toolbar-title>
         </q-toolbar>
         <div class="layout-padding">
-          <div v-html="type.help" v-if="type.help"></div>
+          <div v-html="type.sample_help" v-if="type.sample_help"></div>
           <q-btn
             color="primary"
             @click="show_help = false"

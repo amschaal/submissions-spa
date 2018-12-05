@@ -21,6 +21,22 @@
         >
           <q-input v-model="type.description" type="textarea"/>
         </q-field>
+        <q-field
+          label="Submission Help"
+          :error="errors.submission_help"
+          :error-label="errors.submission_help"
+        >
+          <q-editor v-model="type.submission_help"
+            :toolbar="[
+              ['bold', 'italic', 'strike', 'underline', 'subscript', 'superscript'],
+              ['token', 'hr', 'link', 'custom_btn'],
+              ['print', 'fullscreen'],
+              ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
+              ['undo', 'redo'],
+              ['table']
+            ]"
+          />
+        </q-field>
         <h6>Submission Fields</h6>
         <table v-if="type.schema" style="width:100%">
           <tr><th></th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th>Column Width</th><th></th></tr>
@@ -92,11 +108,11 @@
           label="Add"
         />
         <q-field
-          label="Help"
-          :error="errors.help"
-          :error-label="errors.help"
+          label="Samplesheet Help"
+          :error="errors.sample_help"
+          :error-label="errors.sample_help"
         >
-          <q-editor v-model="type.help"
+          <q-editor v-model="type.sample_help"
             :toolbar="[
               ['bold', 'italic', 'strike', 'underline', 'subscript', 'superscript'],
               ['token', 'hr', 'link', 'custom_btn'],

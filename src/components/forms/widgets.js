@@ -160,6 +160,29 @@ class SelectWidget extends EnumWidget {
     return _.merge(this.options, this.getSelectOptions(), {clearable: true})
   }
 }
+class RadioWidget extends EnumWidget {
+  defaultValue = null
+  static type = 'string'
+  static id = 'radio'
+  static component = 'q-option-group'
+  static name = 'Radio Select'
+  static schema = {
+  }
+  getOptions () {
+    return _.merge(this.options, this.getSelectOptions(), {type: 'radio', inline: true})
+  }
+}
+class MultiCheckboxWidget extends RadioWidget {
+  defaultValue = []
+  static id = 'multicheck'
+  static name = 'Multi Checkbox'
+  static schema = {
+  }
+  getOptions () {
+    return _.merge(this.options, this.getSelectOptions(), {type: 'checkbox', inline: true})
+  }
+}
+
 class AutocompleteWidget extends EnumWidget {
   // @TODO: wrap this in another component as in the guide https://quasar-framework.org/components/autocomplete.html
   static type = 'string'
@@ -221,6 +244,6 @@ class WidgetFactory {
   }
 }
 
-var widgetFactory = new WidgetFactory([TextWidget, WYSIWYGWidget, ChipsWidget, SelectWidget, MultiSelectWidget, CheckboxWidget, AutocompleteWidget])
+var widgetFactory = new WidgetFactory([TextWidget, WYSIWYGWidget, ChipsWidget, SelectWidget, MultiSelectWidget, CheckboxWidget, AutocompleteWidget, RadioWidget, MultiCheckboxWidget])
 
 export default widgetFactory
