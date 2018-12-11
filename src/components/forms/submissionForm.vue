@@ -172,7 +172,7 @@
         <q-card-actions>
           <q-btn @click="submit" label="Submit"></q-btn>
           <q-btn v-if="submission.id" label="Cancel" color="negative" class="float-right" @click="$router.push({name: 'submission', params: {id: submission.id}})"/>
-          <q-btn color="primary" @click="show_help = true" label="Help" icon="fas fa-question-circle" v-if="type.submission_help"/>
+          <q-btn color="primary" @click="show_help = true" label="Help" icon="fas fa-question-circle" v-if="type && type.submission_help"/>
         </q-card-actions>
         <q-modal v-model="show_help">
           <q-modal-layout>
@@ -182,7 +182,7 @@
               </q-toolbar-title>
             </q-toolbar>
             <div class="layout-padding">
-              <div v-html="type.submission_help" v-if="type.submission_help"></div>
+              <div v-html="type.submission_help" v-if="type && type.submission_help"></div>
               <q-btn
                 color="primary"
                 @click="show_help = false"
