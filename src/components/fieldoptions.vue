@@ -15,9 +15,10 @@
           </q-toolbar-title>
         </q-toolbar>
 
-        <div class="layout-padding">{{widgetOptions}}{{data}}
+        <div class="layout-padding">
           <!-- {{data}}
           {{validators}} -->
+          {{validatorsByType(data.type)}}
           <q-field
             label="Description"
           >
@@ -79,7 +80,7 @@
           >
             <q-btn-dropdown label="Add validator">
               <q-list link>
-                <q-item v-for="(v, id) in validators" :key="id" v-close-overlay @click.native="addValidator(id)" :title="validators[v.id].description">
+                <q-item v-for="(v, id) in validatorsByType(data.type)" :key="id" v-close-overlay @click.native="addValidator(id)" :title="v.description">
                   <q-item-main>
                     <q-item-tile label>{{v.name}}</q-item-tile>
                   </q-item-main>
@@ -122,7 +123,7 @@ export default {
     return {
       opened: false,
       data: {enum: [], widget: {}},
-      validators: this.$store.getters.validatorDict, // t{unique: {id: 'unique', name: 'Unique'}, foo: {id: 'foo', name: 'Foo'}},
+      validators: [], // this.$store.getters.validatorDict, // t{unique: {id: 'unique', name: 'Unique'}, foo: {id: 'foo', name: 'Foo'}},
       add_validator: null
       // options: this.value && this.value.enum ? this.value.enum : []
     }
@@ -149,6 +150,18 @@ export default {
       this.$refs.modal.show().then(() => {
 
       })
+    },
+    validatorsByType (type) {
+      var validators = {}
+      console.log('validators', this.$store.getters.validatorDict)
+      for (var v in this.$store.getters.validatorDict) {
+        console.log('supported', type, this.$store.getters.validatorDict[v].supported_types)
+        if (this.$store.getters.validatorDict[v].supported_types && this.$store.getters.validatorDict[v].supported_types.indexOf(type) !== -1) {
+          validators[v] = this.$store.getters.validatorDict[v]
+        }
+      }
+      console.log('validatorsByType', type, validators)
+      return validators
     },
     save () {
       // this.local_data = this.hst.table.getSourceData()
