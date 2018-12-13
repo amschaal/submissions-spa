@@ -123,7 +123,7 @@ export default {
     return {
       opened: false,
       data: {enum: [], widget: {}},
-      validators: [], // this.$store.getters.validatorDict, // t{unique: {id: 'unique', name: 'Unique'}, foo: {id: 'foo', name: 'Foo'}},
+      validators: this.$store.getters.validatorDict, // t{unique: {id: 'unique', name: 'Unique'}, foo: {id: 'foo', name: 'Foo'}},
       add_validator: null
       // options: this.value && this.value.enum ? this.value.enum : []
     }
