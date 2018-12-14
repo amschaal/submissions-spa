@@ -4,23 +4,29 @@
           <div class="field col-sm-12 col-lg-4">
             <StatusSelector v-model="submission.status" :submission="submission" v-if="submission.id"/>
           </div>
-          <div class="field col-sm-12 col-lg-8">
-            <div class="row ">
-              <q-btn v-if="submission.editable && !submission.cancelled" label="Modify" class="float-right" @click="$router.push({name: 'modify_submission', params: {id: submission.id}})"/>
-              <Lock class="float-right" v-if="submission.id" :submission="submission"/>
-              <Cancel class="float-right" v-if="submission.id" :submission="submission"/>
+          <div class="col-sm-12 col-lg-8">
+            <div class="row">
+              <div class="col-lg-12">
+                <q-btn v-if="submission.editable && !submission.cancelled" label="Modify" class="float-right" @click="$router.push({name: 'modify_submission', params: {id: submission.id}})"/>
+                <Lock v-if="submission.id" :submission="submission" class="float-right"/>
+                <Cancel v-if="submission.id" :submission="submission" class="float-right"/>
+              </div>
             </div>
             <div class="row" v-if="submission.id">
-              <q-select
-                v-model="downloadParams.data"
-                :options="dataOptions"
-              />
-              <q-select
-                v-model="downloadParams.format"
-                :options="formatOptions"
-                v-if="downloadParams.data !== 'all'"
-              />
-              <q-btn label="Download" class="float-right" @click="download()"/>
+              <div class="col-lg-12">
+                <q-btn label="Download" @click="download()"  class="float-right"/>
+                <q-select
+                  v-model="downloadParams.format"
+                  :options="formatOptions"
+                  v-if="downloadParams.data !== 'all'"
+                  class="float-right"
+                />
+                <q-select
+                  v-model="downloadParams.data"
+                  :options="dataOptions"
+                  class="float-right"
+                />
+              </div>
             </div>
           </div>
         </div>
