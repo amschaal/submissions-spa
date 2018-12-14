@@ -5,9 +5,23 @@
             <StatusSelector v-model="submission.status" :submission="submission" v-if="submission.id"/>
           </div>
           <div class="field col-sm-12 col-lg-8">
-            <q-btn v-if="submission.editable && !submission.cancelled" label="Modify" class="float-right" @click="$router.push({name: 'modify_submission', params: {id: submission.id}})"/>
-            <Lock class="float-right" v-if="submission.id" :submission="submission"/>
-            <Cancel class="float-right" v-if="submission.id" :submission="submission"/>
+            <div class="row ">
+              <q-btn v-if="submission.editable && !submission.cancelled" label="Modify" class="float-right" @click="$router.push({name: 'modify_submission', params: {id: submission.id}})"/>
+              <Lock class="float-right" v-if="submission.id" :submission="submission"/>
+              <Cancel class="float-right" v-if="submission.id" :submission="submission"/>
+            </div>
+            <div class="row" v-if="submission.id">
+              <q-select
+                v-model="downloadParams.data"
+                :options="dataOptions"
+              />
+              <q-select
+                v-model="downloadParams.format"
+                :options="formatOptions"
+                v-if="downloadParams.data !== 'all'"
+              />
+              <q-btn label="Download" class="float-right" @click="download()"/>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -94,12 +108,25 @@ import Cancel from './cancel.vue'
 export default {
   // name: 'submission',
   props: ['id', 'submission'],
-  // data () {
-  //   return {
-  //     // submission: {},
-  //     // type: {}
-  //   }
-  // },
+  data () {
+    return {
+      downloadParams: {'data': 'all', 'format': 'xlsx'},
+      dataOptions: [
+        {
+          label: 'Submission + Samples',
+          value: 'all'
+        },
+        {
+          label: 'Submission',
+          value: 'submission'
+        },
+        {
+          label: 'Samples',
+          value: 'samples'
+        }
+      ]
+    }
+  },
   // mounted: function () {
   //   console.log('mounted')
   //   var self = this
@@ -126,6 +153,9 @@ export default {
       } else {
         this.$refs.samplesheet.openSamplesheet()
       }
+    },
+    download () {
+      window.location.href = `/server/api/submissions/${this.submission.id}/download/?format=${this.downloadParams.format}&data=${this.downloadParams.data}`
     }
   },
   computed: {
@@ -136,6 +166,23 @@ export default {
         return this.$store.getters.typesDict[this.submission.type]
       }
       return {}
+    },
+    formatOptions () {
+      var options = [
+        {
+          label: 'XLSX',
+          value: 'xlsx'
+        },
+        {
+          label: 'TSV',
+          value: 'tsv'
+        }
+      ]
+      if (this.downloadParams.data === 'all') {
+        return [options[0]]
+      } else {
+        return options
+      }
     }
   },
   components: {
