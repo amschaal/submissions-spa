@@ -41,6 +41,18 @@ export default [
       { path: '/submission_type/create', component: () => import('pages/submission_type'), name: 'create_submission_type' }
     ]
   },
+  {
+    path: '/print',
+    component: () => import('layouts/blank'),
+    children: [
+      {
+        path: '/print/submissions/:id',
+        component: () => import('pages/print_submission'),
+        name: 'print_submission',
+        props: (route) => ({ id: route.params.id })
+      }
+    ]
+  },
   { // Always leave this as last one
     path: '*',
     component: () => import('pages/404')

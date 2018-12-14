@@ -8,24 +8,9 @@
             <div class="row">
               <div class="col-lg-12">
                 <q-btn v-if="submission.editable && !submission.cancelled" label="Modify" class="float-right" @click="$router.push({name: 'modify_submission', params: {id: submission.id}})"/>
+                <q-btn label="Print" class="float-right" @click="$router.push({name: 'print_submission', params: {id: submission.id}})"/>
                 <Lock v-if="submission.id" :submission="submission" class="float-right"/>
                 <Cancel v-if="submission.id" :submission="submission" class="float-right"/>
-              </div>
-            </div>
-            <div class="row" v-if="submission.id">
-              <div class="col-lg-12">
-                <q-btn label="Download" @click="download()"  class="float-right"/>
-                <q-select
-                  v-model="downloadParams.format"
-                  :options="formatOptions"
-                  v-if="downloadParams.data !== 'all'"
-                  class="float-right"
-                />
-                <q-select
-                  v-model="downloadParams.data"
-                  :options="dataOptions"
-                  class="float-right"
-                />
               </div>
             </div>
           </div>
@@ -98,6 +83,22 @@
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
         <Agschema v-model="submission.sample_data" :type="submission_type" :editable="false" ref="samplesheet" v-if="submission_type && submission_type.sample_schema"/>
         <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet"/>
+        <div class="row" v-if="submission.id">
+          <div class="col-lg-12">
+            <q-btn label="Download" @click="download()"  class="float-right"/>
+              <q-select
+                v-model="downloadParams.format"
+                :options="formatOptions"
+                v-if="downloadParams.data !== 'all'"
+                class="float-right"
+              />
+              <q-select
+                v-model="downloadParams.data"
+                :options="dataOptions"
+                class="float-right"
+              />
+          </div>
+        </div>
 
       </div>
 </template>
