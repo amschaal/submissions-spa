@@ -11,18 +11,18 @@
     <div v-if="submission.submission_data">
       <h5 class="centered">Submission specific details</h5>
       <table class="full bordered">
-        <tr><th :key="variable" v-for="(value, variable) in submission.submission_data">{{getTitle(submission.type.schema,variable)}}</th></tr>
+        <tr><th :key="variable" v-for="(value, variable) in submission.submission_data">{{getTitle(submission.submission_schema,variable)}}</th></tr>
         <tr><td :key="variable" v-for="(value, variable) in submission.submission_data">{{value}}</td></tr>
       </table>
     </div>
     <h5 class="centered page-break-before">Total Number of Samples: {{submission.sample_data.length}}</h5>
 <table class="horizontal full bordered compact page-break-after">
   <tr>
-    <th :key="variable" v-for="variable in submission.type.sample_schema.order">{{getTitle(submission.type.sample_schema,variable)}}</th>
+    <th :key="variable" v-for="variable in submission.sample_schema.order">{{getTitle(submission.sample_schema,variable)}}</th>
   </tr>
 
   <tr :key="index" v-for="(row,index) in submission.sample_data">
-    <td :key="index" v-for="(variable, index) in submission.type.sample_schema.order">{{row[variable]}}</td>
+    <td :key="index" v-for="(variable, index) in submission.sample_schema.order">{{row[variable]}}</td>
   </tr>
 </table>
   </div>
