@@ -38,11 +38,11 @@
           />
         </q-field>
         <h6>Submission Fields</h6>
-        <table v-if="type.schema" style="width:100%">
+        <table v-if="type.submission_schema" style="width:100%">
           <tr><th></th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th>Column Width</th><th></th></tr>
           <tr v-for="variable in submission_fields_sorted" :key="variable.variable">
-            <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1, 'schema')" v-if="type.schema.order && type.schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1, 'schema')" v-if="type.schema.order && type.schema.order.indexOf(variable.variable) != type.schema.order.length - 1"/>
-            <td><q-checkbox v-model="type.schema.required" :val="variable.variable"/></td>
+            <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1, 'schema')" v-if="type.submission_schema.order && type.submission_schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1, 'schema')" v-if="type.submission_schema.order && type.submission_schema.order.indexOf(variable.variable) != type.submission_schema.order.length - 1"/>
+            <td><q-checkbox v-model="type.submission_schema.required" :val="variable.variable"/></td>
             <td>{{variable.variable}}</td>
             <td><q-input v-model="variable.schema.title" /></td>
             <td>
@@ -52,24 +52,24 @@
               />
             </td>
             <td>
-              <!-- v-bind:value="getNested(`type.schema.layout.${variable.variable}.width`)" -->
+              <!-- v-bind:value="getNested(`type.submission_schema.layout.${variable.variable}.width`)" -->
               <q-select
 
-                v-model="type.schema.layout[variable.variable].width"
+                v-model="type.submission_schema.layout[variable.variable].width"
                 :options="width_options"
-                v-if="type.schema.layout[variable.variable]"
-                @input="setNested(`type.schema.layout.${variable.variable}.width`,$event)"
+                v-if="type.submission_schema.layout[variable.variable]"
+                @input="setNested(`type.submission_schema.layout.${variable.variable}.width`,$event)"
               />
               <q-select
                 :options="width_options"
-                v-if="!type.schema.layout[variable.variable]"
-                @input="setNested(`type.schema.layout.${variable.variable}.width`,$event)"
+                v-if="!type.submission_schema.layout[variable.variable]"
+                @input="setNested(`type.submission_schema.layout.${variable.variable}.width`,$event)"
               />
               <!-- @input="$set(item,'prop',$event.target.value)" -->
 
             </td>
             <td class="row">
-              <fieldoptions v-model="type.schema.properties[variable.variable]" :variable="variable.variable" type="submission"/> <q-btn label="Delete" color="negative" @click="deleteVariable(variable.variable, 'schema')"></q-btn>
+              <fieldoptions v-model="type.submission_schema.properties[variable.variable]" :variable="variable.variable" type="submission"/> <q-btn label="Delete" color="negative" @click="deleteVariable(variable.variable, 'schema')"></q-btn>
             </td>
           </tr>
         </table>
@@ -182,11 +182,11 @@ export default {
   props: ['id'],
   data () {
     return {
-      type: {help: '', examples: [], schema: {properties: {}, order: [], required: [], layout: {}}, sample_schema: {properties: {}, order: [], required: []}},
+      type: {help: '', examples: [], submission_schema: {properties: {}, order: [], required: [], layout: {}}, sample_schema: {properties: {}, order: [], required: []}},
       errors: {},
       type_options: [{ 'label': 'Text', 'value': 'string' }, { 'label': 'Number', 'value': 'number' }, { 'label': 'True / False', 'value': 'boolean' }],
       width_options: [{ 'label': '100%', 'value': 'col-md-12 col-sm-12 col-xs-auto' }, { 'label': '5/6', 'value': 'col-md-10 col-sm-12 col-xs-auto' }, { 'label': '3/4', 'value': 'col-md-9 col-sm-12 col-xs-auto' }, { 'label': '2/3', 'value': 'col-md-8 col-sm-12 col-xs-auto' }, { 'label': '1/2', 'value': 'col-md-6 col-sm-12 col-xs-auto' }, { 'label': '1/3', 'value': 'col-md-4 col-sm-6 col-xs-auto' }, { 'label': '1/4', 'value': 'col-md-3 col-sm-6 col-xs-auto' }, { 'label': '1/6', 'value': 'col-md-2 col-sm-4 col-xs-auto' }],
-      schema: [],
+      submission_schema: [],
       new_variable: {},
       variable_modal: false,
       examples: [],
@@ -232,8 +232,8 @@ export default {
     addVariable () {
       Vue.set(this.type[this.new_variable.schema].properties, this.new_variable.name, {type: this.new_variable.type, unique: false})
       this.type[this.new_variable.schema].order.push(this.new_variable.name)
-      // // this.type.schema.properties['VARIABLE_NAME'] = {added: true}
-      // console.log(this.type.schema.properties)
+      // // this.type.submission_schema.properties['VARIABLE_NAME'] = {added: true}
+      // console.log(this.type.submission_schema.properties)
       this.variable_modal = false
     },
     move (variable, displacement, schema) {
@@ -369,8 +369,8 @@ export default {
     },
     submission_fields_sorted () {
       // return []
-      console.log('submission_fields_sorted', this.fields_sorted('schema'), this.type['schema'])
-      return this.fields_sorted('schema')
+      console.log('submission_fields_sorted', this.fields_sorted('submission_schema'), this.type['submission_schema'])
+      return this.fields_sorted('submission_schema')
       // return this.submission_types.map(opt => ({label: opt.name, value: opt.id}))
     }
     // nested: {

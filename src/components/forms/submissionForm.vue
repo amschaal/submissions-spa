@@ -149,7 +149,7 @@
             :disable="submission.id != undefined"
           />
         </q-field>
-        <CustomFields v-model="submission.submission_data" :schema="type.schema" ref="submission_fields" v-if="type && type.schema" :errors="errors.submission_data" modify="true"/>
+        <CustomFields v-model="submission.submission_data" :schema="submission.type.submission_schema || type.submission_schema" ref="submission_fields" v-if="type && type.submission_schema" :errors="errors.submission_data" modify="true"/>
         <q-field
           label="* Samples"
           label-width="2"
