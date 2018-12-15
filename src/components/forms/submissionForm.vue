@@ -158,7 +158,7 @@
           v-if="type && type.sample_schema"
         >
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
-          <Agschema v-model="submission.sample_data" :type="type" :editable="true" :allow-examples="true" ref="samplesheet" v-if="type && type.sample_schema"/>
+          <Agschema v-model="submission.sample_data" :schema="submission.sample_schema" :type="type" :editable="true" :allow-examples="true" ref="samplesheet" v-if="type && type.sample_schema"/>
           <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet" />
         </q-field>
         <span v-if="debug">

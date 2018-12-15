@@ -134,13 +134,14 @@ import _ from 'lodash'
 // var clipboardService = null
 
 export default {
-  props: ['value', 'type', 'editable', 'allowExamples'],
+  props: ['value', 'type', 'schema', 'editable', 'allowExamples'],
   data () {
     return {
       opened: false,
       show_help: false,
       showExamples: this.allowExamples,
       showDescriptions: true,
+      sample_schema: {},
       // exampleRows: [], // [{}, {}],
       columnDefs: [
         {headerName: 'Make', field: 'make'},
@@ -192,7 +193,8 @@ export default {
         })
         return
       }
-      this.columnDefs = this.schema2Columns(this.type.sample_schema)
+      this.sample_schema = this.schema || this.type.sample_schema
+      this.columnDefs = this.schema2Columns(this.sample_schema)
       console.log('openSamplesheet', this.rowData, this.value, this.columnDefs)
       this.$refs.modal.show().then(() => {
         if (self.value.length === 0) {
@@ -293,7 +295,7 @@ export default {
       var self = this
       if (this.type) {
         // this.$axios.post('/api/submission_types/' + this.type.id + '/validate_data/', {data: this.getRowData(true)})
-        this.$axios.post('/api/validate/', {sample_schema: this.type.sample_schema, data: this.getRowData(true)})
+        this.$axios.post('/api/validate/', {sample_schema: this.sample_schema, data: this.getRowData(true)})
           .then(function (response) {
             console.log(response)
             self.errors = {}
@@ -366,7 +368,7 @@ export default {
     getExampleRows () {
       var examples = []
       if (this.showDescriptions) {
-        examples.push(this.getColDescriptions(this.type.sample_schema))
+        examples.push(this.getColDescriptions(this.sample_schema))
       }
       if (this.showExamples) {
         console.log('examples', this.type.examples)
