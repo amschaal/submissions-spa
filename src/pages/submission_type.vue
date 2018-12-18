@@ -81,8 +81,8 @@
         <h5>Samplesheet definition</h5>
         <h6>Column Definitions</h6>
         <div v-if="type && type.sample_schema && type.sample_schema.properties">
-          <Agschema v-model="type.examples" :type="type" :editable="true"  ref="samplesheet"/>
-          <q-btn :label="'Examples ('+type.examples.length+')'"  @click="openExamples"/>
+          <Agschema v-model="type.sample_schema.examples" :type="type" :editable="true"  ref="samplesheet"/>
+          <q-btn :label="'Examples ('+type.sample_schema.examples.length+')'"  @click="openExamples"/>
         </div>
         <table v-if="type.sample_schema" style="width:100%">
           <tr><th></th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th></th></tr>
@@ -182,7 +182,7 @@ export default {
   props: ['id'],
   data () {
     return {
-      type: {help: '', examples: [], submission_schema: {properties: {}, order: [], required: [], layout: {}}, sample_schema: {properties: {}, order: [], required: []}},
+      type: {help: '', examples: [], submission_schema: {properties: {}, order: [], required: [], layout: {}}, sample_schema: {properties: {}, order: [], required: [], examples: []}},
       errors: {},
       type_options: [{ 'label': 'Text', 'value': 'string' }, { 'label': 'Number', 'value': 'number' }, { 'label': 'True / False', 'value': 'boolean' }],
       width_options: [{ 'label': '100%', 'value': 'col-md-12 col-sm-12 col-xs-auto' }, { 'label': '5/6', 'value': 'col-md-10 col-sm-12 col-xs-auto' }, { 'label': '3/4', 'value': 'col-md-9 col-sm-12 col-xs-auto' }, { 'label': '2/3', 'value': 'col-md-8 col-sm-12 col-xs-auto' }, { 'label': '1/2', 'value': 'col-md-6 col-sm-12 col-xs-auto' }, { 'label': '1/3', 'value': 'col-md-4 col-sm-6 col-xs-auto' }, { 'label': '1/4', 'value': 'col-md-3 col-sm-6 col-xs-auto' }, { 'label': '1/6', 'value': 'col-md-2 col-sm-4 col-xs-auto' }],
@@ -202,8 +202,8 @@ export default {
         .get('/api/submission_types/' + self.id + '/')
         .then(function (response) {
           self.type = response.data
-          if (!self.type.examples) {
-            self.type.examples = []
+          if (!self.type.sample_schema.examples) {
+            self.type.sample_schema.examples = []
           }
         })
     }

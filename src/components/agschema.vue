@@ -371,8 +371,8 @@ export default {
         examples.push(this.getColDescriptions(this.sample_schema))
       }
       if (this.showExamples) {
-        console.log('examples', this.type.examples)
-        examples = examples.concat(this.type.examples)
+        console.log('examples', this.sample_schema.examples)
+        examples = examples.concat(this.sample_schema.examples)
       }
       return examples
     }
