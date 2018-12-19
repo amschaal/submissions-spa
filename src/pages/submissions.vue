@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="docs-input row justify-center">
+  <q-page class="docs-input justify-center"><!-- row -->
     <q-table
       ref="table"
       :data="serverData"
@@ -132,8 +132,14 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 tr.cancelled td, tr.cancelled td a {
   color: red;
 }
+/*
+.q-table-middle.scroll, .scroll {
+  overflow: inherit !important;
+}
+*/
+
 </style>
