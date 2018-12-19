@@ -21,7 +21,34 @@
             :options="user_options"
           />
         </q-field>
-        <p class="caption">Submitter</p>
+        <p class="caption">PI</p>
+        <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-4">
+            <q-field
+              :error="errors.pi_name"
+              :error-label="errors.pi_name"
+            >
+              <q-input v-model="submission.pi_name" type="text" stack-label="* PI Full Name"/>
+            </q-field>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <q-field
+              :error="errors.pi_email"
+              :error-label="errors.pi_email"
+            >
+              <q-input v-model="submission.pi_email" type="text" stack-label="* PI Email"/>
+            </q-field>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <q-field
+              :error="errors.institute"
+              :error-label="errors.institute"
+            >
+            <q-input v-model="submission.institute" type="text" stack-label="* Institute"/>
+            </q-field>
+          </div>
+        </div>
+        <p class="caption">Submitter (<a class="link" @click="copyPI">Copy from submitter</a>)</p>
         <div class="row">
           <div class="col-sm-12 col-md-12 col-lg-4">
             <q-field
@@ -48,33 +75,6 @@
               :error-label="errors.phone"
             >
               <q-input v-model="submission.phone" type="text" stack-label="* Submitter phone"/>
-            </q-field>
-          </div>
-        </div>
-        <p class="caption">PI (<a class="link" @click="copySubmitter">Copy from submitter</a>)</p>
-        <div class="row">
-          <div class="col-sm-12 col-md-12 col-lg-4">
-            <q-field
-              :error="errors.pi_name"
-              :error-label="errors.pi_name"
-            >
-              <q-input v-model="submission.pi_name" type="text" stack-label="* PI Full Name"/>
-            </q-field>
-          </div>
-          <div class="col-sm-12 col-md-6 col-lg-4">
-            <q-field
-              :error="errors.pi_email"
-              :error-label="errors.pi_email"
-            >
-              <q-input v-model="submission.pi_email" type="text" stack-label="* PI Email"/>
-            </q-field>
-          </div>
-          <div class="col-sm-12 col-md-6 col-lg-4">
-            <q-field
-              :error="errors.institute"
-              :error-label="errors.institute"
-            >
-            <q-input v-model="submission.institute" type="text" stack-label="* Institute"/>
             </q-field>
           </div>
         </div>
@@ -350,9 +350,9 @@ export default {
     //     }
     //   }
     // },
-    copySubmitter () {
-      Vue.set(this.submission, 'pi_name', this.submission.name)
-      Vue.set(this.submission, 'pi_email', this.submission.email)
+    copyPI () {
+      Vue.set(this.submission, 'name', this.submission.pi_name)
+      Vue.set(this.submission, 'email', this.submission.pi_email)
     }
   },
   watch: {
