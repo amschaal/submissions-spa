@@ -11,7 +11,7 @@
       @request="request"
       binary-state-sort
     >
-      <template slot="top-right" slot-scope="props">
+      <template slot="top-right" slot-scope="props" :props="props">
         <q-search hide-underline v-model="filter" />
       </template>
       <template slot="body" slot-scope="props">
@@ -22,7 +22,7 @@
           <q-td key="submission_count" :props="props"><router-link :to="{ name: 'submissions', query: { search: props.row.name }}">{{ props.row.submission_count }}</router-link></q-td>
         </q-tr>
       </template>
-      <template slot="top-left" slot-scope="props">
+      <template slot="top-left" slot-scope="props" :props="props">
         <q-btn color="primary" label="Create" class="q-mr-sm" :to="{name: 'create_submission_type'}"/>
       </template>
     </q-table>

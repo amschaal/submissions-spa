@@ -23,6 +23,21 @@
             v-if="type.sample_help"
           />
           <q-checkbox v-model="showDescriptions" label="Show descriptions"/> <q-checkbox v-model="showExamples" label="Show examples" v-if="allowExamples"/>
+          <q-btn-dropdown label="Resize Columns" class="float-right">
+          <!-- dropdown content -->
+          <q-list link>
+            <q-item @click.native="sizeToFit">
+              <q-item-main>
+                <q-item-tile label>Fit all columns</q-item-tile>
+              </q-item-main>
+            </q-item>
+            <q-item @click.native="autoSizeAll">
+              <q-item-main>
+                <q-item-tile label>Auto-size</q-item-tile>
+              </q-item-main>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
           <ag-grid-vue style="width: 100%; max-height: 400px;" class="ag-theme-balham"
             domLayout='autoHeight'
             rowSelection='multiple'
@@ -118,7 +133,7 @@
 <script src='/statics/hot-schema/hotschema.js'></script> -->
 
 <script>
-import { QSelect } from 'quasar'
+// import { QSelect } from 'quasar'
 import { AgGridVue } from 'ag-grid-vue'
 import '../../node_modules/ag-grid/dist/styles/ag-grid.css'
 import '../../node_modules/ag-grid/dist/styles/ag-theme-balham.css'
@@ -202,6 +217,13 @@ export default {
         }
         this.rootNode = this.gridOptions.api.getModel().rootNode
       })
+    },
+    sizeToFit () {
+      this.gridOptions.api.sizeColumnsToFit()
+    },
+    autoSizeAll () {
+      var allColIds = this.gridOptions.columnApi.getAllColumns().map(column => column.colId)
+      this.gridOptions.columnApi.autoSizeColumns(allColIds)
     },
     schema2Columns (schema) {
       var columnDefs = []
@@ -378,7 +400,7 @@ export default {
     }
   },
   components: {
-    QSelect,
+    // QSelect,
     AgGridVue
   },
   watch: {

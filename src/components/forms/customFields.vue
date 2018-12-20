@@ -71,6 +71,7 @@ export default {
           return {'variable': variable, 'schema': self.schema.properties[variable]}
         })
       }
+      return []
     }
   },
   components: {

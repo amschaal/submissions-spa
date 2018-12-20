@@ -18,11 +18,12 @@
           class="q-mr-sm"
           v-model="visibleColumns"
           :columns="columns"
+          :props="props"
         />
         <q-checkbox v-model="showCancelled" label="Show cancelled" @input="refresh"/>
       </template>
       <template slot="top-right" slot-scope="props">
-        <q-search hide-underline v-model="filter" />
+        <q-search hide-underline v-model="filter" :props="props"/>
       </template>
       <template slot="body" slot-scope="props">
         <q-tr :props="props" v-bind:class="{'cancelled': props.row.cancelled}">
@@ -132,7 +133,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style>
 tr.cancelled td, tr.cancelled td a {
   color: red;
 }
