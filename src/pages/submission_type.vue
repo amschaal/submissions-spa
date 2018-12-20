@@ -41,7 +41,7 @@
         <table v-if="type.submission_schema" style="width:100%">
           <tr><th></th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th>Column Width</th><th></th></tr>
           <tr v-for="variable in submission_fields_sorted" :key="variable.variable">
-            <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1, 'schema')" v-if="type.submission_schema.order && type.submission_schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1, 'schema')" v-if="type.submission_schema.order && type.submission_schema.order.indexOf(variable.variable) != type.submission_schema.order.length - 1"/>
+            <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1, 'submission_schema')" v-if="type.submission_schema.order && type.submission_schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1, 'submission_schema')" v-if="type.submission_schema.order && type.submission_schema.order.indexOf(variable.variable) != type.submission_schema.order.length - 1"/>
             <td><q-checkbox v-model="type.submission_schema.required" :val="variable.variable"/></td>
             <td>{{variable.variable}}</td>
             <td><q-input v-model="variable.schema.title" /></td>
@@ -69,13 +69,13 @@
 
             </td>
             <td class="row">
-              <fieldoptions v-model="type.submission_schema.properties[variable.variable]" :variable="variable.variable" type="submission"/> <q-btn label="Delete" color="negative" @click="deleteVariable(variable.variable, 'schema')"></q-btn>
+              <fieldoptions v-model="type.submission_schema.properties[variable.variable]" :variable="variable.variable" type="submission"/> <q-btn label="Delete" color="negative" @click="deleteVariable(variable.variable, 'submission_schema')"></q-btn>
             </td>
           </tr>
         </table>
         <q-btn
           color="positive"
-          @click="openModal('schema')"
+          @click="openModal('submission_schema')"
           label="Add"
         />
         <h5>Samplesheet definition</h5>
