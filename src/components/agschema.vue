@@ -136,8 +136,8 @@
 <script>
 // import { QSelect } from 'quasar'
 import { AgGridVue } from 'ag-grid-vue'
-import '../../node_modules/ag-grid/dist/styles/ag-grid.css'
-import '../../node_modules/ag-grid/dist/styles/ag-theme-balham.css'
+import '../../node_modules/ag-grid-community/dist/styles/ag-grid.css'
+import '../../node_modules/ag-grid-community/dist/styles/ag-theme-balham.css'
 import 'ag-grid-enterprise/main'
 import NumericComponent from './aggrid/editors/NumericComponent.vue'
 // import DateComponent from './aggrid/DateComponent.vue'
@@ -178,7 +178,7 @@ export default {
         },
         suppressMultiRangeSelection: true,
         suppressRowClickSelection: true,
-        checkboxSelection: function () { return true },
+        // checkboxSelection: function () { return true },
         processCellFromClipboard (params) {
           switch (params.column.colDef.dataType) {
             case 'boolean':
@@ -248,13 +248,14 @@ export default {
       return columnDefs
     },
     getColDescriptions (schema) {
+      console.log('getColDescriptions', schema)
       var descriptions = {}
       for (var prop in schema.properties) {
         if (schema.properties.hasOwnProperty(prop)) {
           descriptions[prop] = schema.properties[prop].description
         }
       }
-      console.log('descriptions', this.columnDefs)
+      console.log('descriptions', descriptions)
       return descriptions
     },
     getColDef (id, definition, schema) {
