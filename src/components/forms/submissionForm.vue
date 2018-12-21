@@ -23,12 +23,20 @@
         </q-field>
         <p class="caption">PI</p>
         <div class="row">
-          <div class="col-sm-12 col-md-12 col-lg-4">
+          <div class="col-sm-6 col-md-6 col-lg-2">
             <q-field
-              :error="errors.pi_name"
-              :error-label="errors.pi_name"
+              :error="errors.pi_first_name"
+              :error-label="errors.pi_first_name"
             >
-              <q-input v-model="submission.pi_name" type="text" stack-label="* PI Full Name"/>
+              <q-input v-model="submission.pi_first_name" type="text" stack-label="* PI First Name"/>
+            </q-field>
+          </div>
+          <div class="col-sm-6 col-md-6 col-lg-2">
+            <q-field
+              :error="errors.pi_last_name"
+              :error-label="errors.pi_last_name"
+            >
+              <q-input v-model="submission.pi_last_name" type="text" stack-label="* PI Last Name"/>
             </q-field>
           </div>
           <div class="col-sm-12 col-md-6 col-lg-4">
@@ -41,6 +49,14 @@
           </div>
           <div class="col-sm-12 col-md-6 col-lg-4">
             <q-field
+              :error="errors.pi_phone"
+              :error-label="errors.pi_phone"
+            >
+              <q-input v-model="submission.pi_phone" type="text" stack-label="* PI phone"/>
+            </q-field>
+          </div>
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <q-field
               :error="errors.institute"
               :error-label="errors.institute"
             >
@@ -48,17 +64,22 @@
             </q-field>
           </div>
         </div>
-        <p class="caption">Submitter (<a class="link" @click="copyPI">Copy from submitter</a>)</p>
+        <p class="caption">Submitter (<a class="link" @click="copyPI">Copy from PI</a>)</p>
         <div class="row">
-          <div class="col-sm-12 col-md-12 col-lg-4">
+          <div class="col-sm-6 col-md-6 col-lg-2">
             <q-field
-              helper="Some helper"
-              :error="errors.name"
-              :error-label="errors.name"
-              :warning="errors.name"
-              warning-label="Hey, we got a warning."
+              :error="errors.first_name"
+              :error-label="errors.first_name"
             >
-              <q-input v-model="submission.name" type="text" stack-label="* Full name"/>
+              <q-input v-model="submission.first_name" type="text" stack-label="* First name"/>
+            </q-field>
+          </div>
+          <div class="col-sm-6 col-md-6 col-lg-2">
+            <q-field
+              :error="errors.last_name"
+              :error-label="errors.last_name"
+            >
+              <q-input v-model="submission.last_name" type="text" stack-label="* Last name"/>
             </q-field>
           </div>
           <div class="col-sm-12 col-md-6 col-lg-4">
@@ -351,7 +372,9 @@ export default {
     //   }
     // },
     copyPI () {
-      Vue.set(this.submission, 'name', this.submission.pi_name)
+      Vue.set(this.submission, 'first_name', this.submission.pi_first_name)
+      Vue.set(this.submission, 'last_name', this.submission.pi_last_name)
+      Vue.set(this.submission, 'phone', this.submission.pi_phone)
       Vue.set(this.submission, 'email', this.submission.pi_email)
     }
   },

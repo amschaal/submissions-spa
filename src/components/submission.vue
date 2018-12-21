@@ -22,9 +22,13 @@
           </div>
         </div>
         <div class="row">
-          <div class="field col-sm-12 col-md-12 col-lg-4">
-            <p class="caption">Submitter</p>
-            {{submission.name}}
+          <div class="field col-sm-6 col-md-6 col-lg-2">
+            <p class="caption">First Name</p>
+            {{submission.first_name}}
+          </div>
+          <div class="field col-sm-6 col-md-6 col-lg-2">
+            <p class="caption">Last Name</p>
+            {{submission.last_name}}
           </div>
           <div class="field col-sm-12 col-md-6 col-lg-4">
             <p class="caption">Email</p>
@@ -36,13 +40,21 @@
           </div>
         </div>
         <div class="row">
-          <div class="field col-sm-12 col-md-12 col-lg-4">
-            <p class="caption">PI</p>
-            {{submission.pi_name}}
+          <div class="field col-sm-6 col-md-6 col-lg-2">
+            <p class="caption">PI First Name</p>
+            {{submission.pi_first_name}}
+          </div>
+          <div class="field col-sm-6 col-md-6 col-lg-2">
+            <p class="caption">PI Last Name</p>
+            {{submission.pi_last_name}}
           </div>
           <div class="field col-sm-12 col-md-6 col-lg-4">
             <p class="caption">PI Email</p>
             {{submission.pi_email}}
+          </div>
+          <div class="field col-sm-12 col-md-6 col-lg-4">
+            <p class="caption">PI Phone</p>
+            {{submission.pi_phone}}
           </div>
           <div class="field col-sm-12 col-md-6 col-lg-4">
             <p class="caption">Institute</p>

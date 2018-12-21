@@ -4,8 +4,9 @@
     <table class="full bordered">
     <tr><th>ID</th><td>{{submission.id}}</td><th>Internal ID</th><td>{{submission.internal_id}}</td><th>Type</th><td>{{submission.type.name}}</td></tr>
     <tr><th>Status</th><td>{{submission.status.name}}</td><th>Submitted</th><td>{{submission.submitted}}</td><th>Updated</th><td>{{submission.updated}}</td></tr>
-    <tr><th>Name</th><td>{{submission.name}}</td><th>Email</th><td>{{submission.email}}</td><th>Phone</th><td>{{submission.phone}}</td></tr>
-    <tr><th>PI</th><td>{{submission.pi_name}}</td><th>PI email</th><td>{{submission.pi_email}}</td><th>Institute</th><td>{{submission.institute}}</td></tr>
+    <tr><th>Name</th><td>{{submission.first_name}} {{submission.last_name}}</td><th>Email</th><td>{{submission.email}}</td><th>Phone</th><td>{{submission.phone}}</td></tr>
+    <tr><th>PI</th><td>{{submission.pi_first_name}} {{submission.pi_last_name}}</td><th>PI email</th><td>{{submission.pi_email}}</td><th>PI Phone</th><td>{{submission.pi_phone}}</td></tr>
+    <tr><th>Institute</th><td colspan="5">{{submission.institute}}</td></tr>
     <tr v-if="submission.notes"><th>Notes</th><td colspan="5">{{submission.notes}}</td></tr>
     </table>
     <div v-if="submission.submission_data">
