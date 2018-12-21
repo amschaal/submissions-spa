@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="docs-input row justify-center">
+  <q-page class="docs-input justify-center">
     <q-table
       ref="table"
       :data="serverData"
@@ -18,7 +18,7 @@
         <q-tr :props="props">
           <q-td key="name" :props="props"><router-link :to="{ name: 'submission_type', params: { id: props.row.id }}">{{ props.row.name }}</router-link></q-td>
           <q-td key="description" :props="props">{{ props.row.description }}</q-td>
-          <q-td key="updated" :props="props">{{ props.row.updated }}</q-td>
+          <q-td key="updated" :props="props">{{ props.row.updated | formatDate }}</q-td>
           <q-td key="submission_count" :props="props"><router-link :to="{ name: 'submissions', query: { search: props.row.name }}">{{ props.row.submission_count }}</router-link></q-td>
         </q-tr>
       </template>

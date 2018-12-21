@@ -32,7 +32,7 @@
           <q-td key="internal_id" :props="props">{{ props.row.internal_id }}</q-td>
           <q-td key="type" :props="props"><router-link :to="{'name': 'submission_type', 'params': { id: props.row.type.id }}">{{ props.row.type.name }}</router-link></q-td>
           <q-td key="status__order" :props="props">{{ props.row.status ? props.row.status.name : '' }}</q-td>
-          <q-td key="submitted" :props="props">{{ props.row.submitted.substring(0,10) }}</q-td>
+          <q-td key="submitted" :props="props">{{ props.row.submitted | formatDate }}</q-td>
           <q-td key="name" :props="props">{{ props.row.name }}</q-td>
           <q-td key="email" :props="props">{{ props.row.email }}</q-td>
           <q-td key="pi_email" :props="props">{{ props.row.pi_email }}</q-td>

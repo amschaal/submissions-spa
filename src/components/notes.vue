@@ -4,7 +4,7 @@
       <q-card inline :class="getClasses(note)">
         <q-card-title>
            {{getTypeText(note)}} {{getEmailsText(note)}} <span class="float-right"><q-icon name="edit" @click.native="$set(note, 'edit', true)" v-if="note.can_modify"/> <q-icon name="delete" @click.native="deleteNote(note)" v-if="!note.id || note.can_modify"/> <q-icon v-if="note.id" name="reply" @click.native="reply(note)"/></span>
-          <span slot="subtitle"><span v-if="note.user"><b>{{ note.user }}</b> wrote:</span> <span class="float-right" v-if="note.created">{{formatDate(note.created)}}</span></span>
+          <span slot="subtitle"><span v-if="note.user"><b>{{ note.user }}</b> wrote:</span> <span class="float-right" v-if="note.created">{{note.created | formatDate}}</span></span>
         </q-card-title>
         <q-card-main v-if="!note.edit">
           {{note.text}}
@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 
 export default {
   name: 'notes',
@@ -49,9 +48,6 @@ export default {
     //   })
   },
   methods: {
-    formatDate (value) {
-      return moment(String(value)).format('MM/DD/YYYY hh:mm')
-    },
     getResponses (note) {
       if (note) {
         return this.noteHash[note.id]

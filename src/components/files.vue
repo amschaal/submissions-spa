@@ -18,7 +18,7 @@
       <template slot="body" slot-scope="props">
         <q-tr :props="props">
           <q-td key="file" :props="props"><q-btn v-if="$store.getters.isLoggedIn" class="float-left" color="red" label="Delete" @click="deleteFile(props.row)"/><a :href="props.row.file" target="_blank">{{ props.row.filename }}</a></q-td>
-          <q-td key="uploaded_at" :props="props">{{ formatDate(props.row.uploaded_at) }}</q-td>
+          <q-td key="uploaded_at" :props="props">{{ props.row.uploaded_at | formatDate }}</q-td>
         </q-tr>
       </template>
     </q-table>
@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 
 export default {
   props: ['submission'],
@@ -131,9 +130,6 @@ export default {
           self.refreshTable()
           // self.request(self.serverPagination, self.filter)
         })
-    },
-    formatDate (value) {
-      return moment(String(value)).format('MM/DD/YYYY hh:mm')
     }
   }
 }
