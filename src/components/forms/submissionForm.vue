@@ -23,7 +23,7 @@
         </q-field>
         <p class="caption">PI</p>
         <div class="row">
-          <div class="col-sm-6 col-md-6 col-lg-2">
+          <div class="col-sm-6 col-md-6 col-lg-3">
             <q-field
               :error="errors.pi_first_name"
               :error-label="errors.pi_first_name"
@@ -31,7 +31,7 @@
               <q-input v-model="submission.pi_first_name" type="text" stack-label="* PI First Name"/>
             </q-field>
           </div>
-          <div class="col-sm-6 col-md-6 col-lg-2">
+          <div class="col-sm-6 col-md-6 col-lg-3">
             <q-field
               :error="errors.pi_last_name"
               :error-label="errors.pi_last_name"
@@ -39,7 +39,7 @@
               <q-input v-model="submission.pi_last_name" type="text" stack-label="* PI Last Name"/>
             </q-field>
           </div>
-          <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="col-sm-12 col-md-6 col-lg-3">
             <q-field
               :error="errors.pi_email"
               :error-label="errors.pi_email"
@@ -47,7 +47,7 @@
               <q-input v-model="submission.pi_email" type="text" stack-label="* PI Email"/>
             </q-field>
           </div>
-          <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="col-sm-12 col-md-6 col-lg-3">
             <q-field
               :error="errors.pi_phone"
               :error-label="errors.pi_phone"
@@ -66,7 +66,7 @@
         </div>
         <p class="caption">Submitter (<a class="link" @click="copyPI">Copy from PI</a>)</p>
         <div class="row">
-          <div class="col-sm-6 col-md-6 col-lg-2">
+          <div class="col-sm-6 col-md-6 col-lg-3">
             <q-field
               :error="errors.first_name"
               :error-label="errors.first_name"
@@ -74,7 +74,7 @@
               <q-input v-model="submission.first_name" type="text" stack-label="* First name"/>
             </q-field>
           </div>
-          <div class="col-sm-6 col-md-6 col-lg-2">
+          <div class="col-sm-6 col-md-6 col-lg-3">
             <q-field
               :error="errors.last_name"
               :error-label="errors.last_name"
@@ -82,7 +82,7 @@
               <q-input v-model="submission.last_name" type="text" stack-label="* Last name"/>
             </q-field>
           </div>
-          <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="col-sm-12 col-md-6 col-lg-3">
             <q-field
               :error="errors.email"
               :error-label="errors.email"
@@ -90,7 +90,7 @@
               <q-input v-model="submission.email" type="email" :disable="submission.id != undefined" stack-label="* Email"/>
             </q-field>
           </div>
-          <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="col-sm-12 col-md-6 col-lg-3">
             <q-field
               :error="errors.phone"
               :error-label="errors.phone"
