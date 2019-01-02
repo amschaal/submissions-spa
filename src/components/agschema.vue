@@ -23,7 +23,6 @@
             v-if="type.sample_help"
           />
           <q-checkbox v-model="showDescriptions" label="Show descriptions"/> <q-checkbox v-model="showExamples" label="Show examples" v-if="allowExamples"/>
-          <!--
           <q-btn-dropdown label="Resize Columns" class="float-right">
           <q-list link>
             <q-item @click.native="sizeToFit">
@@ -38,7 +37,6 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
-        -->
           <ag-grid-vue style="width: 100%; max-height: 400px;" class="ag-theme-balham"
             domLayout='autoHeight'
             rowSelection='multiple'
