@@ -418,4 +418,7 @@ export default {
   .ag-row .example {
     background-color: lightgrey !important;
   }
+  .ag-theme-balham .ag-row-odd {
+    background-color: #fafafa;
+  }
 </style>
