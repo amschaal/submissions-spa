@@ -268,6 +268,7 @@ export default {
         return []
       }
       function cellTooltip (params) {
+        console.log('tooltip', params)
         if (self.errors[params.rowIndex] && self.errors[params.rowIndex][params.colDef.field]) {
           return self.errors[params.rowIndex][params.colDef.field].join(', ')
         }

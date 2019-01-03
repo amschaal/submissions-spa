@@ -16,7 +16,15 @@
           </div>
         </div>
         <div class="row">
-          <div class="field col-sm-12">
+          <div class="field col-sm-12 col-md-4">
+            <p class="caption">Internal ID</p>
+            {{submission.internal_id}}
+          </div>
+          <div class="field col-sm-12 col-md-4">
+            <p class="caption">ID</p>
+            {{submission.id}}
+          </div>
+          <div class="field col-sm-12 col-md-4">
             <p class="caption">Type</p>
             {{submission_type.name}}
           </div>
