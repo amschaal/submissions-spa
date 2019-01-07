@@ -16,6 +16,7 @@
       </template>
       <template slot="body" slot-scope="props">
         <q-tr :props="props">
+          <q-td key="sort_order" :props="props">{{ props.row.sort_order }}</q-td>
           <q-td key="name" :props="props"><router-link :to="{ name: 'submission_type', params: { id: props.row.id }}">{{ props.row.name }}</router-link></q-td>
           <q-td key="description" :props="props">{{ props.row.description }}</q-td>
           <q-td key="updated" :props="props">{{ props.row.updated | formatDate }}</q-td>
@@ -42,11 +43,12 @@ export default {
         page: 1,
         rowsNumber: 0, // specifying this determines pagination is server-side
         rowsPerPage: 10,
-        descending: true,
-        sortBy: 'updated'
+        descending: false,
+        sortBy: 'sort_order'
       },
       serverData: [],
       columns: [
+        { name: 'sort_order', label: 'Sort Order', field: 'sort_order', sortable: true },
         { name: 'name', label: 'Name', field: 'name', sortable: true },
         { name: 'description', label: 'Description', field: 'description' },
         { name: 'updated', label: 'Updated', field: 'updated', sortable: true },

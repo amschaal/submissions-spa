@@ -268,7 +268,6 @@ export default {
         return []
       }
       function cellTooltip (params) {
-        console.log('tooltip', params)
         if (self.errors[params.rowIndex] && self.errors[params.rowIndex][params.colDef.field]) {
           return self.errors[params.rowIndex][params.colDef.field].join(', ')
         }
@@ -417,7 +416,7 @@ export default {
   .ag-row .example {
     background-color: lightgrey !important;
   }
-  .ag-theme-balham .ag-row-odd {
+  .ag-theme-balham .ag-row-odd:not(.ag-row-selected) {
     background-color: #fafafa;
   }
 </style>

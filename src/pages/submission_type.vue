@@ -15,6 +15,14 @@
           <q-input v-model="type.name" type="text"/>
         </q-field>
         <q-field
+          label="Sort order"
+          helper="Submission types will be displayed in numeric order as specified by this field"
+          :error="errors.sort_order"
+          :error-label="errors.sort_order"
+        >
+          <q-input v-model="type.sort_order" type="integer"/>
+        </q-field>
+        <q-field
           label="Description"
           :error="errors.description"
           :error-label="errors.description"
