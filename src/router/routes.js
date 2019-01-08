@@ -28,6 +28,17 @@ export default [
         props: (route) => ({ id: route.params.id, modify: true })
       },
       {
+        path: '/submissions/:id/confirm/',
+        component: () => import('pages/confirm_submission'),
+        name: 'confirm_submission',
+        props: (route) => ({ id: route.params.id })
+      },
+      {
+        path: '/submissions/created/',
+        component: () => import('pages/submission_created'),
+        name: 'submission_created'
+      },
+      {
         path: '/submission_types',
         component: () => import('pages/submission_types'),
         name: 'submission_types'

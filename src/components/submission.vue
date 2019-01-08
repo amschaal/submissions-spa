@@ -1,6 +1,16 @@
 <template>
   <div>
         <div class="row">
+          <div v-if="$route.query.created" class="field col-12">
+            <q-alert
+              type="positive"
+              appear
+              class="q-mb-sm"
+            >
+              <p>Submission Created!</p>
+              <pre>{{submission_type.confirmation_text}}</pre>
+            </q-alert>
+          </div>
           <div class="field col-sm-12 col-lg-4">
             <StatusSelector v-model="submission.status" :submission="submission" v-if="submission.id"/>
           </div>
@@ -16,6 +26,7 @@
           </div>
         </div>
         <div class="row">
+
           <div class="field col-sm-12 col-md-4">
             <p class="caption">Internal ID</p>
             {{submission.internal_id}}

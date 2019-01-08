@@ -317,7 +317,7 @@ export default {
           self.$q.notify({message: 'Submission successfully saved.', type: 'positive'})
           self.$emit('submission_updated', self.submission)
           // if (self.create) {
-          self.$router.push({name: 'submission', params: {id: response.data.id}})
+          self.$router.push({name: 'submission', params: {id: response.data.id}, query: {created: true}})
           // }
         })
         .catch(function (error, stuff) {

@@ -45,6 +45,14 @@
             ]"
           />
         </q-field>
+        <q-field
+          label="Confirmation Text"
+          helper="Additional text for submission confirmation."
+          :error="errors.confirmation_text"
+          :error-label="errors.confirmation_text"
+        >
+          <q-input v-model="type.confirmation_text" type="textarea"/>
+        </q-field>
         <h6>Submission Fields</h6>
         <table v-if="type.submission_schema" style="width:100%">
           <tr><th></th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th>Column Width</th><th></th></tr>
