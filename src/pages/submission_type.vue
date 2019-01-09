@@ -47,7 +47,7 @@
         </q-field>
         <q-field
           label="Confirmation Text"
-          helper="Additional text for submission confirmation."
+          helper="Text to provide additional instruction to submitter after submission is complete."
           :error="errors.confirmation_text"
           :error-label="errors.confirmation_text"
         >
