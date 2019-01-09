@@ -174,6 +174,7 @@ export default {
             return {'font-weight': 'bold'}
           }
         },
+        onCellFocused: this.onCellFocused,
         suppressMultiRangeSelection: true,
         suppressRowClickSelection: true,
         // checkboxSelection: function () { return true },
@@ -216,6 +217,15 @@ export default {
         }
         this.rootNode = this.gridOptions.api.getModel().rootNode
       })
+    },
+    onCellFocused (params) {
+      console.log('focused', params, this.errors)
+      if (this.dismiss) {
+        this.dismiss()
+      }
+      if (this.errors[params.rowIndex] && this.errors[params.rowIndex][params.column.colDef.field]) {
+        this.dismiss = this.$q.notify({position: 'top', message: `Error at Row ${params.rowIndex + 1}, Column "${params.column.colDef.headerName}": ` + this.errors[params.rowIndex][params.column.colDef.field].join(', ')})
+      }
     },
     sizeToFit () {
       this.gridOptions.api.sizeColumnsToFit()
@@ -272,7 +282,6 @@ export default {
           return self.errors[params.rowIndex][params.colDef.field].join(', ')
         }
       }
-      // var cellTooltip = 'testing testing'
       console.log('definition', id, definition, schema)
       var header = id
       var tooltip = null
@@ -367,7 +376,6 @@ export default {
       // this.validate(false)
     },
     close () {
-      // this.data = this.value.slice()
       this.$refs.modal.hide()
     },
     modalOpened () {
