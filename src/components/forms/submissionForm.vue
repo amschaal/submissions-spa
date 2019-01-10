@@ -128,6 +128,7 @@
           </div>
         </div>
         <p class="caption">Payment</p>
+        <UCDAccount v-model="submission.payment" :errors="errors.payment"/>
         <div class="row">
           <div class="col-sm-12 col-md-6">
             <q-field
@@ -221,6 +222,7 @@ import './docs-input.styl'
 // import Samplesheet from '../../components/samplesheet.vue'
 import Agschema from '../../components/agschema.vue'
 import CustomFields from '../../components/forms/customFields.vue'
+import UCDAccount from '../../components/payment/ucdAccount.vue'
 // import Files from '../../components/files.vue'
 import Vue from 'vue'
 
@@ -229,14 +231,15 @@ export default {
   props: ['id', 'submission_types', 'type_options', 'create'],
   data () {
     return {
-      submission: {'submission_data': {}, 'sample_data': [], 'contacts': [], biocore: false},
-      errors: {contacts: []},
+      submission: {'submission_data': {}, 'sample_data': [], 'contacts': [], biocore: false, 'payment': {}},
+      errors: {contacts: [], payment: {}},
       // submission_types: [{ foo: 'bar' }],
       // type_options: [{ 'label': 'test', 'value': 2 }],
       type: {},
       debug: false,
       user_options: null,
-      show_help: false
+      show_help: false,
+      payment: {}
       // create: false
     }
   },
@@ -317,12 +320,12 @@ export default {
           self.$q.notify({message: 'Submission successfully saved.', type: 'positive'})
           self.$emit('submission_updated', self.submission)
           // if (self.create) {
-          self.$router.push({name: 'submission', params: {id: response.data.id}, query: {created: true}})
+          self.$router.push({name: 'submission', params: {id: response.data.id}, query: {created: self.create}})
           // }
         })
         .catch(function (error, stuff) {
           // raise different exception if due to invalid credentials
-          console.log('ERROR', error.response)
+          console.log('ERROR', error)
           self.$q.notify({message: 'There were errors saving your submission.', type: 'negative'})
           if (error.response) {
             self.errors = error.response.data
@@ -420,7 +423,8 @@ export default {
   },
   components: {
     Agschema,
-    CustomFields
+    CustomFields,
+    UCDAccount
   }
 }
 </script>
