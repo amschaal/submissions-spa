@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="submission.type">
     <h5 class="centered">Submission Details</h5>
     <table class="full bordered">
     <tr><th>ID</th><td>{{submission.id}}</td><th>Internal ID</th><td>{{submission.internal_id}}</td><th>Type</th><td>{{submission.type.name}}</td></tr>
@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     getTitle (schema, variable) {
-      return schema.properties[variable].title ? schema.properties[variable].title : variable
+      return schema.properties[variable] && schema.properties[variable].title ? schema.properties[variable].title : variable
     }
   },
   components: {
