@@ -89,7 +89,7 @@
             />
             <q-btn
               color="positive"
-              label="Keep Changes"
+              label="Save"
               @click="validate(true)"
               class="float-right"
             />
@@ -269,9 +269,13 @@ export default {
     getColDef (id, definition, schema) {
       var self = this
       function cellClass (params) {
-        // console.log('cellClass', params, self.errors)
+        console.log('cellClass', params, self.errors)
         if (params.node.rowPinned) {
-          return ['example']
+          if (params.data.example_type === 'description') {
+            return ['description']
+          } else {
+            return ['example']
+          }
         } else if (self.errors[params.rowIndex] && self.errors[params.rowIndex][params.colDef.field]) {
           return ['error']
         }
@@ -398,12 +402,15 @@ export default {
     getExampleRows () {
       var examples = []
       if (this.showDescriptions) {
-        examples.push(this.getColDescriptions(this.sample_schema))
+        var descriptions = this.getColDescriptions(this.sample_schema)
+        descriptions.example_type = 'description'
+        examples.push(descriptions)
       }
       if (this.showExamples) {
         console.log('examples', this.sample_schema.examples)
         examples = examples.concat(this.sample_schema.examples)
       }
+      console.log('examples', examples)
       return examples
     }
   },
@@ -422,7 +429,10 @@ export default {
     background-color: pink;
   }
   .ag-row .example {
-    background-color: lightgrey !important;
+    background-color: lightgreen !important;
+  }
+  .ag-row .description {
+    background-color: lightblue !important;
   }
   .ag-theme-balham .ag-row-odd:not(.ag-row-selected) {
     background-color: #fafafa;
