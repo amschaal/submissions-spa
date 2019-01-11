@@ -22,7 +22,7 @@
             icon="fas fa-question-circle"
             v-if="type.sample_help"
           />
-          <q-checkbox v-model="showDescriptions" label="Show descriptions"/> <q-checkbox v-model="showExamples" label="Show examples" v-if="allowExamples"/>
+          <q-checkbox v-model="showDescriptions" label="Show descriptions" class="show_descriptions"/> <q-checkbox v-model="showExamples" label="Show examples" v-if="allowExamples"  class="show_examples"/>
           <q-btn-dropdown label="Resize Columns" class="float-right">
           <q-list link>
             <q-item @click.native="sizeToFit">
@@ -167,7 +167,7 @@ export default {
       gridOptions: {
         enableRangeSelection: true,
         defaultColDef: {
-          editable: this.editable
+          editable: this.cellEditable
         },
         getRowStyle: function (params) {
           if (params.node.rowPinned) {
@@ -217,6 +217,13 @@ export default {
         }
         this.rootNode = this.gridOptions.api.getModel().rootNode
       })
+    },
+    cellEditable (params) {
+      console.log('cellEditable', this.editable, params)
+      if (params.node.rowPinned === 'top') {
+        return false
+      }
+      return this.editable
     },
     onCellFocused (params) {
       console.log('focused', params, this.errors)
@@ -428,11 +435,11 @@ export default {
   .ag-row .error {
     background-color: pink;
   }
-  .ag-row .example {
+  .ag-row .example, .show_examples span {
     background-color: lightgreen !important;
   }
-  .ag-row .description {
-    background-color: lightblue !important;
+  .ag-row .description, .show_descriptions span {
+    background-color: lightgrey !important;
   }
   .ag-theme-balham .ag-row-odd:not(.ag-row-selected) {
     background-color: #fafafa;
