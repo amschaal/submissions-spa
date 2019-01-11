@@ -22,7 +22,7 @@
             icon="fas fa-question-circle"
             v-if="type.sample_help"
           />
-          <q-checkbox v-model="showDescriptions" label="Show descriptions" class="show_descriptions"/> <q-checkbox v-model="showExamples" label="Show examples" v-if="allowExamples"  class="show_examples"/>
+          <q-checkbox v-model="showDescriptions" label="Show descriptions" class="show_descriptions" v-if="hasDescriptions"/> <q-checkbox v-model="showExamples" label="Show examples" v-if="allowExamples && this.sample_schema.examples && sample_schema.examples.length"  class="show_examples"/>
           <q-btn-dropdown label="Resize Columns" class="float-right">
           <q-list link>
             <q-item @click.native="sizeToFit">
@@ -55,6 +55,11 @@
             <q-btn-dropdown split label="Add row" @click="addRow(1)" color="positive">
               <!-- dropdown content -->
               <q-list link>
+                <q-item v-close-overlay @click.native="addRow(1)">
+                  <q-item-main>
+                    <q-item-tile label>Add 1</q-item-tile>
+                  </q-item-main>
+                </q-item>
                 <q-item v-close-overlay @click.native="addRow(10)">
                   <q-item-main>
                     <q-item-tile label>Add 10</q-item-tile>
@@ -156,12 +161,6 @@ export default {
       showExamples: this.allowExamples,
       showDescriptions: true,
       sample_schema: {},
-      // exampleRows: [], // [{}, {}],
-      columnDefs: [
-        {headerName: 'Make', field: 'make'},
-        {headerName: 'Model', field: 'model'},
-        {headerName: 'Price', field: 'price'}
-      ],
       rowData: this.value,
       rootNode: {},
       gridOptions: {
@@ -212,7 +211,7 @@ export default {
       this.columnDefs = this.schema2Columns(this.sample_schema)
       console.log('openSamplesheet', this.rowData, this.value, this.columnDefs)
       this.$refs.modal.show().then(() => {
-        if (self.value.length === 0) {
+        if (self.rowData.length === 0) {
           self.addRow()
         }
         this.rootNode = this.gridOptions.api.getModel().rootNode
@@ -221,6 +220,7 @@ export default {
     cellEditable (params) {
       console.log('cellEditable', this.editable, params)
       if (params.node.rowPinned === 'top') {
+        this.$q.notify({position: 'top', message: 'Description and example rows are not editable.  Please use the "Add row" button for editable rows.'})
         return false
       }
       return this.editable
@@ -263,14 +263,14 @@ export default {
       return columnDefs
     },
     getColDescriptions (schema) {
-      console.log('getColDescriptions', schema)
+      // console.log('getColDescriptions', schema)
       var descriptions = {}
       for (var prop in schema.properties) {
         if (schema.properties.hasOwnProperty(prop)) {
           descriptions[prop] = schema.properties[prop].description
         }
       }
-      console.log('descriptions', descriptions)
+      // console.log('descriptions', descriptions)
       return descriptions
     },
     getColDef (id, definition, schema) {
@@ -406,15 +406,24 @@ export default {
       return 0
       // return this.getRowData().length
     },
+    hasDescriptions () {
+      for (var prop in this.sample_schema.properties) {
+        if (this.sample_schema.properties.hasOwnProperty(prop)) {
+          if (this.sample_schema.properties[prop].description) {
+            return true
+          }
+        }
+      }
+      return false
+    },
     getExampleRows () {
       var examples = []
-      if (this.showDescriptions) {
+      if (this.showDescriptions && this.hasDescriptions) {
         var descriptions = this.getColDescriptions(this.sample_schema)
         descriptions.example_type = 'description'
         examples.push(descriptions)
       }
       if (this.showExamples) {
-        console.log('examples', this.sample_schema.examples)
         examples = examples.concat(this.sample_schema.examples)
       }
       console.log('examples', examples)
