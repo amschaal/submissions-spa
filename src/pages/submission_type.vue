@@ -2,8 +2,9 @@
   <q-page padding class="docs-input row justify-center">
     <q-card style="width:100%">
       <q-card-title>
-        Submission Type <q-btn @click="delete_type" color="negative" label="Delete" class="float-right" v-if="type.submission_count === 0"/><router-link :to="{'name': 'submissions', 'query': { 'search': type.name }}" class="float-right" v-else>{{type.submission_count}} Submissions</router-link>
+        Submission Type <q-btn :to="{ name: 'create_submission_type', query: { copy_from: type.id } }" label="Copy" v-if="type.id"/> <q-btn @click="delete_type" color="negative" label="Delete" class="float-right" v-if="type.submission_count === 0"/><router-link :to="{'name': 'submissions', 'query': { 'search': type.name }}" class="float-right" v-else>{{type.submission_count}} Submissions</router-link>
       </q-card-title>
+      <!-- <q-btn :to="{ name: 'create_submission_type', query: { copy_from: type.id } }" label="Copy" v-if="type.id"/> -->
       <q-card-separator />
       <q-card-main>
         <q-field
@@ -213,13 +214,20 @@ export default {
     var self = this
     if (!this.id || this.id === 'create') {
       this.create = true
-    } else {
+    }
+    var id = this.$route.query.copy_from || this.id
+    console.log('mounted', this.id, this.create, id, this.$route.query.copy_from)
+    if (!this.create || this.$route.query.copy_from) {
       this.$axios
-        .get('/api/submission_types/' + self.id + '/')
+        .get('/api/submission_types/' + id + '/')
         .then(function (response) {
           self.type = response.data
           if (!self.type.sample_schema.examples) {
             self.type.sample_schema.examples = []
+          }
+          if (self.$route.query.copy_from) {
+            delete self.type['id']
+            self.type.name = 'Copy from ' + self.type.name
           }
         })
     }
@@ -353,6 +361,7 @@ export default {
       }
       // return this.submission_types.map(opt => ({label: opt.name, value: opt.id}))
     }
+
     // removeOptions (property) {
     //   console.log(property)
     //   // delete property.enum
