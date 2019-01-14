@@ -2,7 +2,10 @@
   <q-page padding class="docs-input row justify-center">
     <q-card style="width:100%">
       <q-card-title>
-        Submission Type <q-btn :to="{ name: 'create_submission_type', query: { copy_from: type.id } }" label="Copy" v-if="type.id"/> <q-btn @click="delete_type" color="negative" label="Delete" class="float-right" v-if="type.submission_count === 0"/><router-link :to="{'name': 'submissions', 'query': { 'search': type.name }}" class="float-right" v-else>{{type.submission_count}} Submissions</router-link>
+        <span v-if="!type.id">Create</span> Submission Type
+        <q-btn :to="{ name: 'create_submission_type', query: { copy_from: type.id } }" label="Copy" v-if="type.id"/>
+        <q-btn @click="delete_type" color="negative" label="Delete" class="float-right" v-if="type.id"  :disable="type.submission_count !== 0" title="Only types with no associated permissions may be deleted."/>
+        <router-link v-if="type.submission_count > 0 && type.id" :to="{'name': 'submissions', 'query': { 'search': type.name }}" class="float-right">{{type.submission_count}} Submissions</router-link>
       </q-card-title>
       <!-- <q-btn :to="{ name: 'create_submission_type', query: { copy_from: type.id } }" label="Copy" v-if="type.id"/> -->
       <q-card-separator />
@@ -211,6 +214,7 @@ export default {
     }
   },
   mounted: function () {
+    // Edit, Create, and Copy from logic is a bit convoluted.  Would be good to clean this up.
     var self = this
     if (!this.id || this.id === 'create') {
       this.create = true
