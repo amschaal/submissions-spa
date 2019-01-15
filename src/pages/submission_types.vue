@@ -12,10 +12,10 @@
       binary-state-sort
     >
       <template slot="top-right" slot-scope="props" :props="props">
-        <q-search hide-underline v-model="filter" />
+        <q-checkbox v-model="showInactive" label="Show inactive" @input="refresh" class="inactive"/>  <q-search hide-underline v-model="filter" />
       </template>
       <template slot="body" slot-scope="props">
-        <q-tr :props="props">
+        <q-tr :props="props" v-bind:class="{'inactive': !props.row.active}">
           <q-td key="sort_order" :props="props">{{ props.row.sort_order }}</q-td>
           <q-td key="name" :props="props"><router-link :to="{ name: 'submission_type', params: { id: props.row.id }}">{{ props.row.name }}</router-link></q-td>
           <q-td key="description" :props="props">{{ props.row.description }}</q-td>
@@ -47,6 +47,7 @@ export default {
         sortBy: 'sort_order'
       },
       serverData: [],
+      showInactive: false,
       columns: [
         { name: 'sort_order', label: 'Sort Order', field: 'sort_order', sortable: true },
         { name: 'name', label: 'Name', field: 'name', sortable: true },
@@ -68,8 +69,10 @@ export default {
         sortBy = '-' + sortBy
       }
       var search = this.filter !== '' ? `&search=${this.filter}` : ''
+      var inactive = !this.showInactive ? '&active=true' : ''
+      console.log('inactive', inactive)
       this.$axios
-        .get(`/api/submission_types/?ordering=${sortBy}&page=${pagination.page}&page_size=${pagination.rowsPerPage}${search}`)// ${pagination.descending}&filter=${filter}
+        .get(`/api/submission_types/?ordering=${sortBy}&page=${pagination.page}&page_size=${pagination.rowsPerPage}${search}${inactive}`)// ${pagination.descending}&filter=${filter}
         .then(({ data }) => {
         /*
           // updating pagination to reflect in the UI
@@ -96,6 +99,12 @@ export default {
           // we tell QTable to exit the "loading" state
           this.loading = false
         })
+    },
+    refresh () {
+      this.request({
+        pagination: this.serverPagination,
+        filter: this.filter
+      })
     }
   },
   mounted () {
@@ -107,3 +116,15 @@ export default {
   }
 }
 </script>
+
+<style>
+tr.inactive td, tr.inactive td a, .inactive {
+  color: red;
+}
+/*
+.q-table-middle.scroll, .scroll {
+  overflow: inherit !important;
+}
+*/
+
+</style>
