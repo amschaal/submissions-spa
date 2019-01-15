@@ -157,7 +157,6 @@
       </q-card-actions>
 
     </q-card>
-    <q-btn @click="submit" label="Save" color="primary" class="fixed-bottom-right"></q-btn>
     <q-modal v-model="variable_modal" :content-css="{minWidth: '30vw', minHeight: '30vh'}" ref="modal">
       <q-modal-layout>
         <q-toolbar slot="header">
@@ -247,6 +246,12 @@ export default {
             self.watch_changes = true
           }, 100)
         })
+    }
+  },
+  beforeDestroy: function () {
+    if (this.save_message) {
+      this.save_message()
+      this.save_message = null
     }
   },
   methods: {
