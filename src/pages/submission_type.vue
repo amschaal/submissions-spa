@@ -11,6 +11,13 @@
       <q-card-separator />
       <q-card-main>
         <q-field
+          label="Active"
+          :error="errors.active"
+          :error-label="errors.active"
+        >
+          <q-checkbox v-model="type.active" label="Should this type be available for submission?"/>
+        </q-field>
+        <q-field
           label="Name"
           helper="This shows up in the dropdown on the submission form"
           :error="errors.name"

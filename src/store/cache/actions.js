@@ -12,7 +12,7 @@ export const fetchValidators = (context, {axios}) => {
     })
 }
 export const fetchTypes = (context, {axios}) => {
-  return axios.get('/api/submission_types/?page_size=100&show=true')
+  return axios.get('/api/submission_types/?page_size=100&active=true')
     .then(function (response) {
       context.commit('types', response.data.results)
     })
