@@ -157,6 +157,7 @@
       </q-card-actions>
 
     </q-card>
+    <q-btn @click="submit" label="Save" color="primary" class="fixed-bottom-right"></q-btn>
     <q-modal v-model="variable_modal" :content-css="{minWidth: '30vw', minHeight: '30vh'}" ref="modal">
       <q-modal-layout>
         <q-toolbar slot="header">
@@ -217,7 +218,8 @@ export default {
       new_variable: {},
       variable_modal: false,
       examples: [],
-      foo: null
+      save_message: null,
+      watch_changes: true
     }
   },
   mounted: function () {
@@ -229,6 +231,7 @@ export default {
     var id = this.$route.query.copy_from || this.id
     console.log('mounted', this.id, this.create, id, this.$route.query.copy_from)
     if (!this.create || this.$route.query.copy_from) {
+      this.watch_changes = false
       this.$axios
         .get('/api/submission_types/' + id + '/')
         .then(function (response) {
@@ -240,6 +243,9 @@ export default {
             delete self.type['id']
             self.type.name = 'Copy from ' + self.type.name
           }
+          setTimeout(function () {
+            self.watch_changes = true
+          }, 100)
         })
     }
   },
@@ -347,6 +353,10 @@ export default {
           }
           self.$q.notify('Error saving submission type!')
         })
+      if (this.save_message) {
+        this.save_message()
+        this.save_message = null
+      }
     },
     delete_type () {
       var self = this
@@ -425,6 +435,31 @@ export default {
     // nested () {
     //   return path => this.getNested(path)
     // }
+  },
+  watch: {
+    'type': {
+      handler (newVal, oldVal) {
+        if (this.save_message || !this.watch_changes) {
+          return
+        }
+        var self = this
+        this.save_message = this.$q.notify({
+          message: `Changes have been detected.  Please save to keep your work.`,
+          timeout: 0, // in milliseconds; 0 means no timeout
+          type: 'info',
+          position: 'bottom', // 'top', 'left', 'bottom-left' etc.
+          actions: [
+            {
+              label: 'Save',
+              handler: () => {
+                self.submit()
+              }
+            }
+          ]
+        })
+      },
+      deep: true
+    }
   },
   components: {
     Fieldoptions,
