@@ -330,7 +330,9 @@ export default {
           console.log('ERROR', error)
           self.$q.notify({message: 'There were errors saving your submission.', type: 'negative'})
           if (error.response) {
+            // Vue.set(self, 'errors', error.response.data)
             self.errors = error.response.data
+            Vue.set(self.errors, 'payment', error.response.data.payment || {})
           }
           throw error
         })

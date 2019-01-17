@@ -22,18 +22,6 @@ export default {
     return {
       payment: this.value
     }
-  },
-  // methods: {
-  // },
-  // computed: {
-  // },
-  // components: {
-  //   QSelect
-  // },
-  watch: {
-    // payment: function (newValue, oldValue) {
-    //   this.$emit('input', this.payment)
-    // }
   }
 }
 </script>
