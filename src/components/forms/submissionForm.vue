@@ -128,8 +128,9 @@
           </div>
         </div>
         <p class="caption">Payment</p>
-        <UCDAccount v-model="submission.payment" :errors="errors.payment"/>
-        <div class="row">
+        <!-- <UCDAccount v-model="submission.payment" :errors="errors.payment"/> -->
+        <PPMS v-model="submission.payment" :errors="errors.payment"/>
+        <!-- <div class="row">
           <div class="col-sm-12 col-md-6">
             <q-field
               :error="errors.payment_type"
@@ -154,7 +155,7 @@
               <q-input v-model="submission.payment_info" type="text" stack-label="Payment Info"/>
             </q-field>
           </div>
-        </div>
+        </div> -->
         <q-field>
           <q-checkbox v-model="submission.biocore" label="Do you want the Bioinformatics Core to analyze the data?" />
         </q-field>
@@ -222,7 +223,8 @@ import './docs-input.styl'
 // import Samplesheet from '../../components/samplesheet.vue'
 import Agschema from '../../components/agschema.vue'
 import CustomFields from '../../components/forms/customFields.vue'
-import UCDAccount from '../../components/payment/ucdAccount.vue'
+// import UCDAccount from '../../components/payment/ucdAccount.vue'
+import PPMS from '../../components/payment/ppms.vue'
 // import Files from '../../components/files.vue'
 import Vue from 'vue'
 
@@ -424,7 +426,8 @@ export default {
   components: {
     Agschema,
     CustomFields,
-    UCDAccount
+    // UCDAccount,
+    PPMS
   }
 }
 </script>

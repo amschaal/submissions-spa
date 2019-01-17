@@ -101,13 +101,17 @@
         </div>
         <p class="caption">Payment</p>
         <div class="row">
-          <div class="field col-sm-12 col-md-6">
+          <div class="field col-sm-12 col-md-6" v-for="(value, label) in submission.payment.display" :key="label">
+            <p class="caption">{{label}}</p>
+            {{value}}
+          </div>
+          <!-- <div class="field col-sm-12 col-md-6">
             {{submission.payment_type}}
           </div>
           <div class="field col-sm-12 col-md-6">
             <p class="caption">Payment information</p>
             {{submission.payment_info}}
-          </div>
+          </div> -->
         </div>
         <div class="row" v-if="submission.biocore">
           <div class="field col-sm-12">
