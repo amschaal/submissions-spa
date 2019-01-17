@@ -163,6 +163,7 @@ export default {
       sample_schema: {},
       rowData: this.value,
       rootNode: {},
+      columnDefs: [],
       gridOptions: {
         enableRangeSelection: true,
         defaultColDef: {
