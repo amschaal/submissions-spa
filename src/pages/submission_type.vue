@@ -230,6 +230,7 @@ export default {
     var id = this.$route.query.copy_from || this.id
     console.log('mounted', this.id, this.create, id, this.$route.query.copy_from)
     if (!this.create || this.$route.query.copy_from) {
+      this.$q.loading.show()
       this.watch_changes = false
       this.$axios
         .get('/api/submission_types/' + id + '/')
@@ -245,6 +246,7 @@ export default {
           setTimeout(function () {
             self.watch_changes = true
           }, 100)
+          self.$q.loading.hide()
         })
     }
   },
