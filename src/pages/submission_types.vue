@@ -68,6 +68,7 @@ export default {
       if (pagination.descending) {
         sortBy = '-' + sortBy
       }
+      sortBy += ',name'
       var search = this.filter !== '' ? `&search=${this.filter}` : ''
       var inactive = !this.showInactive ? '&active=true' : ''
       console.log('inactive', inactive)

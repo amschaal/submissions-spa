@@ -1,35 +1,37 @@
 <template>
   <div class="row">
       <div v-for="v in fields" :key="v.variable" class="field" v-bind:class="colWidth(v.variable)">
-        <span v-if="!modify">
-          <p class="caption">{{v.schema.title ? v.schema.title : v.variable}}</p>
+        <div v-if="$store.getters.isLoggedIn || !v.schema.internal">
+          <span v-if="!modify">
+            <p class="caption">{{v.schema.title ? v.schema.title : v.variable}}</p>
 
-          {{widget(v).formatValue(value[v.variable])}}
-        </span>
-        <q-field
-          v-else
-          :error="errors && errors[v.variable]"
-          :error-label="errors ? errors[v.variable] : ''"
-          :label="v.schema.title ? v.schema.title : v.variable"
-          orientation="vertical"
-        >
-        <!-- {{widget(v).getOptions()}} {{widget(v).getDefault()}} value: "{{value[v.variable]}}" -->
-          <!-- <q-input v-model="value[v.variable]" type="text" :stack-label="v.schema.title ? v.schema.title : v.variable"/> -->
-          <component :is="widgetClass(v).component"
-          :value="value[v.variable] || widget(v).getDefault()"
-          @input="val => {$set(value, v.variable, val)}"
-          @change="val => {$set(value, v.variable, val)}"
-            v-bind="widget(v).getOptions()"
+            {{widget(v).formatValue(value[v.variable])}}
+          </span>
+          <q-field
+            v-else
+            :error="errors && errors[v.variable]"
+            :error-label="errors ? errors[v.variable] : ''"
+            :label="v.schema.title ? v.schema.title : v.variable"
+            orientation="vertical"
+          >
+          <!-- {{widget(v).getOptions()}} {{widget(v).getDefault()}} value: "{{value[v.variable]}}" -->
+            <!-- <q-input v-model="value[v.variable]" type="text" :stack-label="v.schema.title ? v.schema.title : v.variable"/> -->
+            <component :is="widgetClass(v).component"
+            :value="value[v.variable] || widget(v).getDefault()"
+            @input="val => {$set(value, v.variable, val)}"
+            @change="val => {$set(value, v.variable, val)}"
+              v-bind="widget(v).getOptions()"
 
-          />
+            />
 
-<!--
-:stack-label="v.schema.title ? v.schema.title : v.variable"
-v-model="value[v.variable]"
-:value="value[v.variable] || widgetClass(v).default"
-@change="val => { value[v.variable] = val }"
--->
-        </q-field>
+  <!--
+  :stack-label="v.schema.title ? v.schema.title : v.variable"
+  v-model="value[v.variable]"
+  :value="value[v.variable] || widgetClass(v).default"
+  @change="val => { value[v.variable] = val }"
+  -->
+          </q-field>
+        </div>
     </div>
   </div>
 </template>
