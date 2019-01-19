@@ -112,9 +112,10 @@
           <q-btn :label="'Examples ('+type.sample_schema.examples.length+')'"  @click="openExamples"/>
         </div>
         <table v-if="type.sample_schema" style="width:100%">
-          <tr><th></th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th></th></tr>
+          <tr><th></th><th>Internal</th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th></th></tr>
           <tr v-for="variable in sample_fields_sorted" :key="variable.variable">
             <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1, 'sample_schema')" v-if="type.sample_schema.order && type.sample_schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1, 'sample_schema')" v-if="type.sample_schema.order && type.sample_schema.order.indexOf(variable.variable) != type.sample_schema.order.length - 1"/>
+            <td><q-checkbox v-model="variable.schema.internal"/></td>
             <td><q-checkbox v-model="type.sample_schema.required" :val="variable.variable"/></td>
             <td>{{variable.variable}}</td>
             <td><q-input v-model="variable.schema.title" /></td>
@@ -278,7 +279,7 @@ export default {
       return null
     },
     addVariable () {
-      Vue.set(this.type[this.new_variable.schema].properties, this.new_variable.name, {type: this.new_variable.type, unique: false})
+      Vue.set(this.type[this.new_variable.schema].properties, this.new_variable.name, {type: this.new_variable.type, internal: false, unique: false})
       this.type[this.new_variable.schema].order.push(this.new_variable.name)
       // // this.type.submission_schema.properties['VARIABLE_NAME'] = {added: true}
       // console.log(this.type.submission_schema.properties)
