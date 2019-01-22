@@ -69,8 +69,8 @@
           <tr><th></th><th>Internal</th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th>Column Width</th><th></th></tr>
           <tr v-for="variable in submission_fields_sorted" :key="variable.variable">
             <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1, 'submission_schema')" v-if="type.submission_schema.order && type.submission_schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1, 'submission_schema')" v-if="type.submission_schema.order && type.submission_schema.order.indexOf(variable.variable) != type.submission_schema.order.length - 1"/>
-            <td><q-checkbox v-model="variable.schema.internal"/></td>
-            <td><q-checkbox v-model="type.submission_schema.required" :val="variable.variable"/></td>
+            <td><q-checkbox v-model="variable.schema.internal" @input="toggleRequired(variable, type.submission_schema)"/></td>
+            <td><q-checkbox v-model="type.submission_schema.required" :val="variable.variable" :disable="variable.schema.internal"/></td>
             <td>{{variable.variable}}</td>
             <td><q-input v-model="variable.schema.title" /></td>
             <td>
@@ -116,8 +116,8 @@
           <tr><th></th><th>Internal</th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th></th></tr>
           <tr v-for="variable in sample_fields_sorted" :key="variable.variable">
             <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1, 'sample_schema')" v-if="type.sample_schema.order && type.sample_schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1, 'sample_schema')" v-if="type.sample_schema.order && type.sample_schema.order.indexOf(variable.variable) != type.sample_schema.order.length - 1"/>
-            <td><q-checkbox v-model="variable.schema.internal"/></td>
-            <td><q-checkbox v-model="type.sample_schema.required" :val="variable.variable"/></td>
+            <td><q-checkbox v-model="variable.schema.internal" @input="toggleRequired(variable, type.sample_schema)"/></td>
+            <td><q-checkbox v-model="type.sample_schema.required" :val="variable.variable" :disable="variable.schema.internal"/></td>
             <td>{{variable.variable}}</td>
             <td><q-input v-model="variable.schema.title" /></td>
             <td>
@@ -390,6 +390,13 @@ export default {
         })
       }
       // return this.submission_types.map(opt => ({label: opt.name, value: opt.id}))
+    },
+    toggleRequired (variable, schema) {
+      console.log('toggleRequired', variable, schema)
+      var index = schema.required.indexOf(variable.variable)
+      if (variable.schema.internal && index >= 0) {
+        schema.required.splice(index, 1)
+      }
     }
 
     // removeOptions (property) {
