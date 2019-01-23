@@ -17,8 +17,8 @@
 
         <div class="layout-padding">
           <!-- {{data}}
-          {{validators}} -->
-          {{validatorsByType(data.type)}}
+          {{validators}}
+          {{validatorsByType(data.type)}} -->
           <q-field
             label="Description"
           >
@@ -130,20 +130,25 @@ export default {
   },
   mounted () {
     // console.log('widgetFactory', widgetFactory.getWidgetOptions('text'))
-    this.data = _.cloneDeep(this.value)
-
-    if (!this.data.enum) {
-      this.$set(this.data, 'enum', [])
-    }
-    if (!this.data.widget) {
-      this.$set(this.data, 'widget', {'type': null, 'options': {}})
-    }
-    if (!this.data.validators) {
-      this.$set(this.data, 'validators', [])
-    }
+    // this.setup()
   },
   methods: {
+    setup () {
+      this.data = _.cloneDeep(this.value)
+
+      if (!this.data.enum) {
+        this.$set(this.data, 'enum', [])
+      }
+      if (!this.data.widget) {
+        this.$set(this.data, 'widget', {'type': null, 'options': {}})
+      }
+      if (!this.data.validators) {
+        this.$set(this.data, 'validators', [])
+      }
+    },
     openModal () {
+      this.setup()
+      // this.data = _.cloneDeep(this.value)
       console.log('root', this.$root.validators)
 
       console.log('openModal', this.value, this.data)
