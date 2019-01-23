@@ -129,7 +129,8 @@
         </div>
         <p class="caption">Payment</p>
         <!-- <UCDAccount v-model="submission.payment" :errors="errors.payment"/> -->
-        <PPMS v-model="submission.payment" :errors="errors.payment"/>
+        <!-- <PPMS v-model="submission.payment" :errors="errors.payment"/> -->
+        <Account v-model="submission.payment" :errors="errors.payment"/>
         <!-- <div class="row">
           <div class="col-sm-12 col-md-6">
             <q-field
@@ -223,8 +224,8 @@ import './docs-input.styl'
 // import Samplesheet from '../../components/samplesheet.vue'
 import Agschema from '../../components/agschema.vue'
 import CustomFields from '../../components/forms/customFields.vue'
-// import UCDAccount from '../../components/payment/ucdAccount.vue'
-import PPMS from '../../components/payment/ppms.vue'
+import Account from '../../components/payment/ucdAccount.vue'
+// import PPMS from '../../components/payment/ppms.vue'
 // import Files from '../../components/files.vue'
 import Vue from 'vue'
 
@@ -428,8 +429,9 @@ export default {
   components: {
     Agschema,
     CustomFields,
-    // UCDAccount,
-    PPMS
+    Account
+    // UCDAccount
+    // PPMS
   }
 }
 </script>

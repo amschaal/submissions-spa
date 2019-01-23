@@ -10,7 +10,9 @@
           v-model="value.payment_type"
           :options="[
             {label: 'Credit Card', value: 'Credit Card'},
-            {label: 'DaFIS', value: 'DaFIS'}
+            {label: 'DaFIS', value: 'DaFIS'},
+            {label: 'UC Chart String', value: 'UC Chart String'},
+            {label: 'Purchase Order', value: 'Purchase Order'}
           ]"
           stack-label="* Payment Type"
         />

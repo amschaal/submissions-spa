@@ -66,7 +66,7 @@
         </q-field>
         <h6>Submission Fields</h6>
         <table v-if="type.submission_schema" style="width:100%">
-          <tr><th></th><th>Internal</th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th>Column Width</th><th></th></tr>
+          <tr><th></th><th title="Should the field only be available to staff?">Internal</th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th>Column Width</th><th></th></tr>
           <tr v-for="variable in submission_fields_sorted" :key="variable.variable">
             <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1, 'submission_schema')" v-if="type.submission_schema.order && type.submission_schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1, 'submission_schema')" v-if="type.submission_schema.order && type.submission_schema.order.indexOf(variable.variable) != type.submission_schema.order.length - 1"/>
             <td><q-checkbox v-model="variable.schema.internal" @input="toggleRequired(variable, type.submission_schema)"/></td>
@@ -113,7 +113,7 @@
           <q-btn :label="'Examples ('+type.sample_schema.examples.length+')'"  @click="openExamples"/>
         </div>
         <table v-if="type.sample_schema" style="width:100%">
-          <tr><th></th><th>Internal</th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th></th></tr>
+          <tr><th></th><th title="Should the field only be available to staff?">Internal</th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th></th></tr>
           <tr v-for="variable in sample_fields_sorted" :key="variable.variable">
             <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1, 'sample_schema')" v-if="type.sample_schema.order && type.sample_schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1, 'sample_schema')" v-if="type.sample_schema.order && type.sample_schema.order.indexOf(variable.variable) != type.sample_schema.order.length - 1"/>
             <td><q-checkbox v-model="variable.schema.internal" @input="toggleRequired(variable, type.sample_schema)"/></td>
@@ -211,7 +211,7 @@ export default {
   props: ['id'],
   data () {
     return {
-      type: {help: '', examples: [], submission_schema: {properties: {}, order: [], required: [], layout: {}}, sample_schema: {properties: {}, order: [], required: [], examples: []}},
+      type: {active: true, help: '', examples: [], submission_schema: {properties: {}, order: [], required: [], layout: {}}, sample_schema: {properties: {}, order: [], required: [], examples: []}},
       errors: {},
       type_options: [{ 'label': 'Text', 'value': 'string' }, { 'label': 'Number', 'value': 'number' }, { 'label': 'True / False', 'value': 'boolean' }],
       width_options: [{ 'label': '100%', 'value': 'col-md-12 col-sm-12 col-xs-auto' }, { 'label': '5/6', 'value': 'col-md-10 col-sm-12 col-xs-auto' }, { 'label': '3/4', 'value': 'col-md-9 col-sm-12 col-xs-auto' }, { 'label': '2/3', 'value': 'col-md-8 col-sm-12 col-xs-auto' }, { 'label': '1/2', 'value': 'col-md-6 col-sm-12 col-xs-auto' }, { 'label': '1/3', 'value': 'col-md-4 col-sm-6 col-xs-auto' }, { 'label': '1/4', 'value': 'col-md-3 col-sm-6 col-xs-auto' }, { 'label': '1/6', 'value': 'col-md-2 col-sm-4 col-xs-auto' }],
