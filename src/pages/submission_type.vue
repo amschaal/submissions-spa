@@ -18,6 +18,14 @@
           <q-checkbox v-model="type.active" label="Should this type be available for submission?"/>
         </q-field>
         <q-field
+          label="Sort order"
+          helper="Submission types will be displayed in numeric order as specified by this field"
+          :error="errors.sort_order"
+          :error-label="errors.sort_order"
+        >
+          <q-input v-model="type.sort_order" type="integer"/>
+        </q-field>
+        <q-field
           label="Name"
           helper="This shows up in the dropdown on the submission form"
           :error="errors.name"
@@ -26,12 +34,12 @@
           <q-input v-model="type.name" type="text"/>
         </q-field>
         <q-field
-          label="Sort order"
-          helper="Submission types will be displayed in numeric order as specified by this field"
-          :error="errors.sort_order"
-          :error-label="errors.sort_order"
+          label="Prefix"
+          helper="Prefix the submission's generated internal id with this text."
+          :error="errors.prefix"
+          :error-label="errors.prefix"
         >
-          <q-input v-model="type.sort_order" type="integer"/>
+          <q-input v-model="type.prefix" type="text"/>
         </q-field>
         <q-field
           label="Description"
