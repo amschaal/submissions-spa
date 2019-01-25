@@ -174,6 +174,15 @@ export default {
             return {'font-weight': 'bold'}
           }
         },
+        getRowHeight: function (params) {
+          console.log('getRowHeight', params, params.node.rowPinned, params.data)
+          if (params.node.rowPinned === 'top' && params.data && params.data._row_type === 'description') {
+            return 75
+          } else {
+            return 25
+          }
+        },
+        onPinnedRowDataChanged: this.expandDescriptionRow,
         onCellFocused: this.onCellFocused,
         suppressMultiRangeSelection: true,
         suppressRowClickSelection: true,
@@ -243,7 +252,7 @@ export default {
       this.gridOptions.columnApi.autoSizeColumns(allColIds)
     },
     schema2Columns (schema) {
-      var columnDefs = []
+      var columnDefs = [{field: '_row_type', hide: true}]
       if (schema.order) {
         for (var i in schema.order) {
           if (this.$store.getters.isLoggedIn || !schema.properties[schema.order[i]].internal) {
@@ -281,7 +290,7 @@ export default {
       function cellClass (params) {
         console.log('cellClass', params, self.errors)
         if (params.node.rowPinned) {
-          if (params.data.example_type === 'description') {
+          if (params.data._row_type === 'description') {
             return ['description']
           } else {
             return ['example']
@@ -292,9 +301,14 @@ export default {
         return []
       }
       function cellTooltip (params) {
+        // console.log('cellTooltip', params)
+        if (params.data._row_type === 'description' || params.data._row_type === 'example') {
+          return params.value
+        }
         if (self.errors[params.rowIndex] && self.errors[params.rowIndex][params.colDef.field]) {
           return self.errors[params.rowIndex][params.colDef.field].join(', ')
         }
+        return params.value
       }
       console.log('definition', id, definition, schema)
       var header = id
@@ -395,6 +409,11 @@ export default {
     modalOpened () {
       alert('hello?')
       console.log('modal opened')
+    },
+    expandDescriptionRow (params) {
+      console.log('expandDescriptionRow', params, params.api, params.api.getPinnedTopRow(0)) //
+      params.api.getPinnedTopRow(0).isDescription = true
+      params.api.onRowHeightChanged()
     }
     // ,
     // beforeMount () {
@@ -423,11 +442,16 @@ export default {
       var examples = []
       if (this.showDescriptions && this.hasDescriptions) {
         var descriptions = this.getColDescriptions(this.sample_schema)
-        descriptions.example_type = 'description'
+        descriptions._row_type = 'description'
         examples.push(descriptions)
       }
       if (this.showExamples) {
-        examples = examples.concat(this.sample_schema.examples)
+        for (var i in this.sample_schema.examples) {
+          var example = this.sample_schema.examples[i]
+          example['_row_type'] = 'example'
+          examples.push(example)
+        }
+        // examples = examples.concat(this.sample_schema.examples)
       }
       console.log('examples', examples)
       return examples
@@ -452,8 +476,12 @@ export default {
   }
   .ag-row .description, .show_descriptions span {
     background-color: lightgrey !important;
+    white-space: normal;
   }
   .ag-theme-balham .ag-row-odd:not(.ag-row-selected) {
     background-color: #fafafa;
+  }
+  .ag-theme-balham .ag-cell {
+    border-right: 1px solid #BDC3C7;
   }
 </style>
