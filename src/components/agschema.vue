@@ -175,7 +175,7 @@ export default {
           }
         },
         getRowHeight: function (params) {
-          console.log('getRowHeight', params, params.node.rowPinned, params.data)
+          // console.log('getRowHeight', params, params.node.rowPinned, params.data)
           if (params.node.rowPinned === 'top' && params.data && params.data._row_type === 'description') {
             return 75
           } else {
@@ -219,7 +219,7 @@ export default {
       }
       this.sample_schema = this.schema || this.type.sample_schema
       this.columnDefs = this.schema2Columns(this.sample_schema)
-      console.log('openSamplesheet', this.rowData, this.value, this.columnDefs)
+      // console.log('openSamplesheet', this.rowData, this.value, this.columnDefs)
       this.$refs.modal.show().then(() => {
         if (self.rowData.length === 0) {
           self.addRow()
@@ -228,7 +228,7 @@ export default {
       })
     },
     cellEditable (params) {
-      console.log('cellEditable', this.editable, params)
+      // console.log('cellEditable', this.editable, params)
       if (params.node.rowPinned === 'top') {
         this.$q.notify({position: 'top', message: 'Description and example rows are not editable.  Please use the "Add row" button for editable rows.'})
         return false
@@ -236,7 +236,6 @@ export default {
       return this.editable
     },
     onCellFocused (params) {
-      console.log('focused', params, this.errors)
       if (this.dismiss) {
         this.dismiss()
       }
@@ -288,7 +287,7 @@ export default {
     getColDef (id, definition, schema) {
       var self = this
       function cellClass (params) {
-        console.log('cellClass', params, self.errors)
+        // console.log('cellClass', params, self.errors)
         if (params.node.rowPinned) {
           if (params.data._row_type === 'description') {
             return ['description']
@@ -310,7 +309,7 @@ export default {
         }
         return params.value
       }
-      console.log('definition', id, definition, schema)
+      // console.log('definition', id, definition, schema)
       var header = id
       var tooltip = null
       if (definition.title) {
@@ -350,13 +349,13 @@ export default {
     },
     validate (save) {
       // this.hst.validateTable(true)
-      console.log('validate', save)
+      // console.log('validate', save)
       var self = this
       if (this.type) {
         // this.$axios.post('/api/submission_types/' + this.type.id + '/validate_data/', {data: this.getRowData(true)})
         this.$axios.post('/api/validate/', {sample_schema: this.sample_schema, data: this.getRowData(true)})
           .then(function (response) {
-            console.log(response)
+            // console.log(response)
             self.errors = {}
             self.gridOptions.api.redrawRows() // redrawCells({force: true})
             self.$q.notify({message: 'Samples successfully validated.  Please save the submission.', type: 'positive'})
@@ -365,7 +364,7 @@ export default {
             }
           })
           .catch(function (error, stuff) {
-            console.log('ERROR', error.response, self.$refs.grid, self.gridOptions.api.refreshCells)
+            // console.log('ERROR', error.response, self.$refs.grid, self.gridOptions.api.refreshCells)
             self.errors = error.response.data.errors
             self.gridOptions.api.redrawRows() // redrawCells({force: true})
             self.$q.notify({message: 'There were errors in your data.', type: 'negative'})
@@ -396,7 +395,6 @@ export default {
       // console.log('addRow', this.getRowData())
     },
     removeRows () {
-      console.log('grid', this.gridOptions)
       var selectedData = this.gridOptions.api.getSelectedRows()
       this.gridOptions.api.updateRowData({remove: selectedData})
       // this.errors = {}
@@ -407,14 +405,13 @@ export default {
       this.$refs.modal.hide()
     },
     modalOpened () {
-      alert('hello?')
       console.log('modal opened')
-    },
-    expandDescriptionRow (params) {
-      console.log('expandDescriptionRow', params, params.api, params.api.getPinnedTopRow(0)) //
-      params.api.getPinnedTopRow(0).isDescription = true
-      params.api.onRowHeightChanged()
-    }
+    }// ,
+    // expandDescriptionRow (params) {
+    //   console.log('expandDescriptionRow', params, params.api, params.api.getPinnedTopRow(0)) //
+    //   params.api.getPinnedTopRow(0).isDescription = true
+    //   params.api.onRowHeightChanged()
+    // }
     // ,
     // beforeMount () {
     //   this.gridOptions.numericComponentFramework = NumericComponent
