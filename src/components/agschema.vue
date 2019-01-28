@@ -251,7 +251,7 @@ export default {
       this.gridOptions.columnApi.autoSizeColumns(allColIds)
     },
     schema2Columns (schema) {
-      var columnDefs = [{field: '_row_type', hide: true}]
+      var columnDefs = []
       if (schema.order) {
         for (var i in schema.order) {
           if (this.$store.getters.isLoggedIn || !schema.properties[schema.order[i]].internal) {
@@ -271,6 +271,7 @@ export default {
         columnDefs[0].headerCheckboxSelectionFilteredOnly = true
         columnDefs[0].checkboxSelection = true
       }
+      columnDefs.push({field: '_row_type', hide: true})
       return columnDefs
     },
     getColDescriptions (schema) {
