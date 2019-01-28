@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-uploader url="/api/submission_files/" :upload-factory="uploadFile" :multiple="true" stack-label="Upload files"/>
+    <q-uploader url="/api/submission_files/" :upload-factory="uploadFile" :multiple="true" stack-label="Upload files" ref="uploader" @add="filesSelected" hide-upload-button/>
     <q-table
       ref="table"
       :data="serverData"
@@ -84,6 +84,10 @@ export default {
           this.loading = false
         })
     },
+    filesSelected (one, two) {
+      console.log('filesSelected', one, two)
+      this.$refs.uploader.upload()
+    },
     refreshTable () {
       this.request({
         pagination: this.serverPagination,
@@ -109,8 +113,7 @@ export default {
       var formData = new FormData()
       formData.append('file', file)
       formData.append('submission', this.submission.id)
-
-      return this.$axios.post('/api/submission_files/',
+      var request = this.$axios.post('/api/submission_files/',
         formData,
         {
           headers: {
@@ -128,8 +131,13 @@ export default {
           console.log('uploaded', self.$refs)
           self.$q.notify({message: 'File uploaded', type: 'positive'})
           self.refreshTable()
+          return new Promise((resolve, reject) => {
+            resolve(file)
+          })
           // self.request(self.serverPagination, self.filter)
         })
+      console.log('uploadFile', request)
+      return request
     }
   }
 }
