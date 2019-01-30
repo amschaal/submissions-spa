@@ -92,9 +92,10 @@ export default {
       }
       var search = this.filter !== '' ? `&search=${this.filter}` : ''
       var cancelled = !this.showCancelled ? '&cancelled__isnull=true' : ''
+      var pageSize = pagination.rowsPerPage ? pagination.rowsPerPage : 1000000 // HACKY
       // var type = this.$route.query.type ? `&type__name__icontains=${this.$route.query.type}` : ''
       this.$axios
-        .get(`/api/submissions/?ordering=${sortBy}&page=${pagination.page}&page_size=${pagination.rowsPerPage}${search}${cancelled}`)// ${pagination.descending}&filter=${filter}
+        .get(`/api/submissions/?ordering=${sortBy}&page=${pagination.page}&page_size=${pageSize}${search}${cancelled}`)// ${pagination.descending}&filter=${filter}
         .then(({ data }) => {
           console.log('data', data)
           // updating pagination to reflect in the UI

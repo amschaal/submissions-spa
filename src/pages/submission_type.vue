@@ -112,14 +112,10 @@
         <q-btn
           color="positive"
           @click="openModal('submission_schema')"
-          label="Add"
+          label="Add field"
         />
         <h5>Samplesheet definition</h5>
         <h6>Column Definitions</h6>
-        <div v-if="type && type.sample_schema && type.sample_schema.properties">
-          <Agschema v-model="type.sample_schema.examples" :type="type" :editable="true"  ref="samplesheet"/>
-          <q-btn :label="'Examples ('+type.sample_schema.examples.length+')'"  @click="openExamples"/>
-        </div>
         <table v-if="type.sample_schema" style="width:100%">
           <tr><th></th><th title="Should the field only be available to staff?">Internal</th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th></th></tr>
           <tr v-for="variable in sample_fields_sorted" :key="variable.variable">
@@ -142,8 +138,12 @@
         <q-btn
           color="positive"
           @click="openModal('sample_schema')"
-          label="Add"
+          label="Add field"
         />
+        <div v-if="type && type.sample_schema && type.sample_schema.properties">
+          <Agschema v-model="type.sample_schema.examples" :type="type" :editable="true"  ref="samplesheet"/>
+          <q-btn :label="'Configure examples ('+type.sample_schema.examples.length+')'"  @click="openExamples"/>
+        </div>
         <q-field
           label="Samplesheet Help"
           :error="errors.sample_help"
