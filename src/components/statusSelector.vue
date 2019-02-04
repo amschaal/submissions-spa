@@ -4,7 +4,7 @@
     v-if="$store.getters.isStaff"
     v-model="status"
     float-label="Set status"
-   :options="$store.getters.statusOptions"
+   :options="statusOptions"
    @input="statusChanged()"
   />
 </div>
@@ -15,7 +15,7 @@ export default {
   props: ['value', 'submission'],
   data () {
     return {
-      status: this.value ? this.value.id : null,
+      status: this.value ? this.value : null,
       options: this.$store.getters.statusOptions
     }
   },
@@ -26,12 +26,17 @@ export default {
       this.$axios.post(`/api/submissions/${this.submission.id}/update_status/`, {status: this.status})
         .then(function (response) {
           self.$q.notify({message: response.data.message, type: 'positive'})
-          self.$emit('input', self.$store.getters.statusesDict[self.status])
+          self.$emit('input', self.status)
         })
         .catch(function (response) {
           self.$q.notify({message: 'Status update failed!', type: 'negative'})
           self.status = self.value ? self.value.id : null
         })
+    }
+  },
+  computed: {
+    statusOptions () {
+      return this.submission.type.statuses.map(t => ({label: t, value: t}))
     }
   }
 }
