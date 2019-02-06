@@ -5,6 +5,7 @@
       <q-tab slot="title" name="submission"  default><span v-if="submission.id">Submission</span><span v-else>Create Submission</span></q-tab>
       <q-tab slot="title" name="files" label="Files"  v-if="submission.id"/>
       <q-tab slot="title" name="comments" label="comments"  v-if="submission.id"/>
+      <q-tab slot="title" name="charges" label="charges"  v-if="submission.id"/>
 
     <q-tab-pane name="submission">
       <q-card-main>
@@ -24,6 +25,11 @@
         <notes-tree :submission="submission"/>
       </q-card-main>
     </q-tab-pane>
+    <q-tab-pane name="charges" v-if="submission.id">
+      <q-card-main>
+        <charges :submission="submission"/>
+      </q-card-main>
+    </q-tab-pane>
   </q-tabs>
   </q-card>
   </q-page>
@@ -38,6 +44,7 @@ import SubmissionForm from '../components/forms/submissionForm.vue'
 import Submission from '../components/submission.vue'
 import Files from '../components/files.vue'
 import NotesTree from '../components/notesTree.vue'
+import Charges from '../components/charges.vue'
 import Vue from 'vue'
 
 export default {
@@ -126,7 +133,8 @@ export default {
     Files,
     SubmissionForm,
     NotesTree,
-    Submission
+    Submission,
+    Charges
   }
 }
 </script>
