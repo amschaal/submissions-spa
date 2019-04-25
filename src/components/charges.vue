@@ -128,15 +128,21 @@ export default {
     deleteItem (item) {
       var index = this.line_items.indexOf(item)
       var self = this
-      this.$axios.delete(`/api/billing/line_items/${item.id}/`)
-        .then(function (response) {
-          self.line_items.splice(index, 1)
-          self.$q.notify(`Charge for "${item.service.name}" deleted.`)
-        })
-        .catch(function (error) {
-          console.log('error', error)
-          self.$q.notify({message: `Error deleting charge, "${item.service.name}".`, type: 'negative'})
-        })
+      if (item.id) {
+        this.$axios.delete(`/api/billing/line_items/${item.id}/`)
+          .then(function (response) {
+            self.line_items.splice(index, 1)
+            self.$q.notify(`Charge for "${item.service.name}" deleted.`)
+          })
+          .catch(function (error) {
+            console.log('error', error)
+            self.$q.notify({message: `Error deleting charge, "${item.service.name}".`, type: 'negative'})
+          })
+      } else {
+        self.line_items.splice(index, 1)
+        self.$q.notify(`Charge for "${item.service.name}" deleted.`)
+      }
+
       // this.line_items.splice(index, 1)
       // this.$q.notify(`Charge for "${item.service.name}" deleted.`)
     },
@@ -159,6 +165,12 @@ export default {
       console.log('selected', service)
     },
     add_service (service) {
+      for (var i in this.line_items) {
+        if (this.line_items[i].service.id === service.id) {
+          this.$q.notify({message: `Service, "${service.name}" already listed.`, type: 'negative'})
+          return
+        }
+      }
       this.line_items.push({service: service, quantity: 0, notes: '', submission: this.submission.id})
       this.select = null
     }
