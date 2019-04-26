@@ -9,14 +9,14 @@
     <tr><th>Institute</th><td colspan="5">{{submission.institute}}</td></tr>
     <tr v-if="submission.notes"><th>Notes</th><td colspan="5">{{submission.notes}}</td></tr>
     </table>
-    <div v-if="submission.submission_data">
+    <div v-if="submission.submission_data && Object.keys(submission.submission_data).length">
       <h5 class="centered">Submission specific details</h5>
       <table class="full bordered">
         <tr><th :key="variable" v-for="(value, variable) in submission.submission_data">{{getTitle(submission.submission_schema,variable)}}</th></tr>
         <tr><td :key="variable" v-for="(value, variable) in submission.submission_data">{{value}}</td></tr>
       </table>
     </div>
-    <h5 class="centered page-break-before">Total Number of Samples: {{submission.sample_data.length}}</h5>
+    <h5 class="centered">Total Number of Samples: {{submission.sample_data.length}}</h5> <!--  page-break-before -->
 <table class="horizontal full bordered compact page-break-after">
   <tr>
     <th :key="variable" v-for="variable in submission.sample_schema.order">{{getTitle(submission.sample_schema,variable)}}</th>
