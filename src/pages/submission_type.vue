@@ -368,6 +368,7 @@ export default {
           if (self.create) {
             self.$router.push({name: 'submission_type', params: {id: response.data.id}})
           }
+          self.$store.dispatch('fetchTypes', {axios: self.$axios})
         })
         .catch(function (error, stuff) {
           // raise different exception if due to invalid credentials
