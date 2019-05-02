@@ -1,12 +1,13 @@
 <template>
-  <div class="row">
+    <div class="row">
+    <p class="col-sm-12 col-lg-12">Please ensure that your lab has an account set up at: <a href="https://ppms.us/ucdavis/">https://ppms.us/ucdavis/</a>. Use the same email address as the PI listed for the group.</p>
     <div class="col-sm-12 col-md-6 col-lg-3">
       <q-field
-        :error="errors.order_id"
-        :error-label="errors.order_id"
-        helper="Please ensure that you have an account and order set up at: https://ppms.us/ucdavis/"
+        :error="errors.pi_email"
+        :error-label="errors.pi_email"
+        helper="Please ensure that your lab has an account set up at: https://ppms.us/ucdavis/.  Use the same email address as the PI listed for the group."
       >
-        <q-input v-model="value.order_id" type="text" stack-label="PPMS Order ID"/>
+        <q-input v-model="value.ppms_email" type="text" stack-label="PI Email"/>
       </q-field>
     </div>
   </div>
