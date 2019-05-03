@@ -7,7 +7,7 @@
         :error-label="errors.pi_email"
         helper="Please ensure that your lab has an account set up at: https://ppms.us/ucdavis/.  Use the same email address as the PI listed for the group."
       >
-        <q-input v-model="value.ppms_email" type="text" stack-label="PI Email"/>
+        <q-input v-model="value.pi_email" type="text" stack-label="PI Email"/>
       </q-field>
     </div>
   </div>
