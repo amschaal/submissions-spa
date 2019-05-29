@@ -158,7 +158,7 @@
           </div>
         </div> -->
         <q-field>
-          <q-checkbox v-model="submission.biocore" label="Do you want the Bioinformatics Core to analyze the data?" />
+          <q-checkbox v-model="submission.biocore" label="I want the Bioinformatics Core to analyze my data" />
         </q-field>
         <q-field
           label="* Submission Type"
