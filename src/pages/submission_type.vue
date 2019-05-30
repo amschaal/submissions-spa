@@ -402,6 +402,9 @@ export default {
       }
       if (self.type[schema].order) {
         return self.type[schema].order.map(function (variable) {
+          if (!self.type[schema].properties[variable]) { // This should not usually happen
+            self.type[schema].properties[variable] = {}
+          }
           return {'variable': variable, 'schema': self.type[schema].properties[variable]}
         })
       }

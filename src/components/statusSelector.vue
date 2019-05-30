@@ -1,7 +1,6 @@
 <template>
-  <div  class="inline row">
+  <div  class="inline row" v-if="$store.getters.isStaff">
     <q-select
-      v-if="$store.getters.isStaff"
       v-model="status"
      :options="statusOptions"
      @input="statusChanged()"
