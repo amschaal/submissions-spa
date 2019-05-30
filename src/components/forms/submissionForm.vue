@@ -3,7 +3,8 @@
       <q-checkbox v-model="debug" label="Debug" v-if="$store.getters.isStaff" />
         <span v-if="debug">
           {{type}}
-          {{submission_types.length}}
+          {{submission_types}}
+          {{type_options}}
           {{submission}}
         </span>
 <!-- v-if="submission.participants && user_options && !create" -->
@@ -231,13 +232,13 @@ import Vue from 'vue'
 
 export default {
   // name: 'submission',
-  props: ['id', 'submission_types', 'type_options', 'create'],
+  props: ['id', 'submission_types', 'create'],
   data () {
     return {
       submission: {'submission_data': {}, 'sample_data': [], 'contacts': [], biocore: false, 'payment': {}},
       errors: {contacts: [], payment: {}},
       // submission_types: [{ foo: 'bar' }],
-      // type_options: [{ 'label': 'test', 'value': 2 }],
+      // type_options: this.$store.getters.typeOptions,
       type: {},
       debug: false,
       user_options: null,
@@ -420,6 +421,9 @@ export default {
   computed: {
     error_message (field) {
       return this.errors[field]
+    },
+    type_options () {
+      return this.$store.getters.typeOptions
     }
     // type_options () {
     //   return this.submission_types.map(opt => ({label: opt.name, value: opt.id}))
