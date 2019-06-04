@@ -183,7 +183,7 @@
           v-if="type && type.sample_schema"
         >
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
-          <Agschema v-model="submission.sample_data" :schema="submission.sample_schema" :type="type" :editable="true" :allow-examples="true" ref="samplesheet" v-if="type && type.sample_schema"/>
+          <Agschema v-model="submission.sample_data" :schema="submission.sample_schema" :type="type" :editable="true" :allow-examples="true" :allow-force-save="true" ref="samplesheet" v-if="type && type.sample_schema"/>
           <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet" />
         </q-field>
         <span v-if="debug">
@@ -196,6 +196,7 @@
         </span>
         <q-card-actions>
           <q-btn @click="submit" label="Submit"></q-btn>
+          <q-btn @click="saveDraft" v-if="!id" color="positive" label="Save Draft"></q-btn>
           <q-btn v-if="submission.id" label="Cancel" color="negative" class="float-right" @click="$router.push({name: 'submission', params: {id: submission.id}})"/>
           <q-btn color="primary" @click="show_help = true" label="Help" icon="fas fa-question-circle" v-if="type && type.submission_help"/>
         </q-card-actions>
@@ -243,7 +244,8 @@ export default {
       debug: false,
       user_options: null,
       show_help: false,
-      payment: {}
+      payment: {},
+      draft: null
       // create: false
     }
   },
@@ -264,6 +266,12 @@ export default {
       //     Vue.set(self.submission, 'type', response.data.type.id)
       //   })
       this.loadSubmission(this.id)
+    } else {
+      this.draft = !this.id && this.$route.query.draft ? this.$route.query.draft : null
+      if (this.draft) {
+        this.loadDraft(this.draft)
+      }
+      console.log('draft', this.draft)
     }
     if (this.submission.type) {
       if (this.submission.type.id) {
@@ -324,6 +332,9 @@ export default {
           self.$q.notify({message: 'Submission successfully saved.', type: 'positive'})
           self.$emit('submission_updated', self.submission)
           // if (self.create) {
+          if (self.draft_message) {
+            self.draft_message()
+          }
           self.$router.push({name: 'submission', params: {id: response.data.id}, query: {created: self.create}})
           // }
         })
@@ -339,22 +350,84 @@ export default {
           throw error
         })
     },
+    loadDraftMessage () {
+      console.log(this.draft_message, this.draft)
+      if (!this.draft_message && this.draft) {
+        var page = window.location.href // self.$router.query.page
+        if (!this.$route.query.draft) {
+          page += '?draft=' + this.draft
+        }
+        var self = this
+        this.draft_message = this.$q.notify({
+          message: `This is a draft.  In order to make it a submission, you must first click on the submit button at the bottom of the form and ensure that the form submits without errors.  You may refer to this draft by the following URL: ${page}`,
+          timeout: 0, // in milliseconds; 0 means no timeout
+          type: 'info',
+          position: 'top', // 'top', 'left', 'bottom-left' etc.
+          actions: [
+            {
+              label: 'Dismiss',
+              handler: () => {
+                self.draft_message()
+                self.draft_message = null
+              }
+            }
+          ]
+        })
+      }
+    },
+    saveDraft () {
+      var self = this
+      var action = !this.draft ? 'post' : 'put'
+      var url = this.draft ? `/api/drafts/${this.draft}/` : '/api/drafts/'
+      // var url = !this.create ? '/api/submissions/' + id + '/update/' : '/api/submit/'
+      this.$axios[action]('' + url, {data: this.submission})
+        .then(function (response) {
+          console.log('saveDraft', response)
+
+          self.$q.notify({message: `Draft saved.`, type: 'positive'})
+          self.draft = response.data.id
+          self.loadDraftMessage()
+          // self.$router.push({name: 'submission', params: {id: response.data.id}, query: {created: self.create}})
+          // }
+        })
+        .catch(function (error, stuff) {
+          // raise different exception if due to invalid credentials
+          console.log('ERROR', error)
+          self.$q.notify({message: 'There were errors saving your draft.', type: 'negative'})
+          throw error
+        })
+    },
+    loadDraft: function (id) {
+      var self = this
+      this.$axios
+        .get(`/api/drafts/${id}/`)
+        .then(function (response) {
+          console.log('response', response)
+          // if (!response.data.sample_data) {
+          //   response.data.data.sample_data = []
+          // }
+          self.submission = response.data.data
+          self.loadDraftMessage()
+          // Vue.set(self.submission, 'type', response.data.type.id)
+        }).catch(function (error, stuff) {
+          self.$q.notify({message: `No draft was found with ID: ${id}`, type: 'negative'})
+          self.draft = null
+          self.$router.push({name: 'create_submission'})
+          throw error
+        })
+    },
     loadSubmission: function (id) {
       var self = this
-      if (id) {
-        this.$axios
-          .get(`/api/submissions/${id}/`)
-          .then(function (response) {
-            console.log('response', response)
-            if (!response.data.sample_data) {
-              response.data.sample_data = []
-            }
-            self.submission = response.data
-            Vue.set(self.submission, 'type', response.data.type.id)
-          })
-      } else {
-        Vue.set(this, 'submission', {'sample_data': [], 'contacts': [], biocore: false})
-      }
+      this.$axios
+        .get(`/api/submissions/${id}/`)
+        .then(function (response) {
+          console.log('response', response)
+          if (!response.data.sample_data) {
+            response.data.sample_data = []
+          }
+          self.submission = response.data
+          Vue.set(self.submission, 'type', response.data.type.id)
+        })
     },
     addContact () {
       this.submission.contacts.push({})

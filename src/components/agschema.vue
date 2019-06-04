@@ -153,7 +153,7 @@ import _ from 'lodash'
 // var clipboardService = null
 
 export default {
-  props: ['value', 'type', 'schema', 'editable', 'allowExamples'],
+  props: ['value', 'type', 'schema', 'editable', 'allowExamples', 'allowForceSave'],
   data () {
     return {
       opened: false,
@@ -368,7 +368,24 @@ export default {
             // console.log('ERROR', error.response, self.$refs.grid, self.gridOptions.api.refreshCells)
             self.errors = error.response.data.errors
             self.gridOptions.api.redrawRows() // redrawCells({force: true})
-            self.$q.notify({message: 'There were errors in your data.', type: 'negative'})
+            if (!save || !self.allowForceSave) {
+              self.$q.notify({message: 'There were errors in your data.', type: 'negative'})
+            } else {
+              self.$q.notify({
+                message: `There were errors.  Any errors will need to be corrected before completing submission.`,
+                timeout: 5000, // in milliseconds; 0 means no timeout
+                type: 'negative',
+                // position: 'bottom', // 'top', 'left', 'bottom-left' etc.
+                actions: [
+                  {
+                    label: 'Save Anyway',
+                    handler: () => {
+                      self.save()
+                    }
+                  }
+                ]
+              })
+            }
 
             // if (error.response) {
             //   self.errors = error.response.data.errors

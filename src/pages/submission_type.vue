@@ -148,7 +148,7 @@
           label="Add field"
         />
         <div v-if="type && type.sample_schema && type.sample_schema.properties">
-          <Agschema v-model="type.sample_schema.examples" :type="type" :editable="true"  ref="samplesheet"/>
+          <Agschema v-model="type.sample_schema.examples" :type="type" :editable="true"  ref="samplesheet" :allow-force-save="false"/>
           <q-btn :label="'Configure examples ('+type.sample_schema.examples.length+')'"  @click="openExamples"/>
         </div>
         <q-field
