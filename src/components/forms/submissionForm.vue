@@ -306,6 +306,11 @@ export default {
         })
     }
   },
+  beforeDestroy: function () {
+    if (this.draft_message) {
+      this.draft_message()
+    }
+  },
   methods: {
     openSamplesheet () {
       if (!this.type || !this.type.sample_schema) {
