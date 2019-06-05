@@ -29,8 +29,18 @@ export const fetchStatuses = (context, {axios}) => {
       console.log(error.message)
     })
 }
-
+export const fetchLab = (context, {axios}) => {
+  return axios.get('/api/labs/default/')
+    .then(function (response) {
+      console.log('lab', response)
+      context.commit('lab', response.data)
+    })
+    .catch(function (error) {
+      console.log(error.message)
+    })
+}
 export const fetchAll = (context, {axios}) => {
+  fetchLab(context, {axios})
   fetchValidators(context, {axios})
   fetchTypes(context, {axios})
   fetchStatuses(context, {axios})

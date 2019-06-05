@@ -49,7 +49,8 @@ export default [
         name: 'submission_type',
         props: true
       },
-      { path: '/submission_type/create', component: () => import('pages/submission_type'), name: 'create_submission_type' }
+      { path: '/submission_type/create', component: () => import('pages/submission_type'), name: 'create_submission_type' },
+      { path: '/settings', name: 'settings', component: () => import('pages/settings') }
     ]
   },
   {

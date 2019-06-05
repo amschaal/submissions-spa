@@ -7,3 +7,6 @@ export const types = (state, types) => {
 export const statuses = (state, statuses) => {
   state.statuses = statuses
 }
+export const lab = (state, lab) => {
+  state.lab = lab
+}

@@ -36,3 +36,6 @@ export const statusOptions = (state) => {
   console.log('getting status options', state.statuses)
   return state.statuses.map(opt => ({label: opt.name, value: opt.id}))
 }
+export const lab = (state) => {
+  return state.lab
+}
