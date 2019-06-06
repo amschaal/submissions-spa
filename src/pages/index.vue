@@ -5,17 +5,16 @@
       <q-card-title>
         DNA Technologies Core Sample Submissions
       </q-card-title>
+
       <q-card-separator />
       <q-card-main>
-      <h5>Getting Started</h5>
-        <p>Put something here.  Also, link to <router-link :to="{ name: 'create_submission' }">sample submission</router-link>.</p>
-        <p>
-          These three steps will assure the trouble-free processing of your projects:
-           Make sure that your lab has an account with the Genome Center.  We require a Genome Center account for each PI/lab/company before receiving samples.  Setting up the account is a simple process of entering contact information for the PI and a financial administrator.  Please see details below on this page. This page has also all other information of administrative relevance.
-           Please check the sample requirements page:  http://dnatech.genomecenter.ucdavis.edu/sample-requirements/ to plan your project accordingly.
-          Find the sample submission forms (Excel spreadsheets)  and the sample shipping instructions on this page:    http://dnatech.genomecenter.ucdavis.edu/sample-submission-scheduling/
-          Please consult our extensive FAQs first in case of questions. We do offer free consultations.  Please contact us at dnatech@ucdavis.edu .
-        </p>
+        <div v-html="default_lab.home_page" v-if="default_lab.home_page"></div>
+        <!-- <p>Welcome to the DNA Technologies Core new online submission portal. Please use this platform for all project submission for Nanopore and 10X (Genome and Single Cell assays).</p>
+        <p>These steps will assure the trouble-free processing of your projects: Make sure that your lab has an account with the Genome Center and PPMS. We require a Genome Center account for each PI/lab/company before receiving samples and soon we will be migrating to PPMS for billing. Setting up the account is a simple process of entering contact information for the PI and a financial administrator. Please see "setting up your account and billing" here: <a href="https://dnatech.genomecenter.ucdavis.edu/getting-started/">https://dnatech.genomecenter.ucdavis.edu/getting-started/</a></p>
+        <p>Before submitting samples, please check the sample requirements page: <a href="https://dnatech.genomecenter.ucdavis.edu/sample-requirements/">https://dnatech.genomecenter.ucdavis.edu/sample-requirements/</a> to plan your project accordingly. The sample shipping instructions on this page: <a href="https://dnatech.genomecenter.ucdavis.edu/sample-submission-scheduling/">https://dnatech.genomecenter.ucdavis.edu/sample-submission-scheduling/</a> Please consult our extensive FAQs first in case of questions. We do offer free consultations. Please contact us at <b>dnatech@ucdavis.edu</b> if you have further questions.</p>
+        <router-link :to="{ name: 'create_submission' }">Click here</router-link> to start sample submission.
+      -->
+        <q-btn :to="{ name: 'create_submission' }" label="Create Submission"></q-btn>
     </q-card-main>
   </q-card>
   </q-page>
@@ -26,6 +25,11 @@
 
 <script>
 export default {
-  name: 'PageIndex'
+  name: 'PageIndex',
+  computed: {
+    default_lab () {
+      return this.$store.getters.lab
+    }
+  }
 }
 </script>
