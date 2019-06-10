@@ -1,7 +1,7 @@
 <template>
   <div v-if="submission.type">
-    <h5 class="centered">Submission Details</h5>
-    <table class="full bordered">
+    <p class="heading">Submission Details</p>
+    <table class="full bordered compact">
     <tr><th>ID</th><td>{{submission.id}}</td><th>Internal ID</th><td>{{submission.internal_id}}</td><th>Type</th><td>{{submission.type.name}}</td></tr>
     <tr><th>Status</th><td><span v-if="submission.status">{{submission.status.name}}</span></td><th>Submitted</th><td>{{submission.submitted}}</td><th>Updated</th><td>{{submission.updated}}</td></tr>
     <tr><th>Name</th><td>{{submission.first_name}} {{submission.last_name}}</td><th>Email</th><td>{{submission.email}}</td><th>Phone</th><td>{{submission.phone}}</td></tr>
@@ -10,13 +10,13 @@
     <tr v-if="submission.notes"><th>Notes</th><td colspan="5">{{submission.notes}}</td></tr>
     </table>
     <div v-if="submission.submission_data && Object.keys(submission.submission_data).length">
-      <h5 class="centered">Submission specific details</h5>
+      <p class="heading">Submission specific details</p>
       <table class="full bordered">
         <tr><th :key="variable" v-for="(value, variable) in submission.submission_data">{{getTitle(submission.submission_schema,variable)}}</th></tr>
         <tr><td :key="variable" v-for="(value, variable) in submission.submission_data">{{value}}</td></tr>
       </table>
     </div>
-    <h5 class="centered">Total Number of Samples: {{submission.sample_data.length}}</h5> <!--  page-break-before -->
+    <p class="heading">Total Number of Samples: {{submission.sample_data.length}}</p> <!--  page-break-before -->
 <table class="horizontal full bordered compact page-break-after">
   <tr>
     <th :key="variable" v-for="variable in submission.sample_schema.order">{{getTitle(submission.sample_schema,variable)}}</th>
@@ -84,11 +84,14 @@ td,th{
 .compact th td{
   word-wrap:break-word;
 }
-.compact td{
-  font-size:10pt;
+.compact td, .compact th{
+  font-size:9pt;
 }
-.centered{
+.heading{
   text-align:center;
+  margin: 5px;
+  font-size: 10pt;
+  font-weight: bold;
 }
 .page-break-before{
   page-break-before:  always;
@@ -109,7 +112,7 @@ td,th{
   }
   body {
     width: 10in;
-    font-size: 11pt;
+    font-size: 10pt;
   }
   .full {
     width:100%;
