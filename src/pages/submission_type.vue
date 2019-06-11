@@ -347,7 +347,7 @@ export default {
       }).then(() => {
         if (self.type[schema].order) {
           var index = self.type[schema].order.indexOf(variable)
-          if (index) {
+          if (index >= 0) {
             self.type[schema].order.splice(index, 1)
           }
         }
