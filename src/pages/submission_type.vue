@@ -34,12 +34,16 @@
           <q-input v-model="type.name" type="text"/>
         </q-field>
         <q-field
-          label="Prefix"
-          helper="Prefix the submission's generated internal id with this text."
-          :error="errors.prefix"
-          :error-label="errors.prefix"
+          label="Internal ID"
+          :error="errors.next_id"
+          :error-label="errors.next_id"
+          helper="The Prefix is concatenated with the Next ID to create the internal id for the submission."
         >
-          <q-input v-model="type.prefix" type="text"/>
+          <div class="row no-wrap">
+            <q-input v-model="type.prefix" type="text" stack-label="Prefix" class="col"/>
+            <q-input v-model="type.next_id" type="number" stack-label="Next ID" class="col"/>
+            <div class="col">Next Internal ID:<br><b>{{next_internal_id}}</b></div>
+          </div>
         </q-field>
         <q-field
           label="Description"
@@ -441,6 +445,11 @@ export default {
   //   }
   // },
   computed: {
+    next_internal_id () {
+      var n = this.type.next_id + ''
+      var suffix = n.length >= 4 ? n : new Array(4 - n.length + 1).join('0') + n
+      return this.type.prefix + suffix
+    },
     error_message (field) {
       return this.errors[field]
     },
