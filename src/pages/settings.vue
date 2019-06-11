@@ -42,6 +42,7 @@
     ]"
         />
       </q-field>
+      <prefixes :lab="lab" v-if="lab.id"/>
       <q-card-actions>
         <q-btn @click="save" label="Save"></q-btn>
       </q-card-actions>
@@ -50,6 +51,7 @@
 </template>
 
 <script>
+import prefixes from '../components/prefixes.vue'
 export default {
   name: 'settings',
   data () {
@@ -104,6 +106,9 @@ export default {
     labOptions () {
       return this.labs.map((l, k) => ({label: l.name, value: l}))
     }
+  },
+  components: {
+    prefixes
   }
 }
 </script>
