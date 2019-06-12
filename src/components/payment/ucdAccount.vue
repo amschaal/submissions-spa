@@ -9,7 +9,7 @@
           float-label="Select"
           v-model="value.payment_type"
           :options="[
-            {label: 'Credit Card', value: 'Credit Card'},
+            {label: 'Credit Card (entered at time of billing)', value: 'Credit Card'},
             {label: 'DaFIS', value: 'DaFIS'},
             {label: 'UC Chart String', value: 'UC Chart String'},
             {label: 'Purchase Order', value: 'Purchase Order'}

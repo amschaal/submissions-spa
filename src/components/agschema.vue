@@ -202,7 +202,7 @@ export default {
         }
       },
       errors: {},
-      maximized: false
+      maximized: true
     }
   },
   methods: {
@@ -372,8 +372,8 @@ export default {
               self.$q.notify({message: 'There were errors in your data.', type: 'negative'})
             } else {
               self.$q.notify({
-                message: `There were errors.  Any errors will need to be corrected before completing submission.`,
-                timeout: 5000, // in milliseconds; 0 means no timeout
+                message: `There were errors.  Any errors will need to be corrected before completing submission.  You may choose to "save anyway" and then save this submission as a draft in order not to lose your work.`,
+                timeout: 10000, // in milliseconds; 0 means no timeout
                 type: 'negative',
                 // position: 'bottom', // 'top', 'left', 'bottom-left' etc.
                 actions: [
