@@ -8,7 +8,8 @@ export default [
       {
         path: '/submissions',
         component: () => import('pages/submissions'),
-        name: 'submissions'
+        name: 'submissions',
+        meta: { authorize: {isLoggedIn: true} }
       },
       { path: '/submissions/create',
         component: () => import('pages/submission'),
@@ -41,16 +42,27 @@ export default [
       {
         path: '/submission_types',
         component: () => import('pages/submission_types'),
-        name: 'submission_types'
+        name: 'submission_types',
+        meta: { authorize: {isLoggedIn: true} }
       },
       {
         path: '/submission_type/:id',
         component: () => import('pages/submission_type'),
         name: 'submission_type',
-        props: true
+        props: true,
+        meta: { authorize: {isLoggedIn: true} }
       },
-      { path: '/submission_type/create', component: () => import('pages/submission_type'), name: 'create_submission_type' },
-      { path: '/settings', name: 'settings', component: () => import('pages/settings') }
+      {
+        path: '/submission_type/create',
+        component: () => import('pages/submission_type'),
+        name: 'create_submission_type'
+      },
+      {
+        path: '/settings',
+        name: 'settings',
+        component: () => import('pages/settings'),
+        meta: { authorize: {isLoggedIn: true} }
+      }
     ]
   },
   {
