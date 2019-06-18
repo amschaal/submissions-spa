@@ -2,11 +2,11 @@
   <div v-if="submission.type">
     <p class="heading">Submission Details</p>
     <table class="full bordered compact">
-    <tr><th>ID</th><td>{{submission.id}}</td><th>Internal ID</th><td>{{submission.internal_id}}</td><th>Type</th><td>{{submission.type.name}}</td></tr>
-    <tr><th>Status</th><td><span v-if="submission.status">{{submission.status.name}}</span></td><th>Submitted</th><td>{{submission.submitted}}</td><th>Updated</th><td>{{submission.updated}}</td></tr>
+    <tr><th>ID</th><td>{{submission.id}}</td><th>Internal ID</th><td>{{submission.internal_id}}</td><th>Type</th><td>{{submission.type.name}}</td><th>Submitted</th><td>{{getDate(submission.submitted)}}</td></tr>
+    <!--<tr><th>Status</th><td><span v-if="submission.status">{{submission.status.name}}</span></td><th>Submitted</th><td>{{submission.submitted}}</td><th>Updated</th><td>{{submission.updated}}</td></tr>-->
+    <tr><th>PI</th><td>{{submission.pi_first_name}} {{submission.pi_last_name}}</td><th>PI email</th><td>{{submission.pi_email}}</td><th>PI Phone</th><td>{{submission.pi_phone}}</td><th>Institute</th><td colspan="5">{{submission.institute}}</td></tr>
     <tr><th>Name</th><td>{{submission.first_name}} {{submission.last_name}}</td><th>Email</th><td>{{submission.email}}</td><th>Phone</th><td>{{submission.phone}}</td></tr>
-    <tr><th>PI</th><td>{{submission.pi_first_name}} {{submission.pi_last_name}}</td><th>PI email</th><td>{{submission.pi_email}}</td><th>PI Phone</th><td>{{submission.pi_phone}}</td></tr>
-    <tr><th>Institute</th><td colspan="5">{{submission.institute}}</td></tr>
+    <!--<tr><th>Institute</th><td colspan="5">{{submission.institute}}</td></tr>-->
     <tr v-if="submission.notes"><th>Notes</th><td colspan="5">{{submission.notes}}</td></tr>
     </table>
     <div v-if="submission.submission_data && Object.keys(submission.submission_data).length">
@@ -19,11 +19,11 @@
     <p class="heading">Total Number of Samples: {{submission.sample_data.length}}</p> <!--  page-break-before -->
 <table class="horizontal full bordered compact page-break-after">
   <tr>
-    <th :key="variable" v-for="variable in submission.sample_schema.order">{{getTitle(submission.sample_schema,variable)}}</th>
+    <th></th><th :key="variable" v-for="variable in submission.sample_schema.order">{{getTitle(submission.sample_schema,variable)}}</th>
   </tr>
 
   <tr :key="index" v-for="(row,index) in submission.sample_data">
-    <td :key="index" v-for="(variable, index) in submission.sample_schema.order">{{row[variable]}}</td>
+    <td>{{index + 1}}</td><td :key="index" v-for="(variable, index) in submission.sample_schema.order">{{row[variable]}}</td>
   </tr>
 </table>
   </div>
@@ -31,6 +31,8 @@
 
 <script>
 import Vue from 'vue'
+import { date } from 'quasar'
+const { formatDate } = date
 export default {
   name: 'print_submission',
   props: ['id'],
@@ -57,6 +59,9 @@ export default {
   methods: {
     getTitle (schema, variable) {
       return schema.properties[variable] && schema.properties[variable].title ? schema.properties[variable].title : variable
+    },
+    getDate (timeStamp) {
+      return formatDate(timeStamp, 'MM/DD/YYYY')
     }
   },
   components: {
