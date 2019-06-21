@@ -171,7 +171,7 @@ export default {
     width: 100%;
   }
   .notes .q-card-main {
-    white-space: pre;
+    white-space: pre-wrap;
   }
   .notes .notes {
     margin-left: 15px;

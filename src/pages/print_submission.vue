@@ -1,17 +1,19 @@
 <template>
   <div v-if="submission.type">
-    <p class="heading">Submission Details</p>
+    <p class="heading">{{submission.lab.name}} - Submission Details</p>
     <table class="full bordered compact">
     <tr><th>ID</th><td>{{submission.id}}</td><th>Internal ID</th><td>{{submission.internal_id}}</td><th>Type</th><td>{{submission.type.name}}</td><th>Submitted</th><td>{{getDate(submission.submitted)}}</td></tr>
     <!--<tr><th>Status</th><td><span v-if="submission.status">{{submission.status.name}}</span></td><th>Submitted</th><td>{{submission.submitted}}</td><th>Updated</th><td>{{submission.updated}}</td></tr>-->
     <tr><th>PI</th><td>{{submission.pi_first_name}} {{submission.pi_last_name}}</td><th>PI email</th><td>{{submission.pi_email}}</td><th>PI Phone</th><td>{{submission.pi_phone}}</td><th>Institute</th><td colspan="5">{{submission.institute}}</td></tr>
     <tr><th>Name</th><td>{{submission.first_name}} {{submission.last_name}}</td><th>Email</th><td>{{submission.email}}</td><th>Phone</th><td>{{submission.phone}}</td></tr>
     <!--<tr><th>Institute</th><td colspan="5">{{submission.institute}}</td></tr>-->
-    <tr v-if="submission.notes"><th>Notes</th><td colspan="5">{{submission.notes}}</td></tr>
+    <tr v-if="submission.notes"><th>Notes</th><td colspan="7">{{submission.notes}}</td></tr>
+    <tr v-if="submission.comments"><th td colspan="8">Special Instructions / Comments</th></tr>
+    <tr v-if="submission.comments"><td colspan="8">{{submission.comments}}</td></tr>
     </table>
+
     <div v-if="submission.submission_data && Object.keys(submission.submission_data).length">
-      <p class="heading">Submission specific details</p>
-      <table class="full bordered">
+      <table class="full bordered compact">
         <tr><th :key="variable" v-for="(value, variable) in submission.submission_data">{{getTitle(submission.submission_schema,variable)}}</th></tr>
         <tr><td :key="variable" v-for="(value, variable) in submission.submission_data">{{value}}</td></tr>
       </table>
@@ -94,7 +96,7 @@ td,th{
 }
 .heading{
   text-align:center;
-  margin: 5px;
+  margin: 10px;
   font-size: 10pt;
   font-weight: bold;
 }

@@ -186,6 +186,17 @@
           <Agschema v-model="submission.sample_data" :schema="submission.sample_schema" :type="type" :editable="true" :allow-examples="true" :allow-force-save="true" ref="samplesheet" v-if="type && type.sample_schema"/>
           <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet" />
         </q-field>
+        <q-field
+          :error="errors.comments"
+          :error-label="errors.comments"
+        >
+          <q-input
+            v-model="submission.comments" type="textarea"
+            stack-label="Special Instructions / Comments"
+            :max-height="100"
+            rows="1"
+          />
+        </q-field>
         <span v-if="debug">
           <p>SCHEMA:
             {{type.sample_schema}}

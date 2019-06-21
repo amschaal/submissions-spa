@@ -79,9 +79,13 @@
             <p class="caption">PI Phone</p>
             {{submission.pi_phone}}
           </div>
-          <div class="field col-sm-12 col-md-6 col-lg-4">
+          <div class="field col-sm-12 col-md-4 col-lg-4">
             <p class="caption">Institute</p>
             {{submission.institute}}
+          </div>
+          <div class="field col-sm-12 col-md-8 col-lg-8">
+            <p class="caption">Special Instructions / Comments</p>
+            {{submission.comments}}
           </div>
         </div>
         <p class="caption" v-if="submission.contacts && submission.contacts.length">Additional Contacts</p>
