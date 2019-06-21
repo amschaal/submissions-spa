@@ -15,7 +15,7 @@
     <div v-if="submission.submission_data && Object.keys(submission.submission_data).length">
       <table class="full bordered compact">
         <tr><th :key="variable" v-for="(value, variable) in submission.submission_data">{{getTitle(submission.submission_schema,variable)}}</th></tr>
-        <tr><td :key="variable" v-for="(value, variable) in submission.submission_data">{{value}}</td></tr>
+        <tr><td :key="variable" v-for="(value, variable) in submission.submission_data">{{truncate(submission.submission_schema, variable, value)}}</td></tr>
       </table>
     </div>
     <p class="heading">Total Number of Samples: {{submission.sample_data.length}}</p> <!--  page-break-before -->
@@ -25,7 +25,7 @@
   </tr>
 
   <tr :key="index" v-for="(row,index) in submission.sample_data">
-    <td>{{index + 1}}</td><td :key="index" v-for="(variable, index) in submission.sample_schema.order">{{row[variable]}}</td>
+    <td>{{index + 1}}</td><td :key="index" v-for="(variable, index) in submission.sample_schema.order">{{truncate(submission.sample_schema, variable, row[variable])}}</td>
   </tr>
 </table>
   </div>
@@ -60,7 +60,20 @@ export default {
   },
   methods: {
     getTitle (schema, variable) {
+      if (schema.printing && schema.printing[variable] && schema.printing[variable].label) {
+        return schema.printing[variable].label
+      }
       return schema.properties[variable] && schema.properties[variable].title ? schema.properties[variable].title : variable
+    },
+    truncate (schema, variable, value) {
+      if (schema.printing && schema.printing[variable] && schema.printing[variable].truncate) {
+        return value.substr(0, schema.printing[variable].truncate) + ' ..'
+      }
+      return value
+    },
+    hidden (schema, variable) {
+      return true
+      // return schema.printing && schema.printing[variable] && schema.printing[variable].hidden
     },
     getDate (timeStamp) {
       return formatDate(timeStamp, 'MM/DD/YYYY')
