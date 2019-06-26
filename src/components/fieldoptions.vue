@@ -16,8 +16,8 @@
         </q-toolbar>
 
         <div class="layout-padding">
-          <!-- {{data}}
-          {{validators}}
+         <!-- {{data}}
+            {{validators}}
           {{validatorsByType(data.type)}} -->
           <q-field
             label="Description"
@@ -89,6 +89,24 @@
             </q-btn-dropdown>
             <div v-for="(v, index) in data.validators" :key="index" :title="validators[v.id].description"><q-btn flat dense round icon="delete_outline" @click="removeValidator(index)"/> {{validators[v.id].name}} <q-btn size="sm" v-if="validators[v.id].uses_options" label="Options"/></div>
           </q-field>
+          <h5>Printing options</h5>
+            <q-field
+              label="Field label"
+            >
+              <q-input v-model="data.printing.label" placeholder="Optionally add a shortened label."/>
+            </q-field>
+            <q-field
+              label="Hidden"
+            >
+              <!-- <q-checkbox v-model="data.unique" :false-value="true" :true-value="false" indeterminate-icon="check_box_outline_blank" unchecked-icon="check_box" checked-icon="check_box_outline_blank" keep-color /> -->
+              <q-checkbox v-model="data.printing.hidden" indeterminate-icon="check_box_outline_blank"/>
+              <!-- :false-value="undefined" toggle-indeterminate="false" indeterminate-value="none"/> -->
+            </q-field>
+            <q-field
+              label="Truncate after N characters"
+            >
+              <q-input v-model="data.printing.truncate_at" type="number" />
+            </q-field>
           <!-- <td v-if="p.type == 'string'"><q-btn v-if="p.enum" @click="removeOptions(p)">Remove options</q-btn><q-btn v-if="!p.enum" @click="useOptions(p)">Use Options</q-btn><q-chips-input v-if="p.enum" v-model="p.enum" placeholder="Enter options" /></td>
           <td v-if="p.type == 'number'">Number stuff</td> -->
         </div>
@@ -122,7 +140,7 @@ export default {
   data () {
     return {
       opened: false,
-      data: {enum: [], widget: {}},
+      data: {enum: [], widget: {}, printing: {}},
       validators: this.$store.getters.validatorDict, // t{unique: {id: 'unique', name: 'Unique'}, foo: {id: 'foo', name: 'Foo'}},
       add_validator: null
       // options: this.value && this.value.enum ? this.value.enum : []
@@ -141,6 +159,9 @@ export default {
       }
       if (!this.data.widget) {
         this.$set(this.data, 'widget', {'type': null, 'options': {}})
+      }
+      if (!this.data.printing) {
+        this.$set(this.data, 'printing', {'hidden': false})
       }
       if (!this.data.validators) {
         this.$set(this.data, 'validators', [])

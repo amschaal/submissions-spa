@@ -60,20 +60,20 @@ export default {
   },
   methods: {
     getTitle (schema, variable) {
-      if (schema.printing && schema.printing[variable] && schema.printing[variable].label) {
-        return schema.printing[variable].label
+      if (schema.properties[variable].printing && schema.properties[variable].printing.label) {
+        return schema.properties[variable].printing.label
       }
       return schema.properties[variable] && schema.properties[variable].title ? schema.properties[variable].title : variable
     },
     truncate (schema, variable, value) {
-      if (schema.printing && schema.printing[variable] && schema.printing[variable].truncate) {
-        return value.substr(0, schema.printing[variable].truncate) + ' ..'
+      if (schema.properties[variable].printing && schema.properties[variable].printing.truncate_at) {
+        return value.substr(0, schema.properties[variable].printing.truncate_at) + ' ..'
       }
       return value
     },
     hidden (schema, variable) {
-      return true
-      // return schema.printing && schema.printing[variable] && schema.printing[variable].hidden
+      // return true
+      return schema.properties[variable].printing && schema.properties[variable].printing.hidden
     },
     getDate (timeStamp) {
       return formatDate(timeStamp, 'MM/DD/YYYY')

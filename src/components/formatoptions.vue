@@ -56,7 +56,7 @@
         </q-toolbar>
       </q-modal-layout>
     </q-modal>
-    <q-btn label="Print Options"  @click="openModal"/>
+    <q-btn label="Printing"  @click="openModal"/>
   </div>
 </template>
 

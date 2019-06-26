@@ -117,7 +117,6 @@
             </td>
             <td class="row">
               <fieldoptions v-model="type.submission_schema.properties[variable.variable]" :variable="variable.variable" type="submission"/>
-              <formatoptions v-model="type.submission_schema.printing[variable.variable]" :variable="variable.variable"/>
               <q-btn label="Delete" color="negative" @click="deleteVariable(variable.variable, 'submission_schema')"></q-btn>
             </td>
           </tr>
@@ -144,7 +143,8 @@
               />
             </td>
             <td class="row">
-              <fieldoptions v-model="type.sample_schema.properties[variable.variable]" :variable="variable.variable" type="sample"/> <q-btn label="Delete" color="negative" @click="deleteVariable(variable.variable, 'sample_schema')"></q-btn>
+              <fieldoptions v-model="type.sample_schema.properties[variable.variable]" :variable="variable.variable" type="sample"/>
+              <q-btn label="Delete" color="negative" @click="deleteVariable(variable.variable, 'sample_schema')"></q-btn>
             </td>
           </tr>
         </table>
@@ -225,7 +225,7 @@
 import '../components/forms/docs-input.styl'
 // import axios from 'axios'
 import Fieldoptions from '../components/fieldoptions.vue'
-import Formatoptions from '../components/formatoptions.vue'
+// import Formatoptions from '../components/formatoptions.vue'
 import Vue from 'vue'
 import Agschema from '../components/agschema.vue'
 export default {
@@ -233,7 +233,7 @@ export default {
   props: ['id'],
   data () {
     return {
-      type: {active: true, help: '', examples: [], statuses: [], submission_schema: {properties: {}, order: [], required: [], layout: {}, printing: {}}, sample_schema: {properties: {}, order: [], required: [], examples: []}},
+      type: {active: true, help: '', examples: [], statuses: [], submission_schema: {properties: {}, order: [], required: [], layout: {}, printing: {}}, sample_schema: {properties: {}, order: [], required: [], printing: {}, examples: []}},
       errors: {},
       type_options: [{ 'label': 'Text', 'value': 'string' }, { 'label': 'Number', 'value': 'number' }, { 'label': 'True / False', 'value': 'boolean' }],
       width_options: [{ 'label': '100%', 'value': 'col-md-12 col-sm-12 col-xs-auto' }, { 'label': '5/6', 'value': 'col-md-10 col-sm-12 col-xs-auto' }, { 'label': '3/4', 'value': 'col-md-9 col-sm-12 col-xs-auto' }, { 'label': '2/3', 'value': 'col-md-8 col-sm-12 col-xs-auto' }, { 'label': '1/2', 'value': 'col-md-6 col-sm-12 col-xs-auto' }, { 'label': '1/3', 'value': 'col-md-4 col-sm-6 col-xs-auto' }, { 'label': '1/4', 'value': 'col-md-3 col-sm-6 col-xs-auto' }, { 'label': '1/6', 'value': 'col-md-2 col-sm-4 col-xs-auto' }],
@@ -265,6 +265,9 @@ export default {
           }
           if (!self.type.submission_schema.printing) {
             Vue.set(self.type.submission_schema, 'printing', {})
+          }
+          if (!self.type.sample_schema.printing) {
+            Vue.set(self.type.sample_schema, 'printing', {})
           }
           if (self.$route.query.copy_from) {
             delete self.type['id']
@@ -513,7 +516,7 @@ export default {
   },
   components: {
     Fieldoptions,
-    Formatoptions,
+    // Formatoptions,
     Agschema
   }
 }
