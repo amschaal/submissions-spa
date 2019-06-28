@@ -14,18 +14,18 @@
 
     <div v-if="submission.submission_data && Object.keys(submission.submission_data).length">
       <table class="full bordered compact">
-        <tr><th :key="variable" v-for="(value, variable) in submission.submission_data">{{getTitle(submission.submission_schema,variable)}}</th></tr>
-        <tr><td :key="variable" v-for="(value, variable) in submission.submission_data">{{truncate(submission.submission_schema, variable, value)}}</td></tr>
+        <tr><th :key="variable" v-for="(value, variable) in submission.submission_data" v-show="!hidden(submission.submission_schema, variable)">{{getTitle(submission.submission_schema,variable)}}</th></tr>
+        <tr><td :key="variable" v-for="(value, variable) in submission.submission_data" v-show="!hidden(submission.submission_schema, variable)">{{truncate(submission.submission_schema, variable, value)}}</td></tr>
       </table>
     </div>
     <p class="heading">Total Number of Samples: {{submission.sample_data.length}}</p> <!--  page-break-before -->
 <table class="horizontal full bordered compact page-break-after">
   <tr>
-    <th></th><th :key="variable" v-for="variable in submission.sample_schema.order">{{getTitle(submission.sample_schema,variable)}}</th>
+    <th></th><th :key="variable" v-for="variable in submission.sample_schema.order" v-show="!hidden(submission.sample_schema, variable)">{{getTitle(submission.sample_schema,variable)}}</th>
   </tr>
 
   <tr :key="index" v-for="(row,index) in submission.sample_data">
-    <td>{{index + 1}}</td><td :key="index" v-for="(variable, index) in submission.sample_schema.order">{{truncate(submission.sample_schema, variable, row[variable])}}</td>
+    <td>{{index + 1}}</td><td :key="index" v-for="(variable, index) in submission.sample_schema.order" v-show="!hidden(submission.sample_schema, variable)">{{truncate(submission.sample_schema, variable, row[variable])}}</td>
   </tr>
 </table>
   </div>
