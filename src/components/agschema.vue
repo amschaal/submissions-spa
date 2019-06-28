@@ -254,13 +254,13 @@ export default {
       var columnDefs = []
       if (schema.order) {
         for (var i in schema.order) {
-          if (this.$store.getters.isLoggedIn || !schema.properties[schema.order[i]].internal) {
+          if (!this.editable || this.$store.getters.isLoggedIn || !schema.properties[schema.order[i]].internal) {
             columnDefs.push(this.getColDef(schema.order[i], schema.properties[schema.order[i]], schema))
           }
         }
       } else {
         for (var prop in schema.properties) {
-          if (schema.properties.hasOwnProperty(prop) && (this.$store.getters.isLoggedIn || !schema.properties[prop].internal)) {
+          if (schema.properties.hasOwnProperty(prop) && (!this.editable || this.$store.getters.isLoggedIn || !schema.properties[prop].internal)) {
             columnDefs.push(this.getColDef(prop, schema.properties[prop], schema))
           }
         }
