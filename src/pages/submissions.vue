@@ -21,6 +21,7 @@
           :props="props"
         />
         <q-checkbox v-model="showCancelled" label="Show cancelled" @input="refresh"/>
+        <q-checkbox v-model="showCompleted" label="Show completed" @input="refresh"><q-tooltip>Include submissions with a status of "completed"</q-tooltip></q-checkbox>
       </template>
       <template slot="top-right" slot-scope="props">
         <q-search hide-underline v-model="filter" :props="props"/>
@@ -53,6 +54,7 @@ export default {
     return {
       filter: '',
       showCancelled: false,
+      showCompleted: false,
       loading: false,
       serverPagination: {
         page: 1,
@@ -92,10 +94,11 @@ export default {
       }
       var search = this.filter !== '' ? `&search=${this.filter}` : ''
       var cancelled = !this.showCancelled ? '&cancelled__isnull=true' : ''
+      var completed = !this.showCompleted ? '&status__iexact!=completed' : ''
       var pageSize = pagination.rowsPerPage ? pagination.rowsPerPage : 1000000 // HACKY
       // var type = this.$route.query.type ? `&type__name__icontains=${this.$route.query.type}` : ''
       this.$axios
-        .get(`/api/submissions/?ordering=${sortBy}&page=${pagination.page}&page_size=${pageSize}${search}${cancelled}`)// ${pagination.descending}&filter=${filter}
+        .get(`/api/submissions/?ordering=${sortBy}&page=${pagination.page}&page_size=${pageSize}${search}${cancelled}${completed}`)// ${pagination.descending}&filter=${filter}
         .then(({ data }) => {
           console.log('data', data)
           // updating pagination to reflect in the UI
