@@ -27,7 +27,7 @@
         <q-search hide-underline v-model="filter" :props="props"/>
       </template>
       <template slot="body" slot-scope="props">
-        <q-tr :props="props" v-bind:class="{'cancelled': props.row.cancelled}">
+        <q-tr :props="props" v-bind:class="{'cancelled': props.row.cancelled, 'completed': props.row.status && props.row.status.toUpperCase() === 'COMPLETED'}">
           <q-td key="locked" :props="props"><q-icon size="18px" name="cancel" v-if="props.row.cancelled" color="red" title="Submission cancelled"/><q-icon size="18px" name="lock" v-if="props.row.locked" color="red"/><q-icon size="18px" name="lock_open" v-else color="green"/></q-td>
           <q-td key="id" :props="props"><router-link :to="{ name: 'submission', params: { id: props.row.id }}">{{ props.row.id }}</router-link></q-td>
           <q-td key="internal_id" :props="props">{{ props.row.internal_id }}</q-td>
@@ -36,6 +36,7 @@
           <q-td key="submitted" :props="props">{{ props.row.submitted | formatDate }}</q-td>
           <q-td key="name" :props="props">{{ props.row.first_name }} {{ props.row.last_name }}</q-td>
           <q-td key="email" :props="props">{{ props.row.email }}</q-td>
+          <q-td key="pi_name" :props="props">{{ props.row.pi_first_name }} {{ props.row.pi_last_name }}</q-td>
           <q-td key="pi_email" :props="props">{{ props.row.pi_email }}</q-td>
           <q-td key="sample_data" :props="props"><span v-if="props.row.sample_data">{{ props.row.sample_data.length }}</span></q-td>
           <q-td key="biocore" :props="props"><q-icon size="18px" name="check_circle" v-if="props.row.biocore" color="green"/></q-td>
@@ -73,11 +74,12 @@ export default {
         { name: 'submitted', label: 'Submitted', field: 'submitted', sortable: true },
         { name: 'name', label: 'Name', field: 'name' },
         { name: 'email', label: 'Email', field: 'email', sortable: true },
-        { name: 'pi_email', label: 'PI', field: 'pi_email', sortable: true },
+        { name: 'pi_name', label: 'PI', field: 'pi_name' },
+        { name: 'pi_email', label: 'PI Email', field: 'pi_email', sortable: true },
         { name: 'sample_data', label: 'Samples', field: 'sample_data' },
         { name: 'biocore', label: 'Biocore', field: 'biocore', sortable: true }
       ],
-      visibleColumns: ['locked', 'id', 'internal_id', 'type', 'status', 'submitted', 'name', 'email', 'pi_email', 'sample_data', 'biocore']
+      visibleColumns: ['locked', 'id', 'internal_id', 'type', 'status', 'submitted', 'name', 'email', 'pi_name', 'sample_data', 'biocore']
     }
   },
   methods: {
@@ -140,6 +142,9 @@ export default {
 <style>
 tr.cancelled td, tr.cancelled td a {
   color: red;
+}
+tr.completed td, tr.completed td a {
+  color: green;
 }
 /*
 .q-table-middle.scroll, .scroll {
