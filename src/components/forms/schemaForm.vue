@@ -79,8 +79,6 @@
       </q-toolbar>
     </q-modal-layout>
     </q-modal>
-    Schema: {{schema}}
-    Sorted: {{fields_sorted}}
     </div>
 </template>
 
@@ -93,9 +91,10 @@ import Vue from 'vue'
 // import Agschema from '../agschema.vue'
 export default {
   name: 'schemaForm',
-  props: ['schema'],
+  props: ['value'],
   data () {
     return {
+      schema: {},
       errors: {},
       type_options: [{ 'label': 'Text', 'value': 'string' }, { 'label': 'Number', 'value': 'number' }, { 'label': 'True / False', 'value': 'boolean' }],
       width_options: [{ 'label': '100%', 'value': 'col-md-12 col-sm-12 col-xs-auto' }, { 'label': '5/6', 'value': 'col-md-10 col-sm-12 col-xs-auto' }, { 'label': '3/4', 'value': 'col-md-9 col-sm-12 col-xs-auto' }, { 'label': '2/3', 'value': 'col-md-8 col-sm-12 col-xs-auto' }, { 'label': '1/2', 'value': 'col-md-6 col-sm-12 col-xs-auto' }, { 'label': '1/3', 'value': 'col-md-4 col-sm-6 col-xs-auto' }, { 'label': '1/4', 'value': 'col-md-3 col-sm-6 col-xs-auto' }, { 'label': '1/6', 'value': 'col-md-2 col-sm-4 col-xs-auto' }],
@@ -103,8 +102,8 @@ export default {
       variable_modal: false
     }
   },
-  mounted: function () {
-    console.log('mounted!!!', this.schema)
+  created: function () {
+    console.log('created!!!', this.schema)
     if (!this.schema.properties) {
       Vue.set(this.schema, 'properties', {})
     }
@@ -208,6 +207,12 @@ export default {
       if (variable.schema && variable.schema.internal && index >= 0) {
         this.schema.required.splice(index, 1)
       }
+    },
+    fields_sorted_method () {
+      console.log('field_sorted', this.schema)
+      return this.schema.order.map(function (variable) {
+        return {'variable': variable, 'schema': this.schema.properties[variable]}
+      })
     }
 
     // removeOptions (property) {
@@ -234,13 +239,17 @@ export default {
   // },
   computed: {
     fields_sorted () {
-      if (!this.schema.order) {
-        return []
-      } else {
-        return this.schema.order.map(function (variable) {
-          return {'variable': variable, 'schema': this.schema.properties[variable]}
-        })
-      }
+      // console.log('field_sorted', this.schema)
+      // var sorted = []
+      // for (var i in this.schema.order) {
+      //   var variable = this.schema.order[i]
+      //   sorted.push({'variable': variable, 'schema': this.schema.properties[variable]})
+      // }
+      // return this.schema.order.length
+      var self = this
+      return this.schema.order.map(function (variable) {
+        return {'variable': variable, 'schema': self.schema.properties[variable]}
+      })
     }
     // nested: {
     //   // return {
@@ -258,6 +267,18 @@ export default {
     // nested () {
     //   return path => this.getNested(path)
     // }
+  },
+  watch: {
+    schema: {
+      handler (newVal, oldVal) {
+        // console.log('watch schema', this.schema)
+        this.$emit('input', this.schema)
+      },
+      deep: true
+    },
+    new_variable: function (val) {
+      console.log('new variable', val)
+    }
   },
   components: {
     Fieldoptions

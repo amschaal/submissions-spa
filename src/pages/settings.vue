@@ -42,6 +42,10 @@
     ]"
         />
       </q-field>
+      <h5>Submission variables</h5>
+      <schemaForm v-model="submission_variables"/>
+      <h5>Sample variables</h5>
+      <schemaForm v-model="sample_variables"/>
       <q-card-actions>
         <q-btn @click="save" label="Save"></q-btn>
       </q-card-actions>
@@ -50,13 +54,16 @@
 </template>
 
 <script>
+import schemaForm from '../components/forms/schemaForm.vue'
 export default {
   name: 'settings',
   data () {
     return {
       lab: null,
       settings: null,
-      labs: []
+      labs: [],
+      submission_variables: {},
+      sample_variables: {}
     }
   },
   methods: {
@@ -106,6 +113,7 @@ export default {
     }
   },
   components: {
+    schemaForm
   }
 }
 </script>
