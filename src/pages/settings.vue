@@ -43,9 +43,9 @@
         />
       </q-field>
       <h5>Submission variables</h5>
-      <schemaForm v-model="submission_variables"/>
+      <schemaForm v-model="lab.submission_variables"/>
       <h5>Sample variables</h5>
-      <schemaForm v-model="sample_variables"/>
+      <schemaForm v-model="lab.sample_variables"/>
       <q-card-actions>
         <q-btn @click="save" label="Save"></q-btn>
       </q-card-actions>

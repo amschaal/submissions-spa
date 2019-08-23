@@ -14,7 +14,7 @@
                 :options="type_options"
               />
             </td>
-            <td>
+            <td v-if="options.showWidth">
               <!-- v-bind:value="getNested(`schema.layout.${variable.variable}.width`)" -->
               <q-select
 
@@ -91,10 +91,18 @@ import Vue from 'vue'
 // import Agschema from '../agschema.vue'
 export default {
   name: 'schemaForm',
-  props: ['value'],
+  props: {
+    value: {
+      type: Object
+    },
+    options: {
+      type: Object,
+      default: function () { return {} }
+    }
+  },
   data () {
     return {
-      schema: {},
+      schema: this.value,
       errors: {},
       type_options: [{ 'label': 'Text', 'value': 'string' }, { 'label': 'Number', 'value': 'number' }, { 'label': 'True / False', 'value': 'boolean' }],
       width_options: [{ 'label': '100%', 'value': 'col-md-12 col-sm-12 col-xs-auto' }, { 'label': '5/6', 'value': 'col-md-10 col-sm-12 col-xs-auto' }, { 'label': '3/4', 'value': 'col-md-9 col-sm-12 col-xs-auto' }, { 'label': '2/3', 'value': 'col-md-8 col-sm-12 col-xs-auto' }, { 'label': '1/2', 'value': 'col-md-6 col-sm-12 col-xs-auto' }, { 'label': '1/3', 'value': 'col-md-4 col-sm-6 col-xs-auto' }, { 'label': '1/4', 'value': 'col-md-3 col-sm-6 col-xs-auto' }, { 'label': '1/6', 'value': 'col-md-2 col-sm-4 col-xs-auto' }],
@@ -104,6 +112,9 @@ export default {
   },
   created: function () {
     console.log('created!!!', this.schema)
+    if (!this.options) {
+      Vue.set(this, 'options', {})
+    }
     if (!this.schema.properties) {
       Vue.set(this.schema, 'properties', {})
     }
