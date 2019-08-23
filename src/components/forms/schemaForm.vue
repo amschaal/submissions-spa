@@ -42,6 +42,25 @@
           @click="openModal"
           label="Add field"
         />
+        <q-btn-dropdown
+        color="positive"
+        label="Add field"
+        >
+          <q-list link>
+            <q-item v-close-overlay @click.native="openModal">
+              <q-item-main>
+                <q-item-tile label>New</q-item-tile>
+              </q-item-main>
+              <q-item-side right icon="create" color="green" />
+            </q-item>
+            <q-item-separator />
+            <q-item v-for="v in variables" :key="v" v-close-overlay @click.native="addExistingVariable(v)">
+              <q-item-main>
+                <q-item-tile label>{{v}}</q-item-tile>
+              </q-item-main>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
     <q-modal v-model="variable_modal" :content-css="{minWidth: '30vw', minHeight: '30vh'}" ref="modal">
       <q-modal-layout>
         <q-toolbar slot="header">
@@ -158,6 +177,14 @@ export default {
       // console.log(this.schema.properties)
       this.variable_modal = false
     },
+    addExistingVariable (v) {
+      if (this.schema.properties[v]) {
+        this.$q.notify(`Variable "${v}" already exists`)
+      } else {
+        Vue.set(this.schema.properties, v, this.options.variables.properties[v])
+        this.schema.order.push(v)
+      }
+    },
     move (variable, displacement, schema) {
       console.log('moveUp', variable)
       var index = this.schema.order.indexOf(variable)
@@ -261,6 +288,9 @@ export default {
       return this.schema.order.map(function (variable) {
         return {'variable': variable, 'schema': self.schema.properties[variable]}
       })
+    },
+    variables () {
+      return this.options && this.options.variables && this.options.variables.order ? this.options.variables.order : []
     }
     // nested: {
     //   // return {
