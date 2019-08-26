@@ -116,43 +116,6 @@
       </q-card-actions>
 
     </q-card>
-    <q-modal v-model="variable_modal" :content-css="{minWidth: '30vw', minHeight: '30vh'}" ref="modal">
-      <q-modal-layout>
-        <q-toolbar slot="header">
-          <q-toolbar-title>
-            Add a variable
-          </q-toolbar-title>
-        </q-toolbar>
-      <div class="layout-padding">
-        <q-field label="Type">
-            <q-select
-              v-model="new_variable.type"
-              :options="type_options"
-            />
-        </q-field>
-        <q-field label="Variable Name" :error="variableError(new_variable.name)" :error-label="variableMessage(new_variable.name)">
-            <q-input
-              v-model="new_variable.name"
-            />
-        </q-field>
-      </div>
-      <q-toolbar slot="footer">
-        <q-toolbar-title>
-          <q-btn
-            color="positive"
-            @click="addVariable()"
-            label="Add"
-            :disable="variableError(new_variable.name) || !new_variable.name || !new_variable.type"
-          />
-          <q-btn
-            @click="variable_modal = false"
-            label="Cancel"
-            color="negative"
-          />
-        </q-toolbar-title>
-      </q-toolbar>
-    </q-modal-layout>
-    </q-modal>
   </q-page>
 
 </template>
@@ -172,11 +135,7 @@ export default {
     return {
       type: {active: true, help: '', examples: [], statuses: [], submission_schema: {properties: {}, order: [], required: [], layout: {}, printing: {}}, sample_schema: {properties: {}, order: [], required: [], printing: {}, examples: []}},
       errors: {},
-      type_options: [{ 'label': 'Text', 'value': 'string' }, { 'label': 'Number', 'value': 'number' }, { 'label': 'True / False', 'value': 'boolean' }],
-      width_options: [{ 'label': '100%', 'value': 'col-md-12 col-sm-12 col-xs-auto' }, { 'label': '5/6', 'value': 'col-md-10 col-sm-12 col-xs-auto' }, { 'label': '3/4', 'value': 'col-md-9 col-sm-12 col-xs-auto' }, { 'label': '2/3', 'value': 'col-md-8 col-sm-12 col-xs-auto' }, { 'label': '1/2', 'value': 'col-md-6 col-sm-12 col-xs-auto' }, { 'label': '1/3', 'value': 'col-md-4 col-sm-6 col-xs-auto' }, { 'label': '1/4', 'value': 'col-md-3 col-sm-6 col-xs-auto' }, { 'label': '1/6', 'value': 'col-md-2 col-sm-4 col-xs-auto' }],
       submission_schema: [],
-      new_variable: {},
-      variable_modal: false,
       examples: [],
       save_message: null,
       watch_changes: true
@@ -224,86 +183,8 @@ export default {
     }
   },
   methods: {
-    openModal (schema) {
-      this.new_variable = {schema: schema}
-      this.variable_modal = true
-    },
     openExamples () {
       this.$refs.samplesheet.openSamplesheet()
-    },
-    variableError (name) {
-      return this.variableMessage(name) !== null
-    },
-    variableMessage (name, schema) {
-      if (name && this.type && this.type[schema]) {
-        for (var n in this.type[schema].properties) {
-          if (n.toLowerCase() === name.toLowerCase()) {
-            return 'That variable name exists'
-          }
-        }
-      }
-      return null
-    },
-    addVariable () {
-      Vue.set(this.type[this.new_variable.schema].properties, this.new_variable.name, {type: this.new_variable.type, internal: false, unique: false})
-      this.type[this.new_variable.schema].order.push(this.new_variable.name)
-      // // this.type.submission_schema.properties['VARIABLE_NAME'] = {added: true}
-      // console.log(this.type.submission_schema.properties)
-      this.variable_modal = false
-    },
-    move (variable, displacement, schema) {
-      console.log('moveUp', variable)
-      var index = this.type[schema].order.indexOf(variable)
-      this.type[schema].order.splice(index + displacement, 0, this.type[schema].order.splice(index, 1)[0])
-    },
-    setNested (path, value) {
-      var props = path.split('.')
-      console.log('setNested', props, value)
-      var self = this
-      var last = this
-
-      props.forEach(function (prop, index) {
-        if (!last[prop] && index < props.length - 1) {
-          console.log('set blank', last, prop)
-          self.$set(last, prop, {})
-        }
-        if (index === props.length - 1) {
-          console.log('set value', last, prop, value)
-          self.$set(last, prop, value)
-        }
-        last = last[prop]
-      })
-    },
-    getNested (path) {
-      var props = path.split('.')
-      console.log('getNested', props)
-      var last = this
-      props.forEach(function (prop, index) {
-        if (index < props.length - 1 && !last[prop]) {
-          return undefined
-        } else if (index === props.length - 1) {
-          return last[prop]
-        }
-        last = last[prop]
-      })
-    },
-    deleteVariable (variable, schema) {
-      var self = this
-      this.$q.dialog({
-        title: 'Confirm variable deletion',
-        message: 'Are you sure you want to delete the variable "' + variable + '"?',
-        ok: 'Okay',
-        cancel: 'Cancel'
-      }).then(() => {
-        if (self.type[schema].order) {
-          var index = self.type[schema].order.indexOf(variable)
-          if (index >= 0) {
-            self.type[schema].order.splice(index, 1)
-          }
-        }
-        Vue.delete(this.type[schema].properties, variable)
-        self.$q.notify({message: 'Variable "' + variable + '" deleted.', type: 'negative'})
-      })
     },
     submit () {
       var self = this
@@ -344,52 +225,8 @@ export default {
             self.$q.notify('Error deleting submission type!')
           })
       }
-    },
-    fields_sorted (schema) {
-      var self = this
-      if (!self.type[schema]) {
-        return []
-      }
-      if (self.type[schema].order) {
-        return self.type[schema].order.map(function (variable) {
-          if (!self.type[schema].properties[variable]) { // This should not usually happen
-            self.type[schema].properties[variable] = {}
-          }
-          return {'variable': variable, 'schema': self.type[schema].properties[variable]}
-        })
-      }
-      // return this.submission_types.map(opt => ({label: opt.name, value: opt.id}))
-    },
-    toggleRequired (variable, schema) {
-      console.log('toggleRequired', variable, schema)
-      var index = schema.required.indexOf(variable.variable)
-      if (variable.schema && variable.schema.internal && index >= 0) {
-        schema.required.splice(index, 1)
-      }
     }
-
-    // removeOptions (property) {
-    //   console.log(property)
-    //   // delete property.enum
-    //   property.enum = null
-    //   delete property.enum
-    //   console.log(property)
-    // },
-    // useOptions (property) {
-    //   property.enum = []
-    // }
   },
-  // watch: {
-  //   'submission.type': function (newType) {
-  //     console.log('type changed', newType)
-  //     for (var i in this.submission_types) {
-  //       if (this.submission_types[i].id === newType) {
-  //         console.log('type', this.submission_types[i])
-  //         this.schema = this.submission_types[i].sample_schema
-  //       }
-  //     }
-  //   }
-  // },
   computed: {
     next_internal_id () {
       var n = this.type.next_id + ''
@@ -398,33 +235,7 @@ export default {
     },
     error_message (field) {
       return this.errors[field]
-    },
-    sample_fields_sorted () {
-      return this.fields_sorted('sample_schema')
-      // return this.submission_types.map(opt => ({label: opt.name, value: opt.id}))
-    },
-    submission_fields_sorted () {
-      // return []
-      console.log('submission_fields_sorted', this.fields_sorted('submission_schema'), this.type['submission_schema'])
-      return this.fields_sorted('submission_schema')
-      // return this.submission_types.map(opt => ({label: opt.name, value: opt.id}))
     }
-    // nested: {
-    //   // return {
-    //   // getter
-    //   get: function (path) {
-    //     console.log('get', path)
-    //     return this.getNested(path)
-    //   },
-    //   // setter
-    //   set: function (path, newValue) {
-    //     this.setNested(path, newValue)
-    //   }
-    //   // }
-    // }
-    // nested () {
-    //   return path => this.getNested(path)
-    // }
   },
   watch: {
     'type': {
