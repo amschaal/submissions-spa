@@ -3,7 +3,7 @@ export const getUser = (state) => {
 }
 export const isLoggedIn = (state) => {
   console.log(state)
-  return state.user != null
+  return state.user && state.user.username != null
 }
 // Replace this later if non staff members authenticate
 export const isStaff = (state) => {

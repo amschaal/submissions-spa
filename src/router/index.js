@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '../store'
 import routes from './routes'
+import {axiosInstance} from '../plugins/axios.js'
 
 Vue.use(VueRouter)
 
@@ -23,12 +24,27 @@ const Router = new VueRouter({
 
 Router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
-
   const { authorize } = to.meta
   if (authorize && authorize.isLoggedIn && to.path !== '/' && !store.getters.isLoggedIn) {
-    return next({ path: '/' })
+    // TODO: Don't repeat the code alread in auth store (use dispatch)
+    console.log('check auth!!!')
+    axiosInstance.post('/api/login/')
+      .then(function (response) {
+        next()
+      })
+      .catch(function (error) {
+        console.log('error', error)
+        return next({ path: '/' })
+      })
+  } else {
+    next()
   }
-  next()
+
+  // if (authorize && authorize.isLoggedIn && to.path !== '/' && !store.getters.isLoggedIn) {
+  //   return next({ path: '/' })
+  // }
+  // next()
+
   /*
   const currentUser = authenticationService.currentUserValue;
 
