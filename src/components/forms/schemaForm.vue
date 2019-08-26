@@ -130,10 +130,28 @@ export default {
     if (!this.options) {
       Vue.set(this, 'options', {})
     }
+    this.setMissingProperties()
   },
   // beforeDestroy: function () {
   // },
   methods: {
+    setMissingProperties () {
+      if (!this.schema.properties) {
+        Vue.set(this.schema, 'properties', {})
+      }
+      if (!this.schema.order) {
+        Vue.set(this.schema, 'order', [])
+      }
+      if (!this.schema.layout) {
+        Vue.set(this.schema, 'layout', {})
+      }
+      if (!this.schema.printing) {
+        Vue.set(this.schema, 'printing', [])
+      }
+      if (!this.schema.required) {
+        Vue.set(this.schema, 'required', [])
+      }
+    },
     openModal () {
       this.new_variable = {schema: this.schema}
       this.variable_modal = true
@@ -142,7 +160,7 @@ export default {
       return this.variableMessage(name) !== null
     },
     variableMessage (name) {
-      if (name) {
+      if (name && this.schema.properties) {
         for (var n in this.schema.properties) {
           if (n.toLowerCase() === name.toLowerCase()) {
             return 'That variable name exists'
@@ -266,6 +284,9 @@ export default {
       //   sorted.push({'variable': variable, 'schema': this.schema.properties[variable]})
       // }
       // return this.schema.order.length
+      if (!this.schema || !this.schema.order) {
+        return []
+      }
       var self = this
       return this.schema.order.map(function (variable) {
         return {'variable': variable, 'schema': self.schema.properties[variable]}
@@ -302,21 +323,7 @@ export default {
     value: {
       handler (newVal, oldVal) {
         this.schema = newVal
-        if (!this.schema.properties) {
-          Vue.set(this.schema, 'properties', {})
-        }
-        if (!this.schema.order) {
-          Vue.set(this.schema, 'order', [])
-        }
-        if (!this.schema.layout) {
-          Vue.set(this.schema, 'layout', {})
-        }
-        if (!this.schema.printing) {
-          Vue.set(this.schema, 'printing', [])
-        }
-        if (!this.schema.required) {
-          Vue.set(this.schema, 'required', [])
-        }
+        this.setMissingProperties()
       },
       deep: false
     }
