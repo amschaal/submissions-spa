@@ -56,6 +56,7 @@
           label="Statuses"
           :error="errors.statuses"
           :error-label="errors.statuses"
+          helper="Special statuses include 'Completed'."
         >
           <q-chips-input v-model="type.statuses" />
         </q-field>
@@ -84,75 +85,10 @@
           <q-input v-model="type.confirmation_text" type="textarea"/>
         </q-field>
         <h6>Submission Fields</h6>
-        <table v-if="type.submission_schema" style="width:100%">
-          <tr><th></th><th title="Should the field only be available to staff?">Internal</th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th>Column Width</th><th></th></tr>
-          <tr v-for="variable in submission_fields_sorted" :key="variable.variable">
-            <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1, 'submission_schema')" v-if="type.submission_schema.order && type.submission_schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1, 'submission_schema')" v-if="type.submission_schema.order && type.submission_schema.order.indexOf(variable.variable) != type.submission_schema.order.length - 1"/>
-            <td><q-checkbox v-if="variable.schema" v-model="variable.schema.internal" @input="toggleRequired(variable, type.submission_schema)"/></td>
-            <td><q-checkbox v-model="type.submission_schema.required" :val="variable.variable" :disable="variable.schema && variable.schema.internal"/></td>
-            <td>{{variable.variable}}</td>
-            <td><q-input v-model="variable.schema.title" /></td>
-            <td>
-              <q-select
-                v-model="variable.schema.type"
-                :options="type_options"
-              />
-            </td>
-            <td>
-              <!-- v-bind:value="getNested(`type.submission_schema.layout.${variable.variable}.width`)" -->
-              <q-select
-
-                v-model="type.submission_schema.layout[variable.variable].width"
-                :options="width_options"
-                v-if="type.submission_schema.layout[variable.variable]"
-                @input="setNested(`type.submission_schema.layout.${variable.variable}.width`,$event)"
-              />
-              <q-select
-                :options="width_options"
-                v-if="!type.submission_schema.layout[variable.variable]"
-                @input="setNested(`type.submission_schema.layout.${variable.variable}.width`,$event)"
-              />
-              <!-- @input="$set(item,'prop',$event.target.value)" -->
-
-            </td>
-            <td class="row">
-              <fieldoptions v-model="type.submission_schema.properties[variable.variable]" :variable="variable.variable" type="submission"/>
-              <q-btn label="Delete" color="negative" @click="deleteVariable(variable.variable, 'submission_schema')"></q-btn>
-            </td>
-          </tr>
-        </table>
-        <q-btn
-          color="positive"
-          @click="openModal('submission_schema')"
-          label="Add field"
-        />
+        <schemaForm v-model="type.submission_schema" :options="{variables: $store.getters.lab.submission_variables, showWidth: true}"/>
         <h5>Samplesheet definition</h5>
         <h6>Column Definitions</h6>
-        <table v-if="type.sample_schema" style="width:100%">
-          <tr><th></th><th title="Should the field only be available to staff?">Internal</th><th>Required</th><th>Variable</th><th>Name</th><th>Type</th><th></th></tr>
-          <tr v-for="variable in sample_fields_sorted" :key="variable.variable">
-            <td><q-btn flat dense round icon="arrow_upward" color="primary" @click="move(variable.variable, -1, 'sample_schema')" v-if="type.sample_schema.order && type.sample_schema.order.indexOf(variable.variable) != 0"/> <q-btn flat dense round icon="arrow_downward" color="primary" @click="move(variable.variable, 1, 'sample_schema')" v-if="type.sample_schema.order && type.sample_schema.order.indexOf(variable.variable) != type.sample_schema.order.length - 1"/>
-            <td><q-checkbox v-model="variable.schema.internal" @input="toggleRequired(variable, type.sample_schema)"/></td>
-            <td><q-checkbox v-model="type.sample_schema.required" :val="variable.variable" :disable="variable.schema.internal"/></td>
-            <td>{{variable.variable}}</td>
-            <td><q-input v-model="variable.schema.title" /></td>
-            <td>
-              <q-select
-                v-model="variable.schema.type"
-                :options="type_options"
-              />
-            </td>
-            <td class="row">
-              <fieldoptions v-model="type.sample_schema.properties[variable.variable]" :variable="variable.variable" type="sample"/>
-              <q-btn label="Delete" color="negative" @click="deleteVariable(variable.variable, 'sample_schema')"></q-btn>
-            </td>
-          </tr>
-        </table>
-        <q-btn
-          color="positive"
-          @click="openModal('sample_schema')"
-          label="Add field"
-        />
+        <schemaForm v-model="type.sample_schema" :options="{variables: $store.getters.lab.sample_variables, showWidth: false}"/>
         <div v-if="type && type.sample_schema && type.sample_schema.properties">
           <Agschema v-model="type.sample_schema.examples" :type="type" :editable="true"  ref="samplesheet" :allow-force-save="false"/>
           <q-btn :label="'Configure examples ('+type.sample_schema.examples.length+')'"  @click="openExamples"/>
@@ -224,7 +160,8 @@
 <script>
 import '../components/forms/docs-input.styl'
 // import axios from 'axios'
-import Fieldoptions from '../components/fieldoptions.vue'
+// import Fieldoptions from '../components/fieldoptions.vue'
+import SchemaForm from '../components/forms/schemaForm.vue'
 // import Formatoptions from '../components/formatoptions.vue'
 import Vue from 'vue'
 import Agschema from '../components/agschema.vue'
@@ -515,7 +452,8 @@ export default {
     }
   },
   components: {
-    Fieldoptions,
+    // Fieldoptions,
+    SchemaForm,
     // Formatoptions,
     Agschema
   }

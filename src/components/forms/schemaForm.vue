@@ -37,11 +37,6 @@
             </td>
           </tr>
         </table>
-        <q-btn
-          color="positive"
-          @click="openModal"
-          label="Add field"
-        />
         <q-btn-dropdown
         color="positive"
         label="Add field"
@@ -112,7 +107,8 @@ export default {
   name: 'schemaForm',
   props: {
     value: {
-      type: Object
+      type: Object,
+      default: function () { return {} }
     },
     options: {
       type: Object,
@@ -133,21 +129,6 @@ export default {
     console.log('created!!!', this.schema)
     if (!this.options) {
       Vue.set(this, 'options', {})
-    }
-    if (!this.schema.properties) {
-      Vue.set(this.schema, 'properties', {})
-    }
-    if (!this.schema.order) {
-      Vue.set(this.schema, 'order', [])
-    }
-    if (!this.schema.layout) {
-      Vue.set(this.schema, 'layout', {})
-    }
-    if (!this.schema.printing) {
-      Vue.set(this.schema, 'printing', [])
-    }
-    if (!this.schema.required) {
-      Vue.set(this.schema, 'required', [])
     }
   },
   // beforeDestroy: function () {
@@ -183,6 +164,7 @@ export default {
       } else {
         Vue.set(this.schema.properties, v, this.options.variables.properties[v])
         this.schema.order.push(v)
+        self.$q.notify({message: `Variable "${v}" added.`, type: 'positive'})
       }
     },
     move (variable, displacement, schema) {
@@ -317,8 +299,26 @@ export default {
       },
       deep: true
     },
-    new_variable: function (val) {
-      console.log('new variable', val)
+    value: {
+      handler (newVal, oldVal) {
+        this.schema = newVal
+        if (!this.schema.properties) {
+          Vue.set(this.schema, 'properties', {})
+        }
+        if (!this.schema.order) {
+          Vue.set(this.schema, 'order', [])
+        }
+        if (!this.schema.layout) {
+          Vue.set(this.schema, 'layout', {})
+        }
+        if (!this.schema.printing) {
+          Vue.set(this.schema, 'printing', [])
+        }
+        if (!this.schema.required) {
+          Vue.set(this.schema, 'required', [])
+        }
+      },
+      deep: false
     }
   },
   components: {
