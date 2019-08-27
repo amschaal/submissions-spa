@@ -35,7 +35,7 @@ export const login = (context, {username, password, axios, dispatch}) => {
 
 export const checkAuth = (context, {axios}) => {
   console.log('context', context)
-  return axios.post('/api/login/')
+  return axios.get('/api/get_user/')
     .then(function (response) {
       context.commit('login', response.data.user)
     })

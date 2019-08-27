@@ -36,7 +36,7 @@ Router.beforeEach((to, from, next) => {
     //     // console.log('catch');
     //     return next({ path: '/' })
     //   })
-    axiosInstance.post('/api/login/')
+    axiosInstance.get('/api/get_user/')
       .then(function (response) {
         next()
       })
