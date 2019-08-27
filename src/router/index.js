@@ -28,6 +28,14 @@ Router.beforeEach((to, from, next) => {
   if (authorize && authorize.isLoggedIn && to.path !== '/' && !store.getters.isLoggedIn) {
     // TODO: Don't repeat the code alread in auth store (use dispatch)
     console.log('check auth!!!')
+    // store.dispatch('checkAuth', {axios: axiosInstance})
+    //   .then(() => {
+    //     next()
+    //   })
+    //   .catch(() => {
+    //     // console.log('catch');
+    //     return next({ path: '/' })
+    //   })
     axiosInstance.post('/api/login/')
       .then(function (response) {
         next()

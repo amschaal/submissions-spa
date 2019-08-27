@@ -122,10 +122,7 @@
 
 <script>
 import '../components/forms/docs-input.styl'
-// import axios from 'axios'
-// import Fieldoptions from '../components/fieldoptions.vue'
 import SchemaForm from '../components/forms/schemaForm.vue'
-// import Formatoptions from '../components/formatoptions.vue'
 import Vue from 'vue'
 import Agschema from '../components/agschema.vue'
 export default {
@@ -263,9 +260,7 @@ export default {
     }
   },
   components: {
-    // Fieldoptions,
     SchemaForm,
-    // Formatoptions,
     Agschema
   }
 }
