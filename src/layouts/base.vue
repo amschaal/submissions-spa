@@ -7,7 +7,7 @@
       >
         <img src="/statics/images/wordmark.png" style="height:60px"/>
         <q-toolbar-title>
-          DNA Technologies Core
+          {{$store.getters.lab.name}}
           <div slot="subtitle">Sample Submission System</div>
           <q-btn v-if="!$store.getters.isLoggedIn" @click="$refs.auth.opened=true" class="float-right" color="primary">Admin</q-btn>
           <q-btn v-if="$store.getters.isLoggedIn" @click="$refs.auth.logout()" class="float-right" color="primary">Logout</q-btn>
