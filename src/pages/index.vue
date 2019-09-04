@@ -3,7 +3,7 @@
 
     <q-card>
       <q-card-title>
-        DNA Technologies Core Sample Submissions
+        {{default_lab.name}} Sample Submissions
       </q-card-title>
 
       <q-card-separator />

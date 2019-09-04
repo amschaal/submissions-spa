@@ -18,6 +18,14 @@
         <tr><td :key="variable" v-for="(value, variable) in submission.submission_data" v-show="!hidden(submission.submission_schema, variable)">{{truncate(submission.submission_schema, variable, value)}}</td></tr>
       </table>
     </div>
+    <table class="full bordered compact">
+      <tr>
+        <th v-for="(value, label) in submission.payment.display" :key="label">{{label}}</th>
+      </tr>
+      <tr>
+        <td v-for="(value, label) in submission.payment.display" :key="label">{{value}}</td>
+      </tr>
+  </table>
     <p class="heading">Total Number of Samples: {{submission.sample_data.length}}</p> <!--  page-break-before -->
 <table class="horizontal full bordered compact page-break-after">
   <tr>
