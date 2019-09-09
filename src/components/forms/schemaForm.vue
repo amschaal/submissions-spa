@@ -32,7 +32,7 @@
 
             </td>
             <td class="row">
-              <fieldoptions v-model="schema.properties[variable.variable]" :variable="variable.variable" type="submission"/>
+              <fieldoptions v-model="schema.properties[variable.variable]" :variable="variable.variable" :type="type"/>
               <q-btn label="Delete" color="negative" @click="deleteVariable(variable.variable, 'submission_schema')"></q-btn>
             </td>
           </tr>
@@ -113,6 +113,10 @@ export default {
     options: {
       type: Object,
       default: function () { return {} }
+    },
+    type: {
+      type: String,
+      default: 'submission'
     }
   },
   data () {

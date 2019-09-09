@@ -11,7 +11,7 @@
             icon="keyboard_arrow_left"
           />
           <q-toolbar-title>
-            Field options for: {{variable}}
+            Field options for: {{variable}} {{type}}
           </q-toolbar-title>
         </q-toolbar>
 
@@ -66,7 +66,7 @@
           >
             <q-input v-model="data.maximum" type="number"/>
           </q-field>
-          <q-field v-if="type=='submission'"
+          <q-field
             label="Widget"
           >
           <q-select
@@ -134,7 +134,8 @@
 
 <script>
 import _ from 'lodash'
-import widgetFactory from './forms/widgets.js'
+import submissionWidgetFactory from './forms/widgets.js'
+import sampleWidgetFactory from './aggrid/widgets.js'
 export default {
   props: ['value', 'variable', 'type'],
   data () {
@@ -216,8 +217,9 @@ export default {
   },
   computed: {
     widgetOptions () {
-      console.log('widgetOptions', this.data.type, widgetFactory.getWidgetOptions(this.data.type))
-      return widgetFactory.getWidgetOptions(this.data.type)
+      var factory = this.type === 'submission' ? submissionWidgetFactory : sampleWidgetFactory
+      console.log('widgetOptions', this.data.type, factory.getWidgetOptions(this.data.type))
+      return factory.getWidgetOptions(this.data.type)
       // switch (this.data.type) {
       //   case 'boolean':
       //     return widgetFactory.getWidgetOptions('text')// [{label: 'Checkbox', value: 'checkbox'}, {label: 'Toggle switch', value: 'toggle'}]

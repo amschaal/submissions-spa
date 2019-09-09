@@ -85,10 +85,10 @@
           <q-input v-model="type.confirmation_text" type="textarea"/>
         </q-field>
         <h6>Submission Fields</h6>
-        <schemaForm v-model="type.submission_schema" :options="{variables: $store.getters.lab.submission_variables, showWidth: true}"/>
+        <schemaForm v-model="type.submission_schema" :options="{variables: $store.getters.lab.submission_variables, showWidth: true}" type="submission"/>
         <h5>Samplesheet definition</h5>
         <h6>Column Definitions</h6>
-        <schemaForm v-model="type.sample_schema" :options="{variables: $store.getters.lab.sample_variables, showWidth: false}"/>
+        <schemaForm v-model="type.sample_schema" :options="{variables: $store.getters.lab.sample_variables, showWidth: false}" type="samples"/>
         <div v-if="type && type.sample_schema && type.sample_schema.properties">
           <Agschema v-model="type.sample_schema.examples" :type="type" :editable="true"  ref="samplesheet" :allow-force-save="false"/>
           <q-btn :label="'Configure examples ('+type.sample_schema.examples.length+')'"  @click="openExamples"/>

@@ -12,7 +12,7 @@
 
 <script>
 import Vue from 'vue'
-
+import { filter } from 'quasar'
 export default Vue.extend({
   data () {
     return {
@@ -22,12 +22,14 @@ export default Vue.extend({
   },
   methods: {
     selected (item) {
-      this.$q.notify(`Selected suggestion "${item}"`)
+      this.value = item.value
+      // this.$q.notify(`Selected suggestion "${item.label}"`)
     },
     search (terms, done) {
       console.log(terms)
       setTimeout(() => {
-        done([{value: 'one', label: 'one'}, {value: 'two', label: 'two'}]) // filter(terms, {field: 'value', list: ['one', 'two', 'three']}) // ['one', 'two', 'three']
+        done(filter(terms, {field: 'value', list: this.options}))
+        // done([{value: 'one', label: 'one'}, {value: 'two', label: 'two'}]) // filter(terms, {field: 'value', list: ['one', 'two', 'three']}) // ['one', 'two', 'three']
       }, 100)
     },
     getValue () {
@@ -41,6 +43,8 @@ export default Vue.extend({
   },
   created () {
     this.value = this.params.value
+    Vue.set(this, 'options', this.params.definition.enum.map(v => ({value: v, label: v})))
+    console.log('autocomplete params', this.params)
   },
   mounted () {
     Vue.nextTick(() => {
