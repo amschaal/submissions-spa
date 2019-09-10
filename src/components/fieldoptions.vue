@@ -69,11 +69,17 @@
           <q-field
             label="Widget"
           >
-          <q-select
-            v-model="data.widget.type"
-            float-label="Select widget type"
-            :options="widgetOptions"
-          />
+          <div class="row inline">
+            <span class="col-9">
+              <q-select
+                v-model="data.widget.type"
+                :options="widgetOptions"
+              />
+            </span>
+            <span class="col-3">
+              <q-btn label="options" size="sm"/>
+            </span>
+          </div>
           </q-field>
           <q-field v-if="data.validators"
             label="Custom validators"
