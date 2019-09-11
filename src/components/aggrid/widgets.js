@@ -2,7 +2,7 @@
 import AutocompleteComponent from './editors/AutocompleteComponent.vue'
 import DateComponent from './editors/DateComponent.vue'
 import BooleanComponent from './editors/BooleanComponent.vue'
-import {Widget, WidgetFactory} from '../forms/WidgetFactory.js'
+import {Widget, WidgetFactory} from '../forms/Widget.js'
 
 class EnumWidget extends Widget {
   defaultValue = []

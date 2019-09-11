@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import {Widget, WidgetFactory} from './WidgetFactory.js'
+import {Widget, WidgetFactory} from './Widget.js'
 
 class TextWidget extends Widget {
   static type = 'string'
