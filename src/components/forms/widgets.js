@@ -226,6 +226,9 @@ class WidgetFactory {
       }
     })
   }
+  getWidgetSchema (id) {
+    return this.lookup[id] ? this.lookup[id].schema : {}
+  }
   getWidget (type, id) {
     console.log('getWidget', type, id)
     if (id && this.lookup[id]) {

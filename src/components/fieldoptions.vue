@@ -15,7 +15,7 @@
           </q-toolbar-title>
         </q-toolbar>
 
-        <div class="layout-padding">
+        <div class="layout-padding" v-if="opened">
          <!-- {{data}}
             {{validators}}
           {{validatorsByType(data.type)}} -->
@@ -77,7 +77,8 @@
               />
             </span>
             <span class="col-3">
-              <q-btn label="options" size="sm"/>
+              <q-btn label="options" size="sm" @click="open('widget_options')"/>
+              <CustomFieldModal v-model="data.widget.options" :schema="widgetSchema(data.widget.type)" :title="`${variable} widget options`" ref="widget_options"/>
             </span>
           </div>
           </q-field>
@@ -93,7 +94,10 @@
                 </q-item>
               </q-list>
             </q-btn-dropdown>
-            <div v-for="(v, index) in data.validators" :key="index" :title="validators[v.id].description"><q-btn flat dense round icon="delete_outline" @click="removeValidator(index)"/> {{validators[v.id].name}} <q-btn size="sm" v-if="validators[v.id].uses_options" label="Options"/></div>
+            <div v-for="(v, index) in data.validators" :key="index" :title="validators[v.id].description">
+              <q-btn flat dense round icon="delete_outline" @click="removeValidator(index)"/> {{validators[v.id].name}} <q-btn size="sm" v-if="validators[v.id].uses_options" label="Options" @click="open('validator_options_'+v.id)"/>
+              <CustomFieldModal v-model="data.widget.options" :schema="widgetSchema(data.widget.type)" :title="`${validators[v.id].name} validator options`" :ref="`validator_options_${v.id}`" v-if="validators[v.id].uses_options"/>
+            </div>
           </q-field>
           <h5>Printing options</h5>
             <q-field
@@ -142,6 +146,7 @@
 import _ from 'lodash'
 import submissionWidgetFactory from './forms/widgets.js'
 import sampleWidgetFactory from './aggrid/widgets.js'
+import CustomFieldModal from './modals/CustomFieldModal.vue'
 export default {
   props: ['value', 'variable', 'type'],
   data () {
@@ -184,6 +189,14 @@ export default {
 
       })
     },
+    open (ref) {
+      console.log('open', this.$refs[ref], ref)
+      if (Array.isArray(this.$refs[ref])) {
+        this.$refs[ref][0].open()
+      } else {
+        this.$refs[ref].open()
+      }
+    },
     validatorsByType (type) {
       var validators = {}
       console.log('validators', this.$store.getters.validatorDict)
@@ -218,8 +231,11 @@ export default {
     },
     removeValidator (index) {
       this.data.validators.splice(index, 1)
+    },
+    widgetSchema (id) {
+      var factory = this.type === 'submission' ? submissionWidgetFactory : sampleWidgetFactory
+      return factory.getWidgetSchema(id)
     }
-
   },
   computed: {
     widgetOptions () {
@@ -235,6 +251,9 @@ export default {
       //     return [{label: 'Text', value: 'text'}]
       // }
     }
+  },
+  components: {
+    CustomFieldModal
   }
 }
 

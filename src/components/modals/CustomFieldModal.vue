@@ -7,8 +7,11 @@
         </q-toolbar-title>
       </q-toolbar>
     <div class="layout-padding">
-      Testing {{schema}} {{value}}
-      <CustomFields :schema="schema" ng-model="data" :modify="true"/>
+      Testing {{schema}} {{value}} {{data}}
+      <div v-for="(def, v) in schema" :key="v">
+        {{v}}: {{def}}
+        <q-input v-model="data[v]" :stack-label="v" />
+      </div>
     </div>
     <q-toolbar slot="footer">
       <q-toolbar-title>
@@ -30,7 +33,6 @@
 
 <script>
 // import Vue from 'vue'
-import CustomFields from '../forms/customFields.vue'
 
 export default {
   props: ['schema', 'value', 'title'],
@@ -51,7 +53,6 @@ export default {
     }
   },
   components: {
-    CustomFields
   }
 }
 </script>

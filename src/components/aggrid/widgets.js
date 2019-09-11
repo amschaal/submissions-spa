@@ -75,7 +75,9 @@ class DateWidget extends Widget {
   static id = 'date'
   static component = DateComponent
   static name = 'Date'
-  static schema = {
+  static schema =
+  {
+    'foo': {'widget': 'q-input', 'label': 'Foo'}
   }
 }
 
@@ -127,6 +129,9 @@ class WidgetFactory {
     // } else {
     //   return this.defaults['string']
     // }
+  }
+  getWidgetSchema (id) {
+    return this.lookup[id] ? this.lookup[id].schema : {}
   }
   getWidgetOptions (type) {
     if (!type || !this.type_lookup[type]) {
