@@ -48,10 +48,14 @@ export default {
       data: this.value ? this.value : {}
     }
   },
+  mounted () {
+    console.log('customFields', this.schema, this.value)
+  },
   methods: {
     widgetClass (v) {
       var widget = v.schema.widget ? v.schema.widget : {}
-      return widgetFactory.getWidget(v.schema.type, widget.type)
+      console.log('widgetClass', v, widget)
+      return widgetFactory.getWidget(widget.type, v.schema.type)
     },
     widget (v) {
       var options = v.schema.widget && v.schema.widget.options ? v.schema.widget.options : {}

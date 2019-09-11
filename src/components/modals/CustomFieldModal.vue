@@ -8,9 +8,8 @@
       </q-toolbar>
     <div class="layout-padding">
       Testing {{schema}} {{value}} {{data}}
-      <div v-for="(def, v) in schema" :key="v">
-        {{v}}: {{def}}
-        <q-input v-model="data[v]" :stack-label="v" />
+      <div v-for="(v, i) in schema" :key="i">
+        <q-input v-model="data[v.variable]" :stack-label="v.label" />
       </div>
     </div>
     <q-toolbar slot="footer">

@@ -2,61 +2,7 @@
 import AutocompleteComponent from './editors/AutocompleteComponent.vue'
 import DateComponent from './editors/DateComponent.vue'
 import BooleanComponent from './editors/BooleanComponent.vue'
-class Widget {
-  defaultValue = null
-  constructor (variable, options) {
-    this.variable = variable
-    this.options = options || {}
-  }
-  /*
-  static schema = {
-                      'required': [
-                        'organism'
-                      ],
-                      'order': [
-                        'organism',
-                        'extra_pipeline'
-                      ],
-                      'properties': {
-                        'extra_pipeline': {
-                          'validators': [],
-                          'unique': false,
-                          'enum': [
-                            'Special pipeline A',
-                            'Special pipeline B',
-                            'Special pipeline C'
-                          ],
-                          'type': 'string',
-                          'title': 'Pipeline'
-                        },
-                        'organism': {
-                          'unique': false,
-                          'type': 'string',
-                          'title': 'Organism name'
-                        }
-                      }
-                    }
-  */
-  getType () {
-    return this.type
-  }
-  validate () {
-    // TODO: use JSON schema to validate this.options against schema
-    return true
-  }
-  // getOptions () {
-  //   return _.merge(this.options, {'stack-label': this.variable.schema.title || this.variable.variable})
-  // }
-  getDefault () {
-    return this.defaultValue
-  }
-  // formatValue (value) {
-  //   if (value instanceof Array) {
-  //     return value.join(', ')
-  //   }
-  //   return value
-  // }
-}
+import {Widget, WidgetFactory} from '../forms/WidgetFactory.js'
 
 class EnumWidget extends Widget {
   defaultValue = []
@@ -76,9 +22,10 @@ class DateWidget extends Widget {
   static component = DateComponent
   static name = 'Date'
   static schema =
-  {
-    'foo': {'widget': 'q-input', 'label': 'Foo'}
-  }
+  [
+    {'variable': 'foo', 'label': 'Foo', 'type': 'text'},
+    {'variable': 'bar', 'label': 'Bar', 'type': 'text', 'options': [{'label': 'One', 'value': 1}, {'label': 'Two', 'value': 2}]}
+  ]
 }
 
 class BooleanWidget extends Widget {
@@ -87,8 +34,8 @@ class BooleanWidget extends Widget {
   static id = 'boolean'
   static component = BooleanComponent
   static name = 'Checkbox'
-  static schema = {
-  }
+  // static schema = {
+  // }
 }
 
 class AutocompleteWidget extends EnumWidget {
@@ -97,48 +44,8 @@ class AutocompleteWidget extends EnumWidget {
   static id = 'autocomplete'
   static component = AutocompleteComponent
   static name = 'Autocomplete'
-  static schema = {
-  }
-}
-
-class WidgetFactory {
-  constructor (widgets) {
-    this.widgets = widgets
-    this.type_lookup = {}
-    this.defaults = {}
-    this.lookup = {}
-    var self = this
-    widgets.forEach(function (widget, index) {
-      if (!self.type_lookup[widget.type]) {
-        self.type_lookup[widget.type] = []
-      }
-      self.type_lookup[widget.type].push(widget)
-      self.lookup[widget.id] = widget
-      if (widget.default) {
-        self.defaults[widget.type] = widget
-      }
-    })
-  }
-  getWidget (id) {
-    return this.lookup[id]
-    // console.log('getWidget', type, id)
-    // if (id && this.lookup[id]) {
-    //   return this.lookup[id]
-    // } else if (type && this.defaults[type]) {
-    //   return this.defaults[type]
-    // } else {
-    //   return this.defaults['string']
-    // }
-  }
-  getWidgetSchema (id) {
-    return this.lookup[id] ? this.lookup[id].schema : {}
-  }
-  getWidgetOptions (type) {
-    if (!type || !this.type_lookup[type]) {
-      return []
-    }
-    return this.type_lookup[type].map(widget => ({ label: widget.name, value: widget.id }))
-  }
+  // static schema = {
+  // }
 }
 
 var widgetFactory = new WidgetFactory([DateWidget, BooleanWidget, AutocompleteWidget])

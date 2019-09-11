@@ -240,8 +240,8 @@ export default {
   computed: {
     widgetOptions () {
       var factory = this.type === 'submission' ? submissionWidgetFactory : sampleWidgetFactory
-      console.log('widgetOptions', this.data.type, factory.getWidgetOptions(this.data.type))
-      return factory.getWidgetOptions(this.data.type)
+      console.log('widgetOptions', this.data.type, factory.getWidgets(this.data.type))
+      return factory.getWidgets(this.data.type)
       // switch (this.data.type) {
       //   case 'boolean':
       //     return widgetFactory.getWidgetOptions('text')// [{label: 'Checkbox', value: 'checkbox'}, {label: 'Toggle switch', value: 'toggle'}]

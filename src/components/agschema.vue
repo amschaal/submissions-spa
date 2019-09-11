@@ -323,6 +323,7 @@ export default {
         tooltip = definition.description
       }
       var widget = null
+      console.log('getcolwidget', definition.widget, definition.widget.type)
       if (definition.widget && definition.widget.type) {
         widget = sampleWidgetFactory.getWidget(definition.widget.type)
       }
