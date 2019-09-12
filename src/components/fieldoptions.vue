@@ -96,7 +96,7 @@
             </q-btn-dropdown>
             <div v-for="(v, index) in data.validators" :key="index" :title="validators[v.id].description">
               <q-btn flat dense round icon="delete_outline" @click="removeValidator(index)"/> {{validators[v.id].name}} <q-btn size="sm" v-if="validators[v.id].uses_options" label="Options" @click="open('validator_options_'+v.id)"/>
-              <CustomFieldModal v-model="data.widget.options" :schema="widgetSchema(data.widget.type)" :title="`${validators[v.id].name} validator options`" :ref="`validator_options_${v.id}`" v-if="validators[v.id].uses_options"/>
+              <CustomFieldModal v-model="v.options" :schema="validators[v.id].schema" :title="`${validators[v.id].name} validator options`" :ref="`validator_options_${v.id}`" v-if="validators[v.id].uses_options"/>
             </div>
           </q-field>
           <h5>Printing options</h5>

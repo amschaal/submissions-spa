@@ -4,18 +4,21 @@ import DateComponent from './editors/DateComponent.vue'
 import BooleanComponent from './editors/BooleanComponent.vue'
 import {Widget, WidgetFactory} from '../forms/Widget.js'
 
-class EnumWidget extends Widget {
-  defaultValue = []
-  // getOptions () {
-  //   return _.merge(this.options, this.getSelectOptions())
-  // }
-  // getSelectOptions () {
-  //   var options = this.variable.schema.enum || []
-  //   return {options: options.map(function (val) { return {'label': val, 'value': val} })}
-  // }
+class GridWidget extends Widget {
 }
 
-class DateWidget extends Widget {
+// class EnumWidget extends GridWidget {
+//   defaultValue = []
+//   // getOptions () {
+//   //   return _.merge(this.options, this.getSelectOptions())
+//   // }
+//   // getSelectOptions () {
+//   //   var options = this.variable.schema.enum || []
+//   //   return {options: options.map(function (val) { return {'label': val, 'value': val} })}
+//   // }
+// }
+
+class DateWidget extends GridWidget {
   // @TODO: wrap this in another component as in the guide https://quasar-framework.org/components/autocomplete.html
   static type = 'string'
   static id = 'date'
@@ -28,7 +31,7 @@ class DateWidget extends Widget {
   ]
 }
 
-class BooleanWidget extends Widget {
+class BooleanWidget extends GridWidget {
   // @TODO: wrap this in another component as in the guide https://quasar-framework.org/components/autocomplete.html
   static type = 'boolean'
   static id = 'boolean'
@@ -38,7 +41,7 @@ class BooleanWidget extends Widget {
   // }
 }
 
-class AutocompleteWidget extends EnumWidget {
+class AutocompleteWidget extends GridWidget {
   // @TODO: wrap this in another component as in the guide https://quasar-framework.org/components/autocomplete.html
   static type = 'string'
   static id = 'autocomplete'

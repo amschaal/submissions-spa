@@ -6,7 +6,9 @@ export class Widget {
     this.variable = variable
     this.options = options || {}
   }
-  static schema = []
+  static schema = [
+    // {'variable': 'test', 'label': 'Test', 'type': 'text'}
+  ]
   /*
   static schema = {
                       'required': [
