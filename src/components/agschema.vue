@@ -330,7 +330,7 @@ export default {
       console.log('widget', definition, widget)
       // console.log('factory', sampleWidgetFactory)
       if (widget) {
-        return {headerName: header, headerTooltip: tooltip, field: id, cellEditorFramework: widget.component, cellEditorParams: {definition: definition}, cellClass: cellClass, tooltip: cellTooltip, pinned: definition.pinned} // values: definition.enum, widget: definition.widget,
+        return {headerName: header, headerTooltip: tooltip, field: id, cellEditorFramework: widget.component, cellEditorParams: {definition: definition, widget_options: definition.widget.options}, cellClass: cellClass, tooltip: cellTooltip, pinned: definition.pinned} // values: definition.enum, widget: definition.widget,
       }
       switch (definition.type) {
         case 'string':

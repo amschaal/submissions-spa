@@ -40,7 +40,8 @@ class VocabularyWidget extends GridWidget {
   static name = 'Vocabulary Autocomplete'
   static schema =
   [
-    // {'variable': 'foo', 'label': 'Foo', 'type': 'text'},
+    {'variable': 'vocabulary', 'label': 'Vocabulary ID', 'type': 'text'},
+    {'variable': 'vocabulary_variable', 'label': 'Variable specifying vocabulary', 'type': 'text'}
     // {'variable': 'bar', 'label': 'Bar', 'type': 'text', 'options': [{'label': 'One', 'value': 1}, {'label': 'Two', 'value': 2}]}
   ]
 }

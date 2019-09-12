@@ -27,7 +27,7 @@ export default Vue.extend({
     },
     search (terms, done) {
       this.$axios
-        .get(`/api/terms/test/?search=${terms}`)
+        .get(`/api/terms/${this.vocabulary}/?search=${terms}`)
         .then(function (response) {
           console.log('response', response)
           done(response.data.results.map(o => ({value: o.value, label: o.value})))
@@ -47,6 +47,15 @@ export default Vue.extend({
   created () {
     this.value = this.params.value
     console.log('autocomplete params', this.params)
+    if (this.params.widget_options.vocabulary_variable) {
+      this.vocabulary_variable = this.params.widget_options.vocabulary_variable
+      this.vocabulary = this.params.node.data[this.vocabulary_variable]
+    } else if (this.params.widget_options.vocabulary) {
+      this.vocabulary = this.params.widget_options.vocabulary
+    }
+    if (!this.vocabulary) {
+      this.$q.notify({message: 'No vocabulary has been selected', color: 'red'})
+    }
   },
   mounted () {
     Vue.nextTick(() => {
