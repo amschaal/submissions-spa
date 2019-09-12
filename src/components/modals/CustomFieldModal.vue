@@ -32,12 +32,12 @@
 
 <script>
 // import Vue from 'vue'
-
+import _ from 'lodash'
 export default {
   props: ['schema', 'value', 'title'],
   data () {
     return {
-      data: this.value,
+      data: _.cloneDeep(this.value),
       opened: false
     }
   },
@@ -46,9 +46,15 @@ export default {
   methods: {
     save () {
       console.log('save', this.data)
+      this.$emit('input', this.data)
+      this.close()
     },
     open () {
+      this.data = _.cloneDeep(this.value)
       this.opened = true
+    },
+    close () {
+      this.opened = false
     }
   },
   components: {
