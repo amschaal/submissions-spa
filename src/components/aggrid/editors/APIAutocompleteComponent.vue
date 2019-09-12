@@ -25,11 +25,12 @@ export default Vue.extend({
       // this.$q.notify(`Selected suggestion "${item.label}"`)
     },
     search (terms, done) {
+      var self = this
       this.$axios
-        .get(`/api/terms/${this.vocabulary}/?search=${terms}`)
+        .get(`${this.url}?search=${terms}&${this.params}`)
         .then(function (response) {
           console.log('response', response)
-          done(response.data.results.map(o => ({value: o.value, label: o.value})))
+          done(response.data.results.map(o => ({value: o[self.value_property], label: o[self.label_property]})))
         })
         // .catch(function (error, stuff) {
         // })
@@ -46,14 +47,13 @@ export default Vue.extend({
   created () {
     this.value = this.params.value
     console.log('autocomplete params', this.params)
-    if (this.params.widget_options.vocabulary_variable) {
-      this.vocabulary_variable = this.params.widget_options.vocabulary_variable
-      this.vocabulary = this.params.node.data[this.vocabulary_variable]
-    } else if (this.params.widget_options.vocabulary) {
-      this.vocabulary = this.params.widget_options.vocabulary
-    }
-    if (!this.vocabulary) {
-      this.$q.notify({message: 'No vocabulary has been selected', color: 'red'})
+    var options = this.params.widget_options ? this.params.widget_options : {}
+    this.url = options.url
+    this.params = options.params
+    this.value_property = options.value_property
+    this.label_property = options.label_property
+    if (!this.url) {
+      this.$q.notify({message: 'No API has been specified.', color: 'red'})
     }
   },
   mounted () {
