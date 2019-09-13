@@ -1,10 +1,11 @@
 <template>
     <div class="autocomplete">
-      <q-input color="amber" v-model="value" placeholder="Featuring static data">
+      <q-input color="amber" v-model="temp_value" placeholder="Search" ref="input">
         <q-autocomplete
           @search="search"
           :min-characters="2"
           @selected="selected"
+          @hide="hide"
         />
       </q-input>
     </div>
@@ -22,7 +23,10 @@ export default Vue.extend({
   methods: {
     selected (item) {
       this.value = item.value
-      // this.$q.notify(`Selected suggestion "${item.label}"`)
+      // this.params.stopEditing() // This closes it when merely highlighting a suggestion
+    },
+    hide () {
+      this.params.stopEditing()
     },
     search (terms, done) {
       this.$axios
@@ -37,14 +41,11 @@ export default Vue.extend({
     },
     getValue () {
       return this.value
-    },
-    setValue (value) {
-      if (!value) return
-      this.value = value
     }
   },
   created () {
     this.value = this.params.value
+    this.temp_value = this.params.value
     console.log('autocomplete params', this.params)
     if (this.params.widget_options.vocabulary_variable) {
       this.vocabulary_variable = this.params.widget_options.vocabulary_variable

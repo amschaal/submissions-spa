@@ -4,6 +4,7 @@ import DateComponent from './editors/DateComponent.vue'
 import BooleanComponent from './editors/BooleanComponent.vue'
 import VocabularyComponent from './editors/VocabularyComponent.vue'
 import APIAutocompleteComponent from './editors/APIAutocompleteComponent.vue'
+import SelectComponent from './editors/SelectComponent.vue'
 import {Widget, WidgetFactory} from '../forms/Widget.js'
 
 class GridWidget extends Widget {
@@ -62,6 +63,21 @@ class APIAutocompleteWidget extends GridWidget {
   ]
 }
 
+class APISelectWidget extends APIAutocompleteWidget {
+  // @TODO: wrap this in another component as in the guide https://quasar-framework.org/components/autocomplete.html
+  // static type = 'string'
+  static id = 'api_select'
+  static component = SelectComponent
+  static name = 'API Select'
+  // static schema =
+  // [
+  //   {'variable': 'url', 'label': 'API URL', 'type': 'text'},
+  //   {'variable': 'params', 'label': 'Additional query parameters', 'type': 'text'},
+  //   {'variable': 'value_property', 'label': 'Value property', 'type': 'text'},
+  //   {'variable': 'label_property', 'label': 'Label property', 'type': 'text'}
+  // ]
+}
+
 class BooleanWidget extends GridWidget {
   // @TODO: wrap this in another component as in the guide https://quasar-framework.org/components/autocomplete.html
   static type = 'boolean'
@@ -82,6 +98,6 @@ class AutocompleteWidget extends GridWidget {
   // }
 }
 
-var widgetFactory = new WidgetFactory([DateWidget, BooleanWidget, AutocompleteWidget, VocabularyWidget, APIAutocompleteWidget])
+var widgetFactory = new WidgetFactory([DateWidget, BooleanWidget, AutocompleteWidget, VocabularyWidget, APIAutocompleteWidget, APISelectWidget])
 
 export default widgetFactory
