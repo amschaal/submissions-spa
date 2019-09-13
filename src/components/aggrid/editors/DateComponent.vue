@@ -1,6 +1,6 @@
 <template>
     <div class="date">
-      <q-datetime :ref="'input'" v-model="value" type="date" />
+      <q-datetime :ref="'input'" v-model="value" type="date" @input="close"/>
     </div>
 </template>
 
@@ -15,12 +15,10 @@ export default Vue.extend({
   },
   methods: {
     getValue () {
-      return this.value
+      return this.value.substr(0, 10)
     },
-    setValue (value) {
-      if (!value) return
-      this.value = value
-      // this.params.onNumberChanged()
+    close () {
+      this.params.stopEditing()
     }
   },
   created () {
@@ -29,7 +27,7 @@ export default Vue.extend({
   mounted () {
     Vue.nextTick(() => {
       if (this.$refs.input) {
-        this.$refs.input.select()
+        this.$refs.input.show()
       }
     })
   }

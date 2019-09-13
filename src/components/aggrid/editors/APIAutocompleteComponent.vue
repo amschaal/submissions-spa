@@ -12,7 +12,6 @@
 
 <script>
 import Vue from 'vue'
-// import { filter } from 'quasar'
 export default Vue.extend({
   data () {
     return {
@@ -29,12 +28,10 @@ export default Vue.extend({
       this.$axios
         .get(`${this.url}?search=${terms}&${this.query_params}`)
         .then(function (response) {
-          console.log('response', response)
           done(response.data.results.map(o => ({value: o[self.value_property], label: o[self.label_property]})))
         })
         // .catch(function (error, stuff) {
         // })
-      console.log(terms)
     },
     getValue () {
       return this.value

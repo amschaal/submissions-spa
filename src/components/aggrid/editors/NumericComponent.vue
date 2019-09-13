@@ -23,12 +23,6 @@ export default Vue.extend({
     },
     getValue () {
       return this.number ? parseFloat(this.number) : this.number
-    },
-    setValue (number) {
-      console.log('setValue', number)
-      if (!number) return
-      this.number = number
-      // this.params.onNumberChanged()
     }
   },
   created () {
@@ -36,6 +30,7 @@ export default Vue.extend({
     this.number = this.params.value
   },
   mounted () {
+    console.log('NumericComponent', this)
     Vue.nextTick(() => {
       if (this.$refs.input) {
         this.$refs.input.select()

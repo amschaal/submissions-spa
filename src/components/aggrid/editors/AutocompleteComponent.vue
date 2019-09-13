@@ -34,11 +34,6 @@ export default Vue.extend({
     },
     getValue () {
       return this.value
-    },
-    setValue (value) {
-      if (!value) return
-      this.value = value
-      // this.params.onNumberChanged()
     }
   },
   created () {

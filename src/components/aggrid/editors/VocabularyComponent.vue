@@ -50,11 +50,11 @@ export default Vue.extend({
     if (this.params.widget_options.vocabulary_variable) {
       this.vocabulary_variable = this.params.widget_options.vocabulary_variable
       this.vocabulary = this.params.node.data[this.vocabulary_variable]
+      if (!this.vocabulary) {
+        this.$q.notify({message: `No vocabulary has been selected.  Please make a selection for "${this.vocabulary_variable}"`, color: 'red'})
+      }
     } else if (this.params.widget_options.vocabulary) {
       this.vocabulary = this.params.widget_options.vocabulary
-    }
-    if (!this.vocabulary) {
-      this.$q.notify({message: 'No vocabulary has been selected', color: 'red'})
     }
   },
   mounted () {
