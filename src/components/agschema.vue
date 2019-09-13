@@ -240,7 +240,11 @@ export default {
         this.dismiss()
       }
       if (this.errors[params.rowIndex] && this.errors[params.rowIndex][params.column.colDef.field]) {
-        this.dismiss = this.$q.notify({position: 'top', message: `Error at Row ${params.rowIndex + 1}, Column "${params.column.colDef.headerName}": ` + this.errors[params.rowIndex][params.column.colDef.field].join(', ')})
+        if (this.sample_schema.properties[params.column.colDef.field].error_message) {
+          this.dismiss = this.$q.notify({position: 'top', message: `Error at Row ${params.rowIndex + 1}, Column "${params.column.colDef.headerName}": ` + this.sample_schema.properties[params.column.colDef.field].error_message})
+        } else {
+          this.dismiss = this.$q.notify({position: 'top', message: `Error at Row ${params.rowIndex + 1}, Column "${params.column.colDef.headerName}": ` + this.errors[params.rowIndex][params.column.colDef.field].join(', ')})
+        }
       }
     },
     sizeToFit () {

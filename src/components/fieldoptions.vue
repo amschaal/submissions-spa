@@ -99,6 +99,11 @@
               <CustomFieldModal v-model="v.options" :schema="validators[v.id].schema" :title="`${validators[v.id].name} validator options`" :ref="`validator_options_${v.id}`" v-if="validators[v.id].uses_options"/>
             </div>
           </q-field>
+          <q-field
+            label="Validation Error Message"
+          >
+            <q-input v-model="data.error_message" type="textarea" placeholder="Optionally add a custom validation message here."/>
+          </q-field>
           <h5>Printing options</h5>
             <q-field
               label="Field label"
