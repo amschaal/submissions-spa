@@ -46,6 +46,19 @@
           </div>
         </q-field>
         <q-field
+          label="Default participants"
+          :error="errors.type"
+          :error-label="errors.type"
+          v-if="user_options"
+        >
+          <q-select
+            float-label="Select"
+            multiple
+            v-model="type.default_participants"
+            :options="user_options"
+          />
+        </q-field>
+        <q-field
           label="Description"
           :error="errors.description"
           :error-label="errors.description"
@@ -130,12 +143,13 @@ export default {
   props: ['id'],
   data () {
     return {
-      type: {active: true, help: '', examples: [], statuses: [], submission_schema: {properties: {}, order: [], required: [], layout: {}, printing: {}}, sample_schema: {properties: {}, order: [], required: [], printing: {}, examples: []}},
+      type: {active: true, help: '', examples: [], statuses: [], default_participants: [], submission_schema: {properties: {}, order: [], required: [], layout: {}, printing: {}}, sample_schema: {properties: {}, order: [], required: [], printing: {}, examples: []}},
       errors: {},
       submission_schema: [],
       examples: [],
       save_message: null,
-      watch_changes: true
+      watch_changes: true,
+      user_options: []
     }
   },
   mounted: function () {
@@ -172,6 +186,11 @@ export default {
           self.$q.loading.hide()
         })
     }
+    this.$axios
+      .get('/api/users/?show=true')
+      .then(function (response) {
+        self.user_options = response.data.results.map(opt => ({label: `${opt.first_name} ${opt.last_name}`, value: opt.id}))
+      })
   },
   beforeDestroy: function () {
     if (this.save_message) {
