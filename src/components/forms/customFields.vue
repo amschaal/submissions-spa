@@ -10,7 +10,7 @@
           <q-field
             v-else
             :error="errors && errors[v.variable]"
-            :error-label="errors ? errors[v.variable] : ''"
+            :error-label="errors ? getError(v) : ''"
             :label="v.schema.title ? v.schema.title : v.variable"
             orientation="vertical"
           >
@@ -64,6 +64,9 @@ export default {
     },
     colWidth (variable) {
       return this.schema.layout[variable] && this.schema.layout[variable].width ? [this.schema.layout[variable].width] : ['col-12']
+    },
+    getError (v) {
+      return v.schema.error_message || this.errors[v.variable]
     }
   },
   computed: {
