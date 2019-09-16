@@ -239,11 +239,10 @@ export default {
       if (this.dismiss) {
         this.dismiss()
       }
-      if (this.errors[params.rowIndex] && this.errors[params.rowIndex][params.column.colDef.field]) {
-        if (this.sample_schema.properties[params.column.colDef.field].error_message) {
-          this.dismiss = this.$q.notify({position: 'top', message: `Error at Row ${params.rowIndex + 1}, Column "${params.column.colDef.headerName}": ` + this.sample_schema.properties[params.column.colDef.field].error_message})
-        } else {
-          this.dismiss = this.$q.notify({position: 'top', message: `Error at Row ${params.rowIndex + 1}, Column "${params.column.colDef.headerName}": ` + this.errors[params.rowIndex][params.column.colDef.field].join(', ')})
+      if (params.column) {
+        var errors = this.getCellErrors(params.rowIndex, params.column.colDef.field)
+        if (errors) {
+          this.dismiss = this.$q.notify({position: 'top', message: `Error at Row ${params.rowIndex + 1}, Column "${params.column.colDef.headerName}": ` + errors.join(', ')})
         }
       }
     },
@@ -289,6 +288,17 @@ export default {
       // console.log('descriptions', descriptions)
       return descriptions
     },
+    getCellErrors (row, field) {
+      if (this.errors[row] && this.errors[row][field]) {
+        if (this.sample_schema.properties[field].error_message) {
+          return [this.sample_schema.properties[field].error_message]
+        } else {
+          return this.errors[row][field]
+        }
+      } else {
+        return null
+      }
+    },
     getColDef (id, definition, schema) {
       var self = this
       function cellClass (params) {
@@ -309,8 +319,9 @@ export default {
         if (params.data._row_type === 'description' || params.data._row_type === 'example') {
           return params.value
         }
-        if (self.errors[params.rowIndex] && self.errors[params.rowIndex][params.colDef.field]) {
-          return self.errors[params.rowIndex][params.colDef.field].join(', ')
+        var errors = self.getCellErrors(params.rowIndex, params.colDef.field)
+        if (errors) {
+          return errors.join(', ')
         }
         return params.value
       }
