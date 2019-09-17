@@ -22,6 +22,7 @@
         />
         <q-checkbox v-model="showCancelled" label="Show cancelled" @input="refresh"/>
         <q-checkbox v-model="showCompleted" label="Show completed" @input="refresh"><q-tooltip>Include submissions with a status of "completed"</q-tooltip></q-checkbox>
+        <q-checkbox v-model="participating" label="Participating" @input="refresh"><q-tooltip>Only show submissions in which I am a participant</q-tooltip></q-checkbox>
       </template>
       <template slot="top-right" slot-scope="props">
         <q-search hide-underline v-model="filter" :props="props"/>
@@ -33,6 +34,7 @@
           <q-td key="internal_id" :props="props">{{ props.row.internal_id }}</q-td>
           <q-td key="type" :props="props"><router-link :to="{'name': 'submission_type', 'params': { id: props.row.type.id }}">{{ props.row.type.name }}</router-link></q-td>
           <q-td key="status" :props="props">{{ props.row.status }}</q-td>
+          <q-td key="participant_names" :props="props">{{ props.row.participant_names.join(', ') }}</q-td>
           <q-td key="submitted" :props="props">{{ props.row.submitted | formatDate }}</q-td>
           <q-td key="name" :props="props">{{ props.row.first_name }} {{ props.row.last_name }}</q-td>
           <q-td key="email" :props="props">{{ props.row.email }}</q-td>
@@ -56,6 +58,7 @@ export default {
       filter: '',
       showCancelled: false,
       showCompleted: false,
+      participating: false,
       loading: false,
       serverPagination: {
         page: 1,
@@ -71,6 +74,7 @@ export default {
         { name: 'internal_id', label: 'Internal Id', field: 'internal_id', sortable: true },
         { name: 'type', label: 'Type', field: 'type' },
         { name: 'status', label: 'Status', field: 'status', sortable: true },
+        { name: 'participant_names', label: 'Participants', field: 'participant_names', sortable: false },
         { name: 'submitted', label: 'Submitted', field: 'submitted', sortable: true },
         { name: 'name', label: 'Name', field: 'name' },
         { name: 'email', label: 'Email', field: 'email', sortable: true },
@@ -97,10 +101,11 @@ export default {
       var search = this.filter !== '' ? `&search=${this.filter}` : ''
       var cancelled = !this.showCancelled ? '&cancelled__isnull=true' : ''
       var completed = !this.showCompleted ? '&status__iexact!=completed' : ''
+      var participating = this.participating ? '&participating' : ''
       var pageSize = pagination.rowsPerPage ? pagination.rowsPerPage : 1000000 // HACKY
       // var type = this.$route.query.type ? `&type__name__icontains=${this.$route.query.type}` : ''
       this.$axios
-        .get(`/api/submissions/?ordering=${sortBy}&page=${pagination.page}&page_size=${pageSize}${search}${cancelled}${completed}`)// ${pagination.descending}&filter=${filter}
+        .get(`/api/submissions/?ordering=${sortBy}&page=${pagination.page}&page_size=${pageSize}${search}${cancelled}${completed}${participating}`)// ${pagination.descending}&filter=${filter}
         .then(({ data }) => {
           console.log('data', data)
           // updating pagination to reflect in the UI
