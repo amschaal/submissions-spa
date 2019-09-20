@@ -3,6 +3,18 @@
     <div v-if="lab">
       <h5>Settings for "{{lab.name}}"</h5>
       <q-field
+        label="Users"
+        v-if="user_options"
+        label-width="2"
+      >
+        <q-select
+          float-label="Select"
+          multiple
+          v-model="lab.users"
+          :options="user_options"
+        />
+      </q-field>
+      <q-field
         label="Home Page"
         label-width="2"
       >
@@ -55,8 +67,17 @@ export default {
       settings: null,
       labs: [],
       submission_variables: {},
-      sample_variables: {}
+      sample_variables: {},
+      user_options: []
     }
+  },
+  mounted () {
+    var self = this
+    this.$axios
+      .get('/api/users/?show=true')
+      .then(function (response) {
+        self.user_options = response.data.results.map(opt => ({label: `${opt.first_name} ${opt.last_name}`, value: opt.id}))
+      })
   },
   methods: {
     save () {
