@@ -1,7 +1,7 @@
 // axios app plugin file (src/plugins/axios.js)
 
 import axios from 'axios'
-axios.defaults.withCredentials = true
+// axios.defaults.withCredentials = true
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 // We create our own axios instance and set a custom base URL.
