@@ -356,8 +356,9 @@ export default {
         })
         .catch(function (error, stuff) {
           // raise different exception if due to invalid credentials
-          console.log('ERROR', error)
-          self.$q.notify({message: 'There were errors saving your submission.', type: 'negative'})
+          console.log('ERROR', error.response)
+          var message = error.response.data.detail || 'There were errors saving your submission.'
+          self.$q.notify({message: message, type: 'negative'})
           if (error.response) {
             // Vue.set(self, 'errors', error.response.data)
             self.errors = error.response.data
