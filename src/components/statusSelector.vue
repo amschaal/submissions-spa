@@ -1,5 +1,5 @@
 <template>
-  <div  class="inline row" v-if="$store.getters.isStaff">
+  <div  class="inline row">
     <q-select
       v-model="status"
      :options="statusOptions"

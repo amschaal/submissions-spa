@@ -13,7 +13,7 @@
           label-width="2"
           :error="errors.type"
           :error-label="errors.type"
-          v-if="$store.getters.isStaff && user_options && submission.participants"
+          v-if="isAdmin && user_options && submission.participants"
         >
           <q-select
             float-label="Select"
@@ -514,6 +514,9 @@ export default {
     },
     type_options () {
       return this.$store.getters.typeOptions
+    },
+    isAdmin () {
+      return this.submission.permissions && this.submission.permissions.indexOf('ADMIN') !== -1
     }
     // type_options () {
     //   return this.submission_types.map(opt => ({label: opt.name, value: opt.id}))

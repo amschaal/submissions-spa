@@ -12,15 +12,15 @@
             </q-alert>
           </div>
           <div class="field col-sm-12 col-lg-4">
-            <StatusSelector v-model="submission.status" :submission="submission" v-if="submission.id"/>
+            <StatusSelector v-model="submission.status" :submission="submission" v-if="submission.id && isAdmin"/>
           </div>
           <div class="col-sm-12 col-lg-8">
             <div class="row">
               <div class="col-lg-12">
-                <q-btn v-if="submission.editable && !submission.cancelled" label="Modify" class="float-right" @click="$router.push({name: 'modify_submission', params: {id: submission.id}})"/>
+                <q-btn v-if="canModify" label="Modify" class="float-right" @click="$router.push({name: 'modify_submission', params: {id: submission.id}})"/>
                 <q-btn label="Print" class="float-right" @click="$router.push({name: 'print_submission', params: {id: submission.id}})"/>
-                <Lock v-if="submission.id" :submission="submission" class="float-right"/>
-                <Cancel v-if="submission.id" :submission="submission" class="float-right"/>
+                <Lock v-if="submission.id && isAdmin" :submission="submission" class="float-right"/>
+                <Cancel v-if="submission.id && canCancel" :submission="submission" class="float-right"/>
               </div>
             </div>
           </div>
@@ -233,6 +233,16 @@ export default {
       } else {
         return options
       }
+    },
+    canCancel () {
+      return this.submission && !this.submission.cancelled && (!this.submission.locked || this.isAdmin)
+    },
+    canModify () {
+      return !this.submission.locked || this.isAdmin
+      // return this.submission.editable && !submission.cancelled
+    },
+    isAdmin () {
+      return this.submission.permissions.indexOf('ADMIN') !== -1
     }
   },
   components: {
