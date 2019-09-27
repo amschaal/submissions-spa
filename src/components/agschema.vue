@@ -337,15 +337,17 @@ export default {
       if (definition.description) {
         tooltip = definition.description
       }
-      var widget = null
-      console.log('getcolwidget', definition.widget, definition.widget.type)
+      var WidgetClass = null
       if (definition.widget && definition.widget.type) {
-        widget = sampleWidgetFactory.getWidget(definition.widget.type)
+        console.log('getcolwidget', definition.widget, definition.widget.type)
+        WidgetClass = sampleWidgetFactory.getWidget(definition.widget.type)
       }
-      console.log('widget', definition, widget)
+      console.log('widget', definition, WidgetClass)
       // console.log('factory', sampleWidgetFactory)
-      if (widget) {
-        return {headerName: header, headerTooltip: tooltip, field: id, cellEditorFramework: widget.component, cellEditorParams: {definition: definition, widget_options: definition.widget.options}, cellClass: cellClass, tooltip: cellTooltip, pinned: definition.pinned} // values: definition.enum, widget: definition.widget,
+      if (WidgetClass) {
+        var options = definition.widget.options
+        var widget = new WidgetClass(id, options)
+        return {headerName: header, headerTooltip: tooltip, field: id, cellEditorFramework: WidgetClass.component, cellEditorParams: {definition: definition, widget_options: widget.getOptions()}, cellClass: cellClass, tooltip: cellTooltip, pinned: definition.pinned} // values: definition.enum, widget: definition.widget,
       }
       switch (definition.type) {
         case 'string':

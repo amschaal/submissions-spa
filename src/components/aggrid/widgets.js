@@ -1,4 +1,4 @@
-// import _ from 'lodash'
+import _ from 'lodash'
 import AutocompleteComponent from './editors/AutocompleteComponent.vue'
 import DateComponent from './editors/DateComponent.vue'
 import BooleanComponent from './editors/BooleanComponent.vue'
@@ -9,6 +9,9 @@ import AdapterAutocompleteComponent from './editors/AdapterAutocompleteComponent
 import {Widget, WidgetFactory} from '../forms/Widget.js'
 
 class GridWidget extends Widget {
+  getOptions () {
+    return this.options // _.merge(this.options, {'stack-label': this.variable.schema.title || this.variable.variable})
+  }
 }
 
 // class EnumWidget extends GridWidget {
@@ -79,7 +82,7 @@ class AdapterAutocompleteWidget extends APIAutocompleteWidget {
   // @TODO: wrap this in another component as in the guide https://quasar-framework.org/components/autocomplete.html
   static type = 'string'
   static id = 'adapter_autocomplete'
-  static component = APIAutocompleteComponent
+  static component = AdapterAutocompleteComponent
   static name = 'Adapter Autocomplete'
   static schema =
   [
@@ -87,8 +90,10 @@ class AdapterAutocompleteWidget extends APIAutocompleteWidget {
   ]
   validateOptions (options, field, schema) {
     var errors = {}
-    if (options.vocabulary_variable && !schema.properties[options.vocabulary_variable]) {
-      errors['db_variable'] = [`Variable "${options.vocabulary_variable}" does not exist.`]
+    if (!options.db_variable) {
+      errors['db_variable'] = ['This field is required']
+    } else if (!schema.properties[options.db_variable]) {
+      errors['db_variable'] = [`Variable "${options.db_variable}" does not exist.`]
     }
     return errors
   }
@@ -107,6 +112,18 @@ class APISelectWidget extends APIAutocompleteWidget {
   //   {'variable': 'value_property', 'label': 'Value property', 'type': 'text'},
   //   {'variable': 'label_property', 'label': 'Label property', 'type': 'text'}
   // ]
+}
+
+class AdapterDBWidget extends APIAutocompleteWidget {
+  // @TODO: wrap this in another component as in the guide https://quasar-framework.org/components/autocomplete.html
+  // static type = 'string'
+  static id = 'adapter_db'
+  static component = SelectComponent
+  static name = 'Adapter Database Select'
+  static schema = []
+  getOptions () {
+    return _.merge(this.options, {'url': 'http://sims.ucdavis.edu:8000/api/adapter_db/', 'value_property': 'id', 'label_property': 'name'})
+  }
 }
 
 class BooleanWidget extends GridWidget {
@@ -129,6 +146,6 @@ class AutocompleteWidget extends GridWidget {
   // }
 }
 
-var widgetFactory = new WidgetFactory([DateWidget, BooleanWidget, AutocompleteWidget, VocabularyWidget, APIAutocompleteWidget, APISelectWidget, AdapterAutocompleteWidget])
+var widgetFactory = new WidgetFactory([DateWidget, BooleanWidget, AutocompleteWidget, VocabularyWidget, APIAutocompleteWidget, APISelectWidget, AdapterAutocompleteWidget, AdapterDBWidget])
 
 export default widgetFactory
