@@ -57,6 +57,10 @@ export class Widget {
     }
     return value
   }
+  validateOptions (options, field, schema) {
+    console.log('validateOptions', options, field, schema)
+    return {} // return dictionary of errors for options
+  }
 }
 
 export class WidgetFactory {

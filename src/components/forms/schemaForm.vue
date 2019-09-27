@@ -32,7 +32,7 @@
 
             </td>
             <td class="row">
-              <fieldoptions v-model="schema.properties[variable.variable]" :variable="variable.variable" :type="type"/>
+              <fieldoptions :schema="schema" v-model="schema.properties[variable.variable]" :variable="variable.variable" :type="type"/>
               <q-btn label="Delete" color="negative" @click="deleteVariable(variable.variable, 'submission_schema')"></q-btn>
             </td>
           </tr>

@@ -78,7 +78,7 @@
             </span>
             <span class="col-3">
               <q-btn label="options" size="sm" @click="open('widget_options')"/>
-              <CustomFieldModal v-model="data.widget.options" :schema="widgetSchema(data.widget.type)" :title="`${variable} widget options`" ref="widget_options"/>
+              <WidgetOptions :WidgetClass="getWidget(data.widget.type)" v-model="data.widget.options" :fields="widgetSchema(data.widget.type)" :schema="schema" :variable="variable" :title="`${variable} widget options`" ref="widget_options"/>
             </span>
           </div>
           </q-field>
@@ -96,7 +96,7 @@
             </q-btn-dropdown>
             <div v-for="(v, index) in data.validators" :key="index" :title="validators[v.id].description">
               <q-btn flat dense round icon="delete_outline" @click="removeValidator(index)"/> {{validators[v.id].name}} <q-btn size="sm" v-if="validators[v.id].uses_options" label="Options" @click="open('validator_options_'+v.id)"/>
-              <CustomFieldModal v-model="v.options" :schema="validators[v.id].schema" :title="`${validators[v.id].name} validator options`" :ref="`validator_options_${v.id}`" v-if="validators[v.id].uses_options"/>
+              <WidgetOptions :WidgetClass="getWidget(data.widget.type)" v-model="v.options" :fields="validators[v.id].schema" :schema="schema" :variable="variable" :title="`${validators[v.id].name} validator options`" :ref="`validator_options_${v.id}`" v-if="validators[v.id].uses_options"/>
             </div>
           </q-field>
           <q-field
@@ -151,9 +151,9 @@
 import _ from 'lodash'
 import submissionWidgetFactory from './forms/widgets.js'
 import sampleWidgetFactory from './aggrid/widgets.js'
-import CustomFieldModal from './modals/CustomFieldModal.vue'
+import WidgetOptions from './modals/WidgetOptions.vue'
 export default {
-  props: ['value', 'variable', 'type'],
+  props: ['value', 'variable', 'type', 'schema'],
   data () {
     return {
       opened: false,
@@ -240,13 +240,18 @@ export default {
     widgetSchema (id) {
       var factory = this.type === 'submission' ? submissionWidgetFactory : sampleWidgetFactory
       return factory.getWidgetSchema(id)
+    },
+    getWidget (id) {
+      return this.widgetFactory.getWidget(id)
     }
   },
   computed: {
+    widgetFactory () {
+      return this.type === 'submission' ? submissionWidgetFactory : sampleWidgetFactory
+    },
     widgetOptions () {
-      var factory = this.type === 'submission' ? submissionWidgetFactory : sampleWidgetFactory
-      console.log('widgetOptions', this.data.type, factory.getWidgets(this.data.type))
-      return factory.getWidgets(this.data.type)
+      console.log('widgetOptions', this.data.type, this.widgetFactory.getWidgets(this.data.type))
+      return this.widgetFactory.getWidgets(this.data.type)
       // switch (this.data.type) {
       //   case 'boolean':
       //     return widgetFactory.getWidgetOptions('text')// [{label: 'Checkbox', value: 'checkbox'}, {label: 'Toggle switch', value: 'toggle'}]
@@ -258,7 +263,7 @@ export default {
     }
   },
   components: {
-    CustomFieldModal
+    WidgetOptions
   }
 }
 
