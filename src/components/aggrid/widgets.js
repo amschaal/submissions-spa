@@ -8,6 +8,8 @@ import SelectComponent from './editors/SelectComponent.vue'
 import AdapterAutocompleteComponent from './editors/AdapterAutocompleteComponent.vue'
 import {Widget, WidgetFactory} from '../forms/Widget.js'
 
+import {SIMS} from '../../settings.js'
+
 class GridWidget extends Widget {
   getOptions () {
     return this.options // _.merge(this.options, {'stack-label': this.variable.schema.title || this.variable.variable})
@@ -97,6 +99,9 @@ class AdapterAutocompleteWidget extends APIAutocompleteWidget {
     }
     return errors
   }
+  getOptions () {
+    return _.merge(this.options, SIMS['adapter_db']) // {'url': 'http://sims.ucdavis.edu:8000/api/adapter_db/', 'value_property': 'id', 'label_property': 'name'}
+  }
 }
 
 class APISelectWidget extends APIAutocompleteWidget {
@@ -122,7 +127,8 @@ class AdapterDBWidget extends APIAutocompleteWidget {
   static name = 'Adapter Database Select'
   static schema = []
   getOptions () {
-    return _.merge(this.options, {'url': 'http://sims.ucdavis.edu:8000/api/adapter_db/', 'value_property': 'id', 'label_property': 'name'})
+    console.log('Adapter DB', _.merge(this.options, SIMS['adapter_db']))
+    return _.merge(this.options, SIMS['adapter_db']) // {'url': 'http://sims.ucdavis.edu:8000/api/adapter_db/', 'value_property': 'id', 'label_property': 'name'}
   }
 }
 
