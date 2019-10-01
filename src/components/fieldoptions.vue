@@ -96,7 +96,7 @@
             </q-btn-dropdown>
             <div v-for="(v, index) in data.validators" :key="index" :title="validators[v.id].description">
               <q-btn flat dense round icon="delete_outline" @click="removeValidator(index)"/> {{validators[v.id].name}} <q-btn size="sm" v-if="validators[v.id].uses_options" label="Options" @click="open('validator_options_'+v.id)"/>
-              <WidgetOptions :WidgetClass="getWidget(data.widget.type)" v-model="v.options" :fields="validators[v.id].schema" :schema="schema" :variable="variable" :title="`${validators[v.id].name} validator options`" :ref="`validator_options_${v.id}`" v-if="validators[v.id].uses_options"/>
+              <ValidatorOptions v-model="v.options" :fields="validators[v.id].schema" :schema="schema" :variable="variable" :title="`${validators[v.id].name} validator options`" :ref="`validator_options_${v.id}`" v-if="validators[v.id].uses_options"/>
             </div>
           </q-field>
           <q-field
@@ -152,6 +152,8 @@ import _ from 'lodash'
 import submissionWidgetFactory from './forms/widgets.js'
 import sampleWidgetFactory from './aggrid/widgets.js'
 import WidgetOptions from './modals/WidgetOptions.vue'
+import ValidatorOptions from './modals/ValidatorOptions.vue'
+
 export default {
   props: ['value', 'variable', 'type', 'schema'],
   data () {
@@ -263,7 +265,8 @@ export default {
     }
   },
   components: {
-    WidgetOptions
+    WidgetOptions,
+    ValidatorOptions
   }
 }
 
