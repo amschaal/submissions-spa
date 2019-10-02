@@ -74,7 +74,7 @@ export default {
       return schema.properties[variable] && schema.properties[variable].title ? schema.properties[variable].title : variable
     },
     truncate (schema, variable, value) {
-      if (schema.properties[variable].printing && schema.properties[variable].printing.truncate_at) {
+      if (value && value.substr && schema.properties[variable].printing && schema.properties[variable].printing.truncate_at) {
         return value.substr(0, schema.properties[variable].printing.truncate_at) + ' ..'
       }
       return value

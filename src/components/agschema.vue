@@ -209,7 +209,12 @@ export default {
     openSamplesheet () {
       var self = this
       this.errors = {}
-      this.rowData = _.cloneDeep(this.value)
+      if (this.value && this.value.length > 0) {
+        this.rowData = _.cloneDeep(this.value)
+      } else {
+        this.rowData = [{}]
+      }
+
       if (!this.type || !this.type.sample_schema) {
         this.$q.dialog({
           title: 'Alert',
@@ -253,8 +258,12 @@ export default {
       var allColIds = this.gridOptions.columnApi.getAllColumns().map(column => column.colId)
       this.gridOptions.columnApi.autoSizeColumns(allColIds)
     },
+    // rowIndex (params) {
+    //   return params.node.rowIndex + 1
+    // },
     schema2Columns (schema) {
       var columnDefs = []
+      // var columnDefs = [{ headerName: '', lockPosition: true, valueGetter: this.rowIndex, cellClass: 'locked-col', width: 60, suppressNavigable: true, pinned: 'left' }]
       if (schema.order) {
         for (var i in schema.order) {
           if (!this.editable || this.$store.getters.isLoggedIn || !schema.properties[schema.order[i]].internal) {
