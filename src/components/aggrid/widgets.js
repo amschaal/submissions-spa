@@ -5,7 +5,9 @@ import BooleanComponent from './editors/BooleanComponent.vue'
 import VocabularyComponent from './editors/VocabularyComponent.vue'
 import APIAutocompleteComponent from './editors/APIAutocompleteComponent.vue'
 import SelectComponent from './editors/SelectComponent.vue'
-import AdapterAutocompleteComponent from './editors/AdapterAutocompleteComponent.vue'
+// import AdapterAutocompleteComponent from './editors/AdapterAutocompleteComponent.vue'
+import AdapterSelectComponent from './editors/AdapterSelectComponent.vue'
+
 import {Widget, WidgetFactory} from '../forms/Widget.js'
 
 import {SIMS} from '../../settings.js'
@@ -80,12 +82,12 @@ class APIAutocompleteWidget extends GridWidget {
   ]
 }
 
-class AdapterAutocompleteWidget extends APIAutocompleteWidget {
+class AdapterWidget extends APIAutocompleteWidget {
   // @TODO: wrap this in another component as in the guide https://quasar-framework.org/components/autocomplete.html
   static type = 'string'
-  static id = 'adapter_autocomplete'
-  static component = AdapterAutocompleteComponent
-  static name = 'Adapter Autocomplete'
+  static id = 'adapter'
+  static component = AdapterSelectComponent // AdapterAutocompleteComponent
+  static name = 'Adapter'
   static schema =
   [
     {'variable': 'db_variable', 'label': 'Variable specifying which adapter database to use', 'type': 'text'}
@@ -152,6 +154,6 @@ class AutocompleteWidget extends GridWidget {
   // }
 }
 
-var widgetFactory = new WidgetFactory([DateWidget, BooleanWidget, AutocompleteWidget, VocabularyWidget, APIAutocompleteWidget, APISelectWidget, AdapterAutocompleteWidget, AdapterDBWidget])
+var widgetFactory = new WidgetFactory([DateWidget, BooleanWidget, AutocompleteWidget, VocabularyWidget, APIAutocompleteWidget, APISelectWidget, AdapterWidget, AdapterDBWidget])
 
 export default widgetFactory
