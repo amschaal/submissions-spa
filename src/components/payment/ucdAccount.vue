@@ -26,6 +26,15 @@
         <q-input v-model="value.payment_info" type="text" stack-label="Payment Info"/>
       </q-field>
     </div>
+    <div class="col-sm-12 col-md-12">
+      <q-field
+        :error="errors.ppms_order_id"
+        :error-label="errors.ppms_order_id"
+        helper="Please see our getting started page for more details: https://dnatech.genomecenter.ucdavis.edu/getting-started/"
+      >
+        <q-input v-model="value.ppms_order_id" type="text" stack-label="PPMS Order ID"/>
+      </q-field>
+    </div>
   </div>
 </template>
 
