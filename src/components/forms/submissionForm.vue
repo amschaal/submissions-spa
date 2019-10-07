@@ -528,10 +528,10 @@ export default {
     'submission': {
       handler (newVal, oldVal) {
         console.log('submission changed')
-        if (window.JSON && window.JSON.stringify) {
+        if (window.JSON && window.JSON.stringify && !newVal.id) {
           window.localStorage.setItem('submission', window.JSON.stringify(newVal))
         }
-        console.log('submission saved', window.localStorage.getItem('submission'))
+        // console.log('submission saved', window.localStorage.getItem('submission'))
       },
       deep: true
     },
