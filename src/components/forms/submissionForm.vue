@@ -256,7 +256,8 @@ export default {
       user_options: null,
       show_help: false,
       payment: {},
-      draft: null
+      draft: null,
+      messages: []
       // create: false
     }
   },
@@ -264,6 +265,7 @@ export default {
     console.log('mounted')
     console.log('type', this.type)
     console.log('submission.type', this.submission.type)
+    var submission = window.localStorage.getItem('submission')
     var self = this
     if (!this.create) {
       // this.$axios
@@ -281,6 +283,39 @@ export default {
       this.draft = !this.id && this.$route.query.draft ? this.$route.query.draft : null
       if (this.draft) {
         this.loadDraft(this.draft)
+      } else if (submission && window.JSON && window.JSON.parse) {
+        var message = this.$q.notify({
+          message: `An unsaved draft was found.  Would you like to load it?`,
+          timeout: 0, // in milliseconds; 0 means no timeout
+          type: 'info',
+          position: 'top', // 'top', 'left', 'bottom-left' etc.
+          actions: [
+            {
+              label: 'Restore',
+              handler: () => {
+                try {
+                  self.submission = window.JSON.parse(submission)
+                  this.$q.notify({message: 'Submission restored.', type: 'positive', position: 'top'})
+                } catch {
+                  this.$q.notify({message: 'There was an error restoring the submission.', type: 'negative'})
+                }
+              }
+            },
+            {
+              label: 'Ignore',
+              handler: () => {
+                self.removeCached()
+              }
+            }
+
+          ]
+        })
+        this.messages.push(message)
+        // if (confirm('An unsaved draft was found.  Would you like to load it?')) {
+        //   this.submission = window.JSON.parse(submission)
+        // } else {
+        //   this.removeCached()
+        // }
       }
       console.log('draft', this.draft)
     }
@@ -321,6 +356,7 @@ export default {
     if (this.draft_message) {
       this.draft_message()
     }
+    this.messages.forEach(m => m())
   },
   methods: {
     openSamplesheet () {
@@ -332,6 +368,9 @@ export default {
       } else {
         this.$refs.samplesheet.openSamplesheet()
       }
+    },
+    removeCached () {
+      window.localStorage.removeItem('submission')
     },
     submit () {
       var self = this
@@ -351,6 +390,7 @@ export default {
           if (self.draft_message) {
             self.draft_message()
           }
+          self.removeCached()
           self.$router.push({name: 'submission', params: {id: response.data.id}, query: {created: self.create}})
           // }
         })
@@ -484,6 +524,16 @@ export default {
       console.log('type', id, this.type, this.$store.getters.typesDict)
       // this.type = this.submission.type
       // this.submission.type = this.type.id
+    },
+    'submission': {
+      handler (newVal, oldVal) {
+        console.log('submission changed')
+        if (window.JSON && window.JSON.stringify) {
+          window.localStorage.setItem('submission', window.JSON.stringify(newVal))
+        }
+        console.log('submission saved', window.localStorage.getItem('submission'))
+      },
+      deep: true
     },
     'id': function (id) {
       console.log('form id', id)
