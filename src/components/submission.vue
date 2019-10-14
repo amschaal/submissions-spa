@@ -35,7 +35,7 @@
             <p class="caption">ID</p>
             {{submission.id}}
           </div>
-          <div class="field col-sm-12 col-md-4">
+          <div class="field col-sm-12 col-md-4" v-if="$store.getters.isStaff">
             <p class="caption">Participants</p>
             <span v-if="submission.participant_names">{{submission.participant_names.join(', ')}}</span>
           </div>
