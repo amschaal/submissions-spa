@@ -100,7 +100,7 @@ export default {
       }
       var search = this.filter !== '' ? `&search=${this.filter}` : ''
       var cancelled = !this.showCancelled ? '&cancelled__isnull=true' : ''
-      var completed = !this.showCompleted ? '&status__iexact!=completed' : ''
+      var completed = !this.showCompleted ? '&exclude_status=completed' : ''
       var participating = this.participating ? '&participating' : ''
       var pageSize = pagination.rowsPerPage ? pagination.rowsPerPage : 1000000 // HACKY
       // var type = this.$route.query.type ? `&type__name__icontains=${this.$route.query.type}` : ''
