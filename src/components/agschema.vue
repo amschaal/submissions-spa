@@ -402,7 +402,11 @@ export default {
             }
           })
           .catch(function (error, stuff) {
-            // console.log('ERROR', error.response, self.$refs.grid, self.gridOptions.api.refreshCells)
+            console.log('ERROR', error.response, self.$refs.grid, self.gridOptions.api.refreshCells)
+            if (!error.response.data || !error.response.data.errors) {
+              self.$q.notify({message: 'A server error occurred.', type: 'negative'})
+              return
+            }
             self.errors = error.response.data.errors
             self.gridOptions.api.redrawRows() // redrawCells({force: true})
             if (!save || !self.allowForceSave) {
