@@ -8,7 +8,7 @@
               class="q-mb-sm"
             >
               <p>Submission Created!</p>
-              <pre>{{submission_type.confirmation_text}}</pre>
+              <pre id="confirmation">{{submission_type.confirmation_text}}</pre>
             </q-alert>
           </div>
           <div class="field col-sm-12 col-lg-4">
@@ -263,5 +263,8 @@ export default {
   }
   div.row div p.caption {
     margin: 0 0 5px;
+  }
+  pre#confirmation {
+    white-space: pre-wrap;
   }
 </style>
