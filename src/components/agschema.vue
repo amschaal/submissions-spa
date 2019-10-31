@@ -202,6 +202,7 @@ export default {
         }
       },
       errors: {},
+      warnings: {},
       maximized: true
     }
   },
@@ -209,6 +210,7 @@ export default {
     openSamplesheet () {
       var self = this
       this.errors = {}
+      this.warnings = {}
       if (this.value && this.value.length > 0) {
         this.rowData = _.cloneDeep(this.value)
       } else {
@@ -248,6 +250,11 @@ export default {
         var errors = this.getCellErrors(params.rowIndex, params.column.colDef.field)
         if (errors) {
           this.dismiss = this.$q.notify({position: 'top', message: `Error at Row ${params.rowIndex + 1}, Column "${params.column.colDef.headerName}": ` + errors.join(', ')})
+        } else {
+          var warnings = this.getCellWarnings(params.rowIndex, params.column.colDef.field)
+          if (warnings) {
+            this.dismiss = this.$q.notify({position: 'top', color: 'warning', message: `Warning at Row ${params.rowIndex + 1}, Column "${params.column.colDef.headerName}": ` + warnings.join(', ')})
+          }
         }
       }
     },
@@ -308,6 +315,17 @@ export default {
         return null
       }
     },
+    getCellWarnings (row, field) {
+      if (this.warnings[row] && this.warnings[row][field]) {
+        if (this.sample_schema.properties[field].error_message) {
+          return [this.sample_schema.properties[field].error_message]
+        } else {
+          return this.warnings[row][field]
+        }
+      } else {
+        return null
+      }
+    },
     getColDef (id, definition, schema) {
       var self = this
       function cellClass (params) {
@@ -320,6 +338,8 @@ export default {
           }
         } else if (self.errors[params.rowIndex] && self.errors[params.rowIndex][params.colDef.field]) {
           return ['error']
+        } else if (self.warnings[params.rowIndex] && self.warnings[params.rowIndex][params.colDef.field]) {
+          return ['warning']
         }
         return []
       }
@@ -329,8 +349,11 @@ export default {
           return params.value
         }
         var errors = self.getCellErrors(params.rowIndex, params.colDef.field)
+        var warnings = self.getCellWarnings(params.rowIndex, params.colDef.field)
         if (errors) {
           return errors.join(', ')
+        } else if (warnings) {
+          return warnings.join(', ')
         }
         return params.value
       }
@@ -395,6 +418,7 @@ export default {
           .then(function (response) {
             // console.log(response)
             self.errors = {}
+            self.warnings = {}
             self.gridOptions.api.redrawRows() // redrawCells({force: true})
             self.$q.notify({message: 'Samples successfully validated.  Please save the submission.', type: 'positive'})
             if (save) {
@@ -403,19 +427,26 @@ export default {
           })
           .catch(function (error, stuff) {
             console.log('ERROR', error.response, self.$refs.grid, self.gridOptions.api.refreshCells)
-            if (!error.response.data || !error.response.data.errors) {
+            if (!error.response.data || (!error.response.data.errors && !error.response.data.warnings)) {
               self.$q.notify({message: 'A server error occurred.', type: 'negative'})
               return
             }
             self.errors = error.response.data.errors
+            self.warnings = error.response.data.warnings
             self.gridOptions.api.redrawRows() // redrawCells({force: true})
             if (!save || !self.allowForceSave) {
-              self.$q.notify({message: 'There were errors in your data.', type: 'negative'})
+              if (self.hasErrors) {
+                self.$q.notify({message: 'There were errors in your data.', type: 'negative'})
+              }
+              if (self.hasWarnings) {
+                self.$q.notify({message: 'There were warnings in your data.', type: 'warning'})
+              }
             } else {
+              var message = self.hasErrors ? 'There were errors.  Any errors will need to be corrected before completing submission.  You may choose to "save anyway" and then save this submission as a draft in order not to lose your work.' : 'There were warnings.  To ignore the warnings, click "save anyway".'
               self.$q.notify({
-                message: `There were errors.  Any errors will need to be corrected before completing submission.  You may choose to "save anyway" and then save this submission as a draft in order not to lose your work.`,
+                message: message,
                 timeout: 10000, // in milliseconds; 0 means no timeout
-                type: 'negative',
+                type: self.hasErrors ? 'negative' : 'warning',
                 // position: 'bottom', // 'top', 'left', 'bottom-left' etc.
                 actions: [
                   {
@@ -477,6 +508,14 @@ export default {
     // }
   },
   computed: {
+    hasErrors () {
+      console.log('hasErrors', this.errors)
+      return this.errors && _.size(this.errors) > 0
+    },
+    hasWarnings () {
+      console.log('hasWarnings', this.warnings)
+      return this.warnings && _.size(this.warnings) > 0
+    },
     sampleCount () {
       if (this.gridOptions.api) {
         return this.gridOptions.api.getModel().rootNode.allChildrenCount
@@ -526,6 +565,9 @@ export default {
 <style>
   .ag-row .error {
     background-color: pink;
+  }
+  .ag-row .warning {
+    background-color: #ffda85;
   }
   .ag-row .example, .show_examples span {
     background-color: lightgreen !important;
