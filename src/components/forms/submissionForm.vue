@@ -180,6 +180,8 @@
           label-width="2"
           :error="errors.sample_data"
           :error-label="errors.sample_data"
+          :warning="sample_data_warning"
+          :warning-label="sample_data_warning"
           v-if="type && type.sample_schema"
         >
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
@@ -241,6 +243,7 @@ import Account from '../../components/payment/ucdAccount.vue'
 // import PPMS from '../../components/payment/ppms.vue'
 // import Files from '../../components/files.vue'
 import Vue from 'vue'
+import _ from 'lodash'
 
 export default {
   // name: 'submission',
@@ -381,8 +384,11 @@ export default {
       this.$axios[action]('' + url, this.submission)
         .then(function (response) {
           console.log('submit', response)
-          self.errors = {}
+          // self.errors = {}
+          // self.warnings = {}
           self.submission = response.data
+          self.errors = response.data.data.errors
+          self.warnings = response.data.data.warnings
           // console.log(response)
           self.$q.notify({message: 'Submission successfully saved.', type: 'positive'})
           self.$emit('submission_updated', self.submission)
@@ -483,6 +489,8 @@ export default {
             response.data.sample_data = []
           }
           self.submission = response.data
+          self.errors = response.data.data.errors
+          self.warnings = response.data.data.warnings
           Vue.set(self.submission, 'type', response.data.type.id)
         })
     },
@@ -561,6 +569,14 @@ export default {
   computed: {
     error_message (field) {
       return this.errors[field]
+    },
+    sample_data_warning () {
+      if (!this.warnings || !this.warnings.sample_data) {
+        return null
+      } else {
+        var warnings = _.size(this.warnings.sample_data)
+        return `${warnings} samples have warnings.`
+      }
     },
     type_options () {
       return this.$store.getters.typeOptions
