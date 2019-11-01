@@ -180,12 +180,12 @@
           label-width="2"
           :error="errors.sample_data"
           :error-label="errors.sample_data"
-          :warning="sample_data_warning"
+          :warning="sample_data_warning != null"
           :warning-label="sample_data_warning"
           v-if="type && type.sample_schema"
         >
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
-          <Agschema v-model="submission.sample_data" :schema="submission.sample_schema" :type="type" :editable="true" :allow-examples="true" :allow-force-save="true" ref="samplesheet" v-if="type && type.sample_schema"/>
+          <Agschema v-model="submission.sample_data" :schema="submission.sample_schema" :type="type" :editable="true" :allow-examples="true" :allow-force-save="true" ref="samplesheet" v-if="type && type.sample_schema" :submission="submission" v-on:warnings="updateWarnings"/>
           <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet" />
         </q-field>
         <q-field
@@ -372,6 +372,10 @@ export default {
         this.$refs.samplesheet.openSamplesheet()
       }
     },
+    updateWarnings (warnings) {
+      console.log('update', warnings)
+      Vue.set(this.warnings, 'sample_data', warnings)
+    },
     removeCached () {
       window.localStorage.removeItem('submission')
     },
@@ -489,8 +493,8 @@ export default {
             response.data.sample_data = []
           }
           self.submission = response.data
-          self.errors = response.data.data.errors
-          self.warnings = response.data.data.warnings
+          self.errors = response.data.data.errors || {}
+          self.warnings = response.data.data.warnings || {}
           Vue.set(self.submission, 'type', response.data.type.id)
         })
     },
@@ -571,7 +575,7 @@ export default {
       return this.errors[field]
     },
     sample_data_warning () {
-      if (!this.warnings || !this.warnings.sample_data) {
+      if (!this.warnings || !this.warnings.sample_data || _.size(this.warnings.sample_data) === 0) {
         return null
       } else {
         var warnings = _.size(this.warnings.sample_data)

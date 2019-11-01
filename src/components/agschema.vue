@@ -153,7 +153,7 @@ import sampleWidgetFactory from './aggrid/widgets.js'
 // var clipboardService = null
 
 export default {
-  props: ['value', 'type', 'schema', 'editable', 'allowExamples', 'allowForceSave'],
+  props: ['value', 'type', 'schema', 'editable', 'allowExamples', 'allowForceSave', 'submission'],
   data () {
     return {
       opened: false,
@@ -209,8 +209,9 @@ export default {
   methods: {
     openSamplesheet () {
       var self = this
-      this.errors = {}
-      this.warnings = {}
+      this.errors = this.submission.data.errors && this.submission.data.errors.sample_data ? this.submission.data.errors.sample_data : {}
+      this.warnings = this.submission.data.warnings && this.submission.data.warnings.sample_data ? this.submission.data.warnings.sample_data : {}
+      console.log('warnings', this.warnings)
       if (this.value && this.value.length > 0) {
         this.rowData = _.cloneDeep(this.value)
       } else {
@@ -406,6 +407,7 @@ export default {
     },
     save () {
       this.$emit('input', this.getRowData(false))
+      this.$emit('warnings', this.warnings)
       this.close()
     },
     validate (save) {
