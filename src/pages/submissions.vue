@@ -29,7 +29,7 @@
       </template>
       <template slot="body" slot-scope="props">
         <q-tr :props="props" v-bind:class="{'cancelled': props.row.cancelled, 'completed': props.row.status && props.row.status.toUpperCase() === 'COMPLETED'}">
-          <q-td key="locked" :props="props"><q-icon size="18px" name="cancel" v-if="props.row.cancelled" color="red" title="Submission cancelled"/><q-icon size="18px" name="lock" v-if="props.row.locked" color="red"/><q-icon size="18px" name="lock_open" v-else color="green"/></q-td>
+          <q-td key="locked" :props="props"><q-icon size="18px" name="cancel" v-if="props.row.cancelled" color="red" title="Submission cancelled"/><q-icon size="18px" name="warning" v-if="hasWarnings(props.row)" color="warning" title="There are warnings associated with this submission"/><q-icon size="18px" name="lock" v-if="props.row.locked" color="red"/><q-icon size="18px" name="lock_open" v-else color="green"/></q-td>
           <q-td key="id" :props="props"><router-link :to="{ name: 'submission', params: { id: props.row.id }}">{{ props.row.id }}</router-link></q-td>
           <q-td key="internal_id" :props="props">{{ props.row.internal_id }}</q-td>
           <q-td key="type" :props="props"><router-link :to="{'name': 'submission_type', 'params': { id: props.row.type.id }}">{{ props.row.type.name }}</router-link></q-td>
@@ -50,6 +50,7 @@
 
 <script>
 // import axios from 'axios'
+import _ from 'lodash'
 
 export default {
   name: 'submissions',
@@ -132,6 +133,9 @@ export default {
         pagination: this.serverPagination,
         filter: this.filter
       })
+    },
+    hasWarnings (submission) {
+      return submission.data && submission.data.warnings && _.size(submission.data.warnings) > 0
     }
   },
   mounted () {

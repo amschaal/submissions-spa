@@ -1,6 +1,13 @@
 <template>
   <div>
         <div class="row">
+          <div class="field col-12" v-if="hasWarnings">
+            <q-alert
+              type="warning"
+            >
+              <p>There are warnings associated with this submission.  Modify the submission for details.</p>
+            </q-alert>
+          </div>
           <div v-if="$route.query.created" class="field col-12">
             <q-alert
               type="positive"
@@ -26,7 +33,6 @@
           </div>
         </div>
         <div class="row">
-
           <div class="field col-sm-6 col-md-2">
             <p class="caption">Internal ID</p>
             {{submission.internal_id}}
@@ -154,6 +160,7 @@ import StatusSelector from './statusSelector.vue'
 import Lock from './lock.vue'
 import Cancel from './cancel.vue'
 // import Vue from 'vue'
+import _ from 'lodash'
 
 export default {
   // name: 'submission',
@@ -216,6 +223,9 @@ export default {
         return this.$store.getters.typesDict[this.submission.type]
       }
       return {}
+    },
+    hasWarnings () {
+      return this.submission.data && this.submission.data.warnings && _.size(this.submission.data.warnings) > 0
     },
     formatOptions () {
       var options = [
