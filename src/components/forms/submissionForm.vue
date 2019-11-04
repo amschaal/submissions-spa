@@ -128,7 +128,7 @@
         <p class="caption">Payment</p>
         <!-- <UCDAccount v-model="submission.payment" :errors="errors.payment"/> -->
         <!-- <PPMS v-model="submission.payment" :errors="errors.payment"/> -->
-        <Account v-model="submission.payment" :errors="errors.payment"/>
+        <Account v-model="submission.payment" :errors="errors.payment || {}"/>
         <!-- <div class="row">
           <div class="col-sm-12 col-md-6">
             <q-field
@@ -495,7 +495,7 @@ export default {
             response.data.sample_data = []
           }
           self.submission = response.data
-          Vue.set(self, 'errors', response.data.data.errors || {})
+          Vue.set(self, 'errors', response.data.data.errors || {contacts: [], payment: {}})
           Vue.set(self, 'warnings', response.data.data.warnings || {})
           Vue.set(self.submission, 'type', response.data.type.id)
         })
