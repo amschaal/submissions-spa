@@ -2,10 +2,7 @@
   <div>
       <q-checkbox v-model="debug" label="Debug" v-if="$store.getters.isStaff" />
         <span v-if="debug">
-          {{type}}
-          {{submission_types}}
-          {{type_options}}
-          {{submission}}
+          warnings: {{this.warnings}}
         </span>
 <!-- v-if="submission.participants && user_options && !create" -->
         <q-field
@@ -178,14 +175,14 @@
         <q-field
           label="* Samples"
           label-width="2"
-          :error="errors.sample_data"
-          :error-label="errors.sample_data"
-          :warning="sample_data_warning != null"
-          :warning-label="sample_data_warning"
+          :error="sample_data_error"
+          error-label="Samples contain errors"
+          :warning="sample_data_warning"
+          warning-label="Samples contain warnings"
           v-if="type && type.sample_schema"
         >
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
-          <Agschema v-model="submission.sample_data" :schema="submission.sample_schema" :type="type" :editable="true" :allow-examples="true" :allow-force-save="true" ref="samplesheet" v-if="type && type.sample_schema" :submission="submission" v-on:warnings="updateWarnings"/>
+          <Agschema v-model="submission.sample_data" :schema="submission.sample_schema" :type="type" :editable="true" :allow-examples="true" :allow-force-save="true" ref="samplesheet" v-if="type && type.sample_schema" :submission="submission" v-on:warnings="updateWarnings" v-on:errors="updateErrors"/>
           <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet" />
         </q-field>
         <q-field
@@ -252,6 +249,7 @@ export default {
     return {
       submission: {'submission_data': {}, 'sample_data': [], 'contacts': [], biocore: false, 'payment': {}},
       errors: {contacts: [], payment: {}},
+      warnings: {},
       // submission_types: [{ foo: 'bar' }],
       // type_options: this.$store.getters.typeOptions,
       type: {},
@@ -376,6 +374,10 @@ export default {
       console.log('update', warnings)
       Vue.set(this.warnings, 'sample_data', warnings)
     },
+    updateErrors (errors) {
+      console.log('update errors', errors)
+      Vue.set(this.errors, 'sample_data', errors)
+    },
     removeCached () {
       window.localStorage.removeItem('submission')
     },
@@ -391,8 +393,8 @@ export default {
           // self.errors = {}
           // self.warnings = {}
           self.submission = response.data
-          self.errors = response.data.data.errors
-          self.warnings = response.data.data.warnings
+          Vue.set(self, 'errors', response.data.data.errors)
+          Vue.set(self, 'warnings', response.data.data.warnings)
           // console.log(response)
           self.$q.notify({message: 'Submission successfully saved.', type: 'positive'})
           self.$emit('submission_updated', self.submission)
@@ -493,8 +495,8 @@ export default {
             response.data.sample_data = []
           }
           self.submission = response.data
-          self.errors = response.data.data.errors || {}
-          self.warnings = response.data.data.warnings || {}
+          Vue.set(self, 'errors', response.data.data.errors || {})
+          Vue.set(self, 'warnings', response.data.data.warnings || {})
           Vue.set(self.submission, 'type', response.data.type.id)
         })
     },
@@ -575,12 +577,10 @@ export default {
       return this.errors[field]
     },
     sample_data_warning () {
-      if (!this.warnings || !this.warnings.sample_data || _.size(this.warnings.sample_data) === 0) {
-        return null
-      } else {
-        var warnings = _.size(this.warnings.sample_data)
-        return `${warnings} samples have warnings.`
-      }
+      return this.warnings && this.warnings.sample_data && _.size(this.warnings.sample_data) > 0
+    },
+    sample_data_error () {
+      return this.errors && this.errors.sample_data && _.size(this.errors.sample_data) > 0
     },
     type_options () {
       return this.$store.getters.typeOptions

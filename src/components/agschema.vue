@@ -408,6 +408,7 @@ export default {
     save () {
       this.$emit('input', this.getRowData(false))
       this.$emit('warnings', this.warnings)
+      this.$emit('errors', this.errors)
       this.close()
     },
     validate (save) {
