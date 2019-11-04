@@ -209,8 +209,10 @@ export default {
   methods: {
     openSamplesheet () {
       var self = this
-      this.errors = this.submission.data.errors && this.submission.data.errors.sample_data ? this.submission.data.errors.sample_data : {}
-      this.warnings = this.submission.data.warnings && this.submission.data.warnings.sample_data ? this.submission.data.warnings.sample_data : {}
+      if (this.submission) {
+        this.errors = this.submission.data.errors && this.submission.data.errors.sample_data ? this.submission.data.errors.sample_data : {}
+        this.warnings = this.submission.data.warnings && this.submission.data.warnings.sample_data ? this.submission.data.warnings.sample_data : {}
+      }
       console.log('warnings', this.warnings)
       if (this.value && this.value.length > 0) {
         this.rowData = _.cloneDeep(this.value)

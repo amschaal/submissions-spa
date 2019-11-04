@@ -52,7 +52,7 @@ export default {
   props: ['id', 'create', 'modify'],
   data () {
     return {
-      submission: {'sample_data': []},
+      submission: {'sample_data': [], 'payment': {}, 'contacts': []},
       errors: {},
       submission_types: [],
       type_options: this.$store.getters.typeOptions
@@ -115,7 +115,7 @@ export default {
             Vue.set(self.submission, 'type', response.data.type.id)
           })
       } else {
-        Vue.set(this, 'submission', {'sample_data': [], 'contacts': [], biocore: false})
+        Vue.set(this, 'submission', {'sample_data': [], 'contacts': [], biocore: false, 'payment': {}})
         // this.submission = {'sample_data': [], 'contacts': [], biocore: false}
       }
     }
