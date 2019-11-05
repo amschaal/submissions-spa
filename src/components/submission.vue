@@ -131,6 +131,7 @@
         <CustomFields v-model="submission.submission_data" :schema="submission_type.schema" ref="submission_fields" v-if="submission_type && submission_type.schema" :modify="false"/>
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
         <Agschema v-model="submission.sample_data" :type="submission_type" :editable="false" ref="samplesheet" v-if="submission_type && submission_type.sample_schema" :submission="submission"/>
+        <q-icon size="25px" name="warning" v-if="hasWarnings" color="warning" title="Samples contain warnings."/>
         <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet"/>
         <div class="row" v-if="submission.id">
           <div class="col-lg-12">
