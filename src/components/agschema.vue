@@ -209,7 +209,7 @@ export default {
   methods: {
     openSamplesheet () {
       var self = this
-      if (this.submission) {
+      if (this.submission && this.submission.data) {
         this.errors = this.submission.data.errors && this.submission.data.errors.sample_data ? this.submission.data.errors.sample_data : {}
         this.warnings = this.submission.data.warnings && this.submission.data.warnings.sample_data ? this.submission.data.warnings.sample_data : {}
       }
