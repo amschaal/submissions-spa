@@ -252,7 +252,7 @@ export default {
     },
     autosave () {
       console.log('autosave!', this.type)
-      // this.type.updated = Date.now()
+      this.type.updated = Date.now()
       window.localStorage.setItem(this.type_key, window.JSON.stringify(this.type))
     },
     load_autosave () {
@@ -265,6 +265,9 @@ export default {
       var autosave = this.get_autosave()
       var self = this
       if (autosave) {
+        if (!this.create && this.type.updated && Date.parse(this.type.updated) > autosave.updated) {
+          return
+        }
         this.autosave_message = this.$q.notify({
           message: `An unsaved version was found.  Would you like to load it?`,
           timeout: 0, // in milliseconds; 0 means no timeout
