@@ -159,8 +159,10 @@ export default {
       this.create = true
     }
     var id = this.$route.query.copy_from || this.id
-    this.notify_autosave()
     console.log('mounted', this.id, this.create, id, this.$route.query.copy_from)
+    if (this.create) {
+      this.notify_autosave()
+    }
     if (!this.create || this.$route.query.copy_from) {
       this.$q.loading.show()
       this.$axios
@@ -181,6 +183,7 @@ export default {
             self.type.name = 'Copy from ' + self.type.name
           }
           self.$q.loading.hide()
+          self.notify_autosave()
         })
     }
     setTimeout(function () {
