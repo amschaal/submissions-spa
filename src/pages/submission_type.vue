@@ -148,7 +148,7 @@ export default {
       submission_schema: [],
       examples: [],
       save_message: null,
-      watch_changes: true,
+      watch_changes: false,
       user_options: []
     }
   },
@@ -159,10 +159,10 @@ export default {
       this.create = true
     }
     var id = this.$route.query.copy_from || this.id
+    this.notify_autosave()
     console.log('mounted', this.id, this.create, id, this.$route.query.copy_from)
     if (!this.create || this.$route.query.copy_from) {
       this.$q.loading.show()
-      this.watch_changes = false
       this.$axios
         .get('/api/submission_types/' + id + '/')
         .then(function (response) {
@@ -180,12 +180,12 @@ export default {
             delete self.type['id']
             self.type.name = 'Copy from ' + self.type.name
           }
-          setTimeout(function () {
-            self.watch_changes = true
-          }, 100)
           self.$q.loading.hide()
         })
     }
+    setTimeout(function () {
+      self.watch_changes = true
+    }, 5000)
     this.$axios
       .get('/api/users/?show=true')
       .then(function (response) {
@@ -212,6 +212,7 @@ export default {
         .then(function (response) {
           console.log(response)
           self.$q.notify({message: 'Submission type successfully saved.', type: 'positive'})
+          self.remove_autosave()
           if (self.create) {
             self.$router.push({name: 'submission_type', params: {id: response.data.id}})
           }
@@ -241,6 +242,57 @@ export default {
             self.$q.notify('Error deleting submission type!')
           })
       }
+    },
+    remove_autosave () {
+      window.localStorage.removeItem(this.type_key)
+    },
+    get_autosave () {
+      var jsonified = window.localStorage.getItem(this.type_key)
+      return jsonified ? window.JSON.parse(jsonified) : null
+    },
+    autosave () {
+      console.log('autosave!', this.type)
+      // this.type.updated = Date.now()
+      window.localStorage.setItem(this.type_key, window.JSON.stringify(this.type))
+    },
+    load_autosave () {
+      var saved = this.get_autosave()
+      if (saved) {
+        Vue.set(this, 'type', this.get_autosave())
+      }
+    },
+    notify_autosave () {
+      var autosave = this.get_autosave()
+      var self = this
+      if (autosave) {
+        this.autosave_message = this.$q.notify({
+          message: `An unsaved version was found.  Would you like to load it?`,
+          timeout: 0, // in milliseconds; 0 means no timeout
+          type: 'info',
+          position: 'top', // 'top', 'left', 'bottom-left' etc.
+          actions: [
+            {
+              label: 'Restore',
+              handler: () => {
+                try {
+                  console.log('loading autosave', autosave)
+                  Vue.set(self, 'type', autosave)
+                  self.$q.notify({message: 'Submission type loaded.', type: 'positive', position: 'top'})
+                } catch {
+                  self.$q.notify({message: 'There was an error restoring the submission type.', type: 'negative'})
+                }
+              }
+            },
+            {
+              label: 'Ignore',
+              handler: () => {
+                self.remove_autosave()
+              }
+            }
+
+          ]
+        })
+      }
     }
   },
   computed: {
@@ -251,12 +303,22 @@ export default {
     },
     error_message (field) {
       return this.errors[field]
+    },
+    type_key () {
+      return this.id && this.id !== 'create' ? `submission_type_${this.id}` : 'submission_type'
     }
   },
   watch: {
     'type': {
       handler (newVal, oldVal) {
-        if (this.save_message || !this.watch_changes) {
+        if (!this.watch_changes) {
+          return
+        }
+        if (window.JSON && window.JSON.stringify) { // && (!newVal.updated || Date.now() - newVal.updated < 5000)
+          clearTimeout(this.autosave_timeout)
+          this.autosave_timeout = setTimeout(this.autosave, 10000)
+        }
+        if (this.save_message) {
           return
         }
         var self = this
