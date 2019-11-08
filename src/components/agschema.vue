@@ -479,7 +479,20 @@ export default {
       this.gridOptions.api[method](function (node) {
         data.push(node.data)
       })
-      return data
+      var self = this, cleaned = [], take = false
+      _.forEachRight(data, function (row) {
+        if (take) {
+          cleaned.unshift(row)
+        } else if (!self.rowIsEmpty(row)) {
+          take = true
+          cleaned.unshift(row)
+        }
+      })
+      console.log('getRowData', data, cleaned)
+      return cleaned
+    },
+    rowIsEmpty (row) {
+      return !_.values(row).some(x => x !== undefined && x !== '')
     },
     addRow (number) {
       var rows = []
