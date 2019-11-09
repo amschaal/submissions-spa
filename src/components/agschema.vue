@@ -217,7 +217,7 @@ export default {
       if (this.value && this.value.length > 0) {
         this.rowData = _.cloneDeep(this.value)
       } else {
-        this.rowData = [{}]
+        this.rowData = _.times(10, _.stubObject)
       }
 
       if (!this.type || !this.type.sample_schema) {
