@@ -200,6 +200,10 @@ export default {
       this.save_message()
       this.save_message = null
     }
+    if (this.autosave_message) {
+      this.autosave_message()
+      this.autosave_message = null
+    }
   },
   methods: {
     openExamples () {
