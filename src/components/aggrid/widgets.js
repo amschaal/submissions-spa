@@ -4,11 +4,13 @@ import DateComponent from './editors/DateComponent.vue'
 import BooleanComponent from './editors/BooleanComponent.vue'
 import VocabularyComponent from './editors/VocabularyComponent.vue'
 import APIAutocompleteComponent from './editors/APIAutocompleteComponent.vue'
+import APISelectComponent from './editors/APISelectComponent.vue'
 import SelectComponent from './editors/SelectComponent.vue'
 // import AdapterAutocompleteComponent from './editors/AdapterAutocompleteComponent.vue'
 import AdapterSelectComponent from './editors/AdapterSelectComponent.vue'
 
 import {Widget, WidgetFactory} from '../forms/Widget.js'
+// import {MultiSelectWidget} from '../forms/widgets.js'
 
 import {SIMS} from '../../settings.js'
 
@@ -110,7 +112,7 @@ class APISelectWidget extends APIAutocompleteWidget {
   // @TODO: wrap this in another component as in the guide https://quasar-framework.org/components/autocomplete.html
   // static type = 'string'
   static id = 'api_select'
-  static component = SelectComponent
+  static component = APISelectComponent
   static name = 'API Select'
   // static schema =
   // [
@@ -125,7 +127,7 @@ class AdapterDBWidget extends APIAutocompleteWidget {
   // @TODO: wrap this in another component as in the guide https://quasar-framework.org/components/autocomplete.html
   // static type = 'string'
   static id = 'adapter_db'
-  static component = SelectComponent
+  static component = APISelectComponent
   static name = 'Adapter Database Select'
   static schema = []
   getOptions () {
@@ -154,6 +156,19 @@ class AutocompleteWidget extends GridWidget {
   // }
 }
 
-var widgetFactory = new WidgetFactory([DateWidget, BooleanWidget, AutocompleteWidget, VocabularyWidget, APIAutocompleteWidget, APISelectWidget, AdapterWidget, AdapterDBWidget])
+class MultiSelectWidget extends GridWidget {
+  static type = 'string'
+  static id = 'multi-select'
+  static component = SelectComponent
+  static name = 'MultiSelect'
+  // getOptions () {
+  //   return _.merge(this.options, this.getSelectOptions(), {multiple: true, clearable: true})
+  // }
+  getOptions () {
+    return _.merge(this.options, {}, {multiple: true, clearable: true})
+  }
+}
+
+var widgetFactory = new WidgetFactory([DateWidget, BooleanWidget, AutocompleteWidget, VocabularyWidget, APIAutocompleteWidget, APISelectWidget, AdapterWidget, AdapterDBWidget, MultiSelectWidget])
 
 export default widgetFactory

@@ -1,11 +1,11 @@
 <template>
     <div>
       <q-select
-        filter
         v-model="value"
         :options="options"
         ref="select"
         @input="selected(value)"
+        :multiple="widget_options.multiple"
       />
     </div>
 </template>
@@ -17,43 +17,34 @@ export default Vue.extend({
   data () {
     return {
       value: null,
-      options: []
+      options: [],
+      widget_options: {}
     }
   },
   methods: {
     selected (value) {
       this.params.stopEditing()
     },
-    getOptions () {
-      var self = this
-      this.$axios
-        .get(`${this.url}?${this.query_params}`)
-        .then(function (response) {
-          console.log('response', response)
-          self.options = response.data.results.map(
-            o => ({value: o[self.value_property], label: o[self.label_property]})
-          )
-        })
-        // .catch(function (error, stuff) {
-        // })
-    },
     getValue () {
       return this.value
     }
   },
   created () {
+    this.widget_options = this.params.widget_options ? this.params.widget_options : {}
     this.value = this.params.value
-    console.log('select params', this.params)
-    var options = this.params.widget_options ? this.params.widget_options : {}
-    this.url = options.url
-    this.query_params = options.params
-    this.value_property = options.value_property
-    this.label_property = options.label_property
-    if (!this.url) {
-      this.$q.notify({message: 'No API has been specified.', color: 'red'})
-    } else {
-      this.getOptions()
+    if (this.widget_options.multiple) {
+      this.value = this.value ? this.value : []
+      if (!Array.isArray(this.value)) {
+        if (this.value instanceof String) {
+          this.value = this.value.split(',')
+        } else {
+          this.value = [this.value]
+        }
+      }
     }
+    this.options = this.params.definition.enum.map(function (val) { return {'label': val, 'value': val} })
+    console.log('select params', this.params)
+    // var options = this.params.widget_options ? this.params.widget_options : {}
   },
   mounted () {
     Vue.nextTick(() => {
