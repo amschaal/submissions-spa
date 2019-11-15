@@ -2,7 +2,7 @@
     <div>
       <q-select
         v-model="value"
-        :options="options"
+        :options="select_options"
         ref="select"
         @input="selected(value)"
         :multiple="widget_options.multiple"
@@ -17,7 +17,7 @@ export default Vue.extend({
   data () {
     return {
       value: null,
-      options: [],
+      select_options: [],
       widget_options: {}
     }
   },
@@ -26,24 +26,37 @@ export default Vue.extend({
       this.params.stopEditing()
     },
     getValue () {
-      return this.value
+      return Array.isArray(this.value) ? this.value.join(',') : this.value
+    },
+    setValue () {
+      this.value = this.params.value
+      if (this.widget_options.multiple) {
+        this.value = this.value ? this.value : []
+        if (!Array.isArray(this.value)) {
+          if (typeof this.value === 'string') {
+            this.value = this.value.split(',')
+          } else {
+            this.value = [this.value]
+          }
+        }
+        var filtered = []
+        // filter bad values here
+        for (var i in this.options) {
+          if (this.value.indexOf(this.options[i]) >= 0) {
+            filtered.push(this.options[i])
+          }
+        }
+        this.value = filtered
+      }
     }
   },
   created () {
     this.widget_options = this.params.widget_options ? this.params.widget_options : {}
-    this.value = this.params.value
-    if (this.widget_options.multiple) {
-      this.value = this.value ? this.value : []
-      if (!Array.isArray(this.value)) {
-        if (this.value instanceof String) {
-          this.value = this.value.split(',')
-        } else {
-          this.value = [this.value]
-        }
-      }
-    }
-    this.options = this.params.definition.enum.map(function (val) { return {'label': val, 'value': val} })
+    this.options = this.params.definition.enum
+    this.setValue()
+    this.select_options = this.options.map(function (val) { return {'label': val, 'value': val} })
     console.log('select params', this.params)
+    console.log('value', this.value)
     // var options = this.params.widget_options ? this.params.widget_options : {}
   },
   mounted () {
