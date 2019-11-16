@@ -70,6 +70,11 @@
                     <q-item-tile label>Add 25</q-item-tile>
                   </q-item-main>
                 </q-item>
+                <q-item v-close-overlay @click.native="addRow(100)">
+                  <q-item-main>
+                    <q-item-tile label>Add 100</q-item-tile>
+                  </q-item-main>
+                </q-item>
               </q-list>
             </q-btn-dropdown>
             <!-- <q-btn
@@ -346,29 +351,37 @@ export default {
         }
         return []
       }
-      function cellTooltip (params) {
-        // console.log('cellTooltip', params)
-        if (params.data._row_type === 'description' || params.data._row_type === 'example') {
-          return params.value
-        }
-        var errors = self.getCellErrors(params.rowIndex, params.colDef.field)
-        var warnings = self.getCellWarnings(params.rowIndex, params.colDef.field)
-        if (errors) {
-          return errors.join(', ')
-        } else if (warnings) {
-          return warnings.join(', ')
-        }
-        return params.value
-      }
-      // console.log('definition', id, definition, schema)
       var header = id
-      var tooltip = null
       if (definition.title) {
         header = definition.title
       }
       if (schema.required && schema.required.indexOf(id) !== -1) {
         header = '*' + header
       }
+      function cellTooltip (params) {
+        // console.log('cellTooltip', params)
+        if (params.data._row_type === 'description' || params.data._row_type === 'example') {
+          return 'Descriptions and examples cannot be modified.  Please use blank rows for user data.' // params.value
+        }
+        var errors = self.getCellErrors(params.rowIndex, params.colDef.field)
+        var warnings = self.getCellWarnings(params.rowIndex, params.colDef.field)
+        var text = `row ${params.rowIndex + 1}, ${header}`
+        if (errors) {
+          return text + ': ' + errors.join(', ')
+        } else if (warnings) {
+          return text + ': ' + warnings.join(', ')
+        }
+        return params.value ? text + ': ' + params.value : text
+      }
+      // console.log('definition', id, definition, schema)
+      // var header = id
+      var tooltip = null
+      // if (definition.title) {
+      //   header = definition.title
+      // }
+      // if (schema.required && schema.required.indexOf(id) !== -1) {
+      //   header = '*' + header
+      // }
       if (definition.description) {
         tooltip = definition.description
       }
