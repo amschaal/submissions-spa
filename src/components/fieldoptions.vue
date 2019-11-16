@@ -54,6 +54,12 @@
           >
             <q-chips-input v-model="data.enum" placeholder="Enter options" />
           </q-field>
+          <q-field
+            label="Select multiple"
+            v-if="data.type === 'string' && data.enum && data.enum.length"
+          >
+            <q-checkbox v-model="data.multiple" indeterminate-icon="check_box_outline_blank"/>
+          </q-field>
           <q-field v-if="data.type === 'number'"
             label="Minimum"
             helper="Optionally, enter a minimum valid number."

@@ -107,4 +107,5 @@ class MultiSelectWidget extends SelectWidget {
 
 var widgetFactory = new WidgetFactory([TextWidget, WYSIWYGWidget, ChipsWidget, SelectWidget, MultiSelectWidget, CheckboxWidget, AutocompleteWidget, RadioWidget, MultiCheckboxWidget])
 
+// export {MultiSelectWidget}
 export default widgetFactory

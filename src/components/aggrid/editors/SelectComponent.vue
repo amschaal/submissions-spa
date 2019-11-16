@@ -23,10 +23,10 @@ export default Vue.extend({
   },
   methods: {
     selected (value) {
-      this.params.stopEditing()
+      // this.params.stopEditing()
     },
     getValue () {
-      return Array.isArray(this.value) ? this.value.join(',') : this.value
+      return Array.isArray(this.value) ? this.value.join(', ') : this.value
     },
     setValue () {
       this.value = this.params.value
@@ -34,7 +34,7 @@ export default Vue.extend({
         this.value = this.value ? this.value : []
         if (!Array.isArray(this.value)) {
           if (typeof this.value === 'string') {
-            this.value = this.value.split(',')
+            this.value = this.value.split(', ')
           } else {
             this.value = [this.value]
           }
