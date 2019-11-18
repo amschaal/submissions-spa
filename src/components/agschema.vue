@@ -151,6 +151,7 @@ import NumericComponent from './aggrid/editors/NumericComponent.vue'
 // import DateComponent from './aggrid/DateComponent.vue'
 // import AutocompleteComponent from './aggrid/editors/AutocompleteComponent.vue'
 import BooleanComponent from './aggrid/editors/BooleanComponent.vue'
+import SelectComponent from './aggrid/editors/SelectComponent.vue'
 import _ from 'lodash'
 import sampleWidgetFactory from './aggrid/widgets.js'
 // import { ClipboardService } from '../../node_modules/ag-grid-enterprise/dist/lib/clipboardService.js'
@@ -405,8 +406,10 @@ export default {
       switch (definition.type) {
         case 'string':
           if (definition.enum) {
+            // console.log('enum', {headerName: header, headerTooltip: tooltip, field: id, cellEditorFramework: SelectComponent, cellEditorParams: {definition: definition, widget_options: {multiple: definition.multiple}}, cellClass: cellClass, tooltip: cellTooltip, pinned: definition.pinned})
             // return {headerName: header, headerTooltip: tooltip, field: id, cellEditorFramework: AutocompleteComponent, cellEditorParams: {values: definition.enum, widget: definition.widget, definition: definition}, cellClass: cellClass, tooltip: cellTooltip, pinned: definition.pinned} // cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum}
-            return {headerName: header, headerTooltip: tooltip, field: id, cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum}, cellClass: cellClass, tooltip: cellTooltip, pinned: definition.pinned} // cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum} // cellEditorFramework: AutocompleteComponent
+            // return {headerName: header, headerTooltip: tooltip, field: id, cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum}, cellClass: cellClass, tooltip: cellTooltip, pinned: definition.pinned} // cellEditor: 'agRichSelectCellEditor', cellEditorParams: {values: definition.enum} // cellEditorFramework: AutocompleteComponent
+            return {headerName: header, headerTooltip: tooltip, field: id, cellEditorFramework: SelectComponent, cellEditorParams: {definition: definition, widget_options: {multiple: definition.multiple}}, cellClass: cellClass, tooltip: cellTooltip, pinned: definition.pinned}
           } else {
             return {headerName: header, headerTooltip: tooltip, field: id, type: 'text', cellClass: cellClass, tooltip: cellTooltip, pinned: definition.pinned}
           }

@@ -51,12 +51,13 @@ export default Vue.extend({
     }
   },
   created () {
+    console.log('select params', this.params)
+    console.log('value', this.value)
     this.widget_options = this.params.widget_options ? this.params.widget_options : {}
     this.options = this.params.definition.enum
     this.setValue()
     this.select_options = this.options.map(function (val) { return {'label': val, 'value': val} })
-    console.log('select params', this.params)
-    console.log('value', this.value)
+
     // var options = this.params.widget_options ? this.params.widget_options : {}
   },
   mounted () {

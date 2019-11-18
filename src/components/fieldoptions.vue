@@ -80,6 +80,7 @@
               <q-select
                 v-model="data.widget.type"
                 :options="widgetOptions"
+                clearable
               />
             </span>
             <span class="col-3">

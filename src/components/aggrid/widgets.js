@@ -156,13 +156,24 @@ class AutocompleteWidget extends GridWidget {
   // }
 }
 
-class MultiSelectWidget extends GridWidget {
+class SelectWidget extends GridWidget {
   static type = 'string'
-  static id = 'multi-select'
+  static id = 'select'
   static component = SelectComponent
-  static name = 'MultiSelect'
+  static name = 'Select'
   // getOptions () {
   //   return _.merge(this.options, this.getSelectOptions(), {multiple: true, clearable: true})
+  // }
+  getOptions () {
+    return _.merge(this.options, {}, {multiple: false, clearable: true})
+  }
+}
+
+class MultiSelectWidget extends SelectWidget {
+  static id = 'multi-select'
+  static name = 'MultiSelect'
+  //   return _.merge(this.options, this.getSelectOptions(), {multiple: true, clearable: true})
+  // getOptions () {
   // }
   getOptions () {
     return _.merge(this.options, {}, {multiple: true, clearable: true})
