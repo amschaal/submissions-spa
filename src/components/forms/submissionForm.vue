@@ -6,6 +6,20 @@
         </span>
 <!-- v-if="submission.participants && user_options && !create" -->
         <q-field
+          label="* Submission Type"
+          label-width="2"
+          :error="errors.type"
+          :error-label="errors.type"
+          class="required"
+        >
+          <q-select
+            float-label="Select"
+            v-model="submission.type"
+            :options="type_options"
+            :disable="submission.id != undefined"
+          />
+        </q-field>
+        <q-field
           label="Participants"
           label-width="2"
           :error="errors.type"
@@ -26,7 +40,7 @@
               :error="errors.pi_first_name"
               :error-label="errors.pi_first_name"
             >
-              <q-input v-model="submission.pi_first_name" type="text" stack-label="* PI First Name"/>
+              <q-input v-model="submission.pi_first_name" type="text" class="required" stack-label="* PI First Name"/>
             </q-field>
           </div>
           <div class="col-sm-6 col-md-6 col-lg-3">
@@ -34,7 +48,7 @@
               :error="errors.pi_last_name"
               :error-label="errors.pi_last_name"
             >
-              <q-input v-model="submission.pi_last_name" type="text" stack-label="* PI Last Name"/>
+              <q-input v-model="submission.pi_last_name" type="text" class="required" stack-label="* PI Last Name"/>
             </q-field>
           </div>
           <div class="col-sm-12 col-md-6 col-lg-3">
@@ -42,7 +56,7 @@
               :error="errors.pi_email"
               :error-label="errors.pi_email"
             >
-              <q-input v-model="submission.pi_email" type="text" stack-label="* PI Email"/>
+              <q-input v-model="submission.pi_email" type="text" class="required" stack-label="* PI Email"/>
             </q-field>
           </div>
           <div class="col-sm-12 col-md-6 col-lg-3">
@@ -50,7 +64,7 @@
               :error="errors.pi_phone"
               :error-label="errors.pi_phone"
             >
-              <q-input v-model="submission.pi_phone" type="text" stack-label="* PI phone"/>
+              <q-input v-model="submission.pi_phone" type="text" class="required" stack-label="* PI phone"/>
             </q-field>
           </div>
           <div class="col-sm-12 col-md-12 col-lg-12">
@@ -58,7 +72,7 @@
               :error="errors.institute"
               :error-label="errors.institute"
             >
-            <q-input v-model="submission.institute" type="text" stack-label="* Institute"/>
+            <q-input v-model="submission.institute" type="text" class="required" stack-label="* Institute"/>
             </q-field>
           </div>
         </div>
@@ -157,19 +171,6 @@
         </div> -->
         <q-field>
           <q-checkbox v-model="submission.biocore" label="I want the Bioinformatics Core to analyze my data" />
-        </q-field>
-        <q-field
-          label="* Submission Type"
-          label-width="2"
-          :error="errors.type"
-          :error-label="errors.type"
-        >
-          <q-select
-            float-label="Select"
-            v-model="submission.type"
-            :options="type_options"
-            :disable="submission.id != undefined"
-          />
         </q-field>
         <CustomFields v-model="submission.submission_data" :schema="submission.type.submission_schema || type.submission_schema" ref="submission_fields" v-if="type && type.submission_schema" :errors="errors.submission_data" modify="true"/>
         <q-field
@@ -610,6 +611,10 @@ export default {
     color: -webkit-link;
     cursor: pointer;
     text-decoration: underline;
+  }
+  /* This isn't working.... */
+  .required .q-if-label .q-if-label-inner, .required .q-field-label .q-field-label-inner {
+    font-weight: bold !important;
   }
 
 </style>
