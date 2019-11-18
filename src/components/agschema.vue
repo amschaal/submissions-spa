@@ -172,7 +172,10 @@ export default {
       gridOptions: {
         enableRangeSelection: true,
         defaultColDef: {
-          editable: this.cellEditable
+          editable: this.cellEditable,
+          suppressSorting: true, // deprecated
+          sortable: false, // newer version
+          suppressMenu: true // let's keep it simple
         },
         getRowStyle: function (params) {
           if (params.node.rowPinned) {
@@ -277,18 +280,20 @@ export default {
     //   return params.node.rowIndex + 1
     // },
     schema2Columns (schema) {
-      var columnDefs = []
+      var columnDefs = [], col
       // var columnDefs = [{ headerName: '', lockPosition: true, valueGetter: this.rowIndex, cellClass: 'locked-col', width: 60, suppressNavigable: true, pinned: 'left' }]
       if (schema.order) {
         for (var i in schema.order) {
           if (!this.editable || this.$store.getters.isLoggedIn || !schema.properties[schema.order[i]].internal) {
-            columnDefs.push(this.getColDef(schema.order[i], schema.properties[schema.order[i]], schema))
+            col = this.getColDef(schema.order[i], schema.properties[schema.order[i]], schema)
+            columnDefs.push(col)
           }
         }
       } else {
         for (var prop in schema.properties) {
           if (schema.properties.hasOwnProperty(prop) && (!this.editable || this.$store.getters.isLoggedIn || !schema.properties[prop].internal)) {
-            columnDefs.push(this.getColDef(prop, schema.properties[prop], schema))
+            col = this.getColDef(prop, schema.properties[prop], schema)
+            columnDefs.push(col)
           }
         }
       }
