@@ -616,5 +616,10 @@ export default {
   .required .q-if-label .q-if-label-inner, .required .q-field-label .q-field-label-inner {
     font-weight: bold !important;
   }
-
+  .docs-input .q-field {
+    margin: 2px 0px;
+  }
+  .docs-input .caption {
+    margin-top: 15px;
+  }
 </style>
