@@ -621,7 +621,7 @@ export default {
 </script>
 <style scoped>
   .q-field {
-    padding: 0px 10px;
+    padding: 0px 0px;
   }
   .link {
     color: -webkit-link;
@@ -634,9 +634,6 @@ export default {
   }
   .docs-input .q-field {
     margin: 2px 0px;
-  }
-  .docs-input .caption {
-    margin: 10px;
   }
   fieldset {
     margin-top: 12px;

@@ -267,10 +267,10 @@ export default {
 </script>
 <style>
   .q-field {
-    padding: 0px 10px;
+    padding: 0px 0px;
   }
   .field {
-    margin-bottom: 10px;
+    margin-bottom: 0px;
   }
   div.row div p.caption {
     margin: 0 0 5px;
