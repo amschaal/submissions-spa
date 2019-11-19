@@ -1,6 +1,6 @@
 <template>
   <div>
-      <q-checkbox v-model="debug" label="Debug" v-if="$store.getters.isStaff" />
+      <q-checkbox v-model="debug" label="Debug" v-if="$store.getters.isStaff && false" />
         <span v-if="debug">
           warnings: {{this.warnings}}
         </span>
@@ -33,7 +33,8 @@
             :options="user_options"
           />
         </q-field>
-        <p class="caption">PI</p>
+        <fieldset>
+        <legend>PI</legend>
         <div class="row">
           <div class="col-sm-6 col-md-6 col-lg-3">
             <q-field
@@ -76,7 +77,9 @@
             </q-field>
           </div>
         </div>
-        <p class="caption">Submitter (<a class="link" @click="copyPI">Copy from PI</a>)</p>
+      </fieldset>
+      <fieldset>
+      <legend>Submitter (<a class="link" @click="copyPI">Copy from PI</a>)</legend>
         <div class="row">
           <div class="col-sm-6 col-md-6 col-lg-3">
             <q-field
@@ -111,7 +114,9 @@
             </q-field>
           </div>
         </div>
-        <p class="caption">Additional Contacts <q-btn @click="addContact" label="Add" color="positive"/></p>
+      </fieldset>
+      <fieldset>
+        <legend>Additional Contacts (<a @click="addContact" class="link">Add</a>)</legend>
         <div class="row" v-for="(c, index) in submission.contacts" :key="index">
           <div class="col-sm-12 col-md-4 col-lg-4">
             <q-field
@@ -139,7 +144,9 @@
             <q-btn @click="removeContact(index)" color="negative" label="remove"/>
           </div>
         </div>
-        <p class="caption">Payment</p>
+      </fieldset>
+      <fieldset>
+        <legend>Payment</legend>
         <!-- <UCDAccount v-model="submission.payment" :errors="errors.payment"/> -->
         <!-- <PPMS v-model="submission.payment" :errors="errors.payment"/> -->
         <Account v-model="submission.payment" :errors="errors.payment || {}"/>
@@ -169,6 +176,10 @@
             </q-field>
           </div>
         </div> -->
+      </fieldset>
+      <fieldset>
+        <legend>Submission Information</legend>
+        <p v-if="!type.id" class="error">***Please select submission type at the top of the form before filling in submission information***</p>
         <q-field>
           <q-checkbox v-model="submission.biocore" label="I want the Bioinformatics Core to analyze my data" />
         </q-field>
@@ -177,10 +188,11 @@
           label="* Samples"
           label-width="2"
           :error="sample_data_error"
-          error-label="Samples contain errors"
+          :error-label="sample_data_error_label"
           :warning="sample_data_warning"
           warning-label="Samples contain warnings"
           v-if="type && type.sample_schema"
+          helper="Click on the Samples button to enter sample information"
         >
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
           <Agschema v-model="submission.sample_data" :schema="submission.sample_schema" :type="type" :editable="true" :allow-examples="true" :allow-force-save="true" ref="samplesheet" v-if="type && type.sample_schema" :submission="submission" v-on:warnings="updateWarnings" v-on:errors="updateErrors"/>
@@ -197,6 +209,7 @@
             rows="1"
           />
         </q-field>
+      </fieldset>
         <span v-if="debug">
           <p>SCHEMA:
             {{type.sample_schema}}
@@ -583,6 +596,9 @@ export default {
     sample_data_error () {
       return this.errors && this.errors.sample_data && _.size(this.errors.sample_data) > 0
     },
+    sample_data_error_label () {
+      return _.size(this.submission.sample_data) > 0 ? 'Samples contain errors.' : 'Please click on the Samples button and enter at least 1 sample.'
+    },
     type_options () {
       return this.$store.getters.typeOptions
     },
@@ -620,6 +636,21 @@ export default {
     margin: 2px 0px;
   }
   .docs-input .caption {
-    margin-top: 15px;
+    margin: 10px;
+  }
+  fieldset {
+    margin-top: 12px;
+    border: 1px solid #006daf;
+    padding: 12px;
+    border-radius: 8px;
+  }
+  legend {
+    color: #006daf;
+    font-style: italic;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .error {
+    color: var(--q-color-negative);
   }
 </style>
