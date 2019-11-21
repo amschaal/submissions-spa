@@ -18,10 +18,9 @@
           <q-btn
             color="primary"
             @click="show_help = true"
-            label="Help"
-            icon="fas fa-question-circle"
+            label="Sample requirements"
             v-if="type.sample_help"
-          />
+          /> <!-- icon="fas fa-question-circle" -->
           <q-checkbox v-model="showDescriptions" label="Show descriptions" class="show_descriptions" v-if="hasDescriptions"/> <q-checkbox v-model="showExamples" label="Show examples" v-if="allowExamples && this.sample_schema.examples && sample_schema.examples.length"  class="show_examples"/>
           <q-btn-dropdown label="Resize Columns" class="float-right">
           <q-list link>
@@ -119,7 +118,7 @@
       <q-modal-layout>
         <q-toolbar slot="header">
           <q-toolbar-title>
-            Help
+            Sample requirements
           </q-toolbar-title>
         </q-toolbar>
         <div class="layout-padding">

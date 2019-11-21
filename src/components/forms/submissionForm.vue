@@ -6,20 +6,6 @@
         </span>
 <!-- v-if="submission.participants && user_options && !create" -->
         <q-field
-          label="* Submission Type"
-          label-width="2"
-          :error="errors.type"
-          :error-label="errors.type"
-          class="required"
-        >
-          <q-select
-            float-label="Select"
-            v-model="submission.type"
-            :options="type_options"
-            :disable="submission.id != undefined"
-          />
-        </q-field>
-        <q-field
           label="Participants"
           label-width="2"
           :error="errors.type"
@@ -33,6 +19,21 @@
             :options="user_options"
           />
         </q-field>
+        <fieldset>
+          <legend>Please select the submission type</legend>
+        <q-field
+          :error="errors.type"
+          :error-label="errors.type"
+          class="required"
+        >
+          <q-select
+            stack-label="* Submission Type"
+            v-model="submission.type"
+            :options="type_options"
+            :disable="submission.id != undefined"
+          />
+        </q-field>
+      </fieldset>
         <fieldset>
         <legend>PI</legend>
         <div class="row">

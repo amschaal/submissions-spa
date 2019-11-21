@@ -4,17 +4,19 @@
       <q-field
         :error="errors.payment_type"
         :error-label="errors.payment_type"
+        :helper="type_help"
       >
         <q-select
           float-label="Select"
           v-model="value.payment_type"
           :options="[
-            {label: 'Credit Card (entered at time of billing)', value: 'Credit Card'},
-            {label: 'DaFIS', value: 'DaFIS'},
+            {label: 'UCD KFS Account', value: 'DaFIS'},
             {label: 'UC Chart String', value: 'UC Chart String'},
+            {label: 'Credit Card (Non UC only)', value: 'Credit Card'},
             {label: 'Purchase Order', value: 'Purchase Order'}
           ]"
           stack-label="* Payment Type"
+
         />
       </q-field>
     </div>
@@ -50,8 +52,20 @@ export default {
     }
   },
   methods: {
+
   },
   computed: {
+    type_help () {
+      console.log('type_help', this.value.payment_type)
+      switch (this.value.payment_type) {
+        case 'DaFIS':
+          return 'Enter payment info in the form CHART-ACCOUNT, e.g. 3-MYACCNT'
+        case 'Credit Card':
+          return 'Details required after invoicing (leave payment info blank)'
+        default:
+          return ''
+      }
+    }
   },
   components: {
     QSelect
