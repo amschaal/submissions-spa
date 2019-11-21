@@ -7,6 +7,8 @@
         :helper="type_help"
       >
         <q-select
+          inverted-light
+          color="white"
           float-label="Select"
           v-model="value.payment_type"
           :options="[

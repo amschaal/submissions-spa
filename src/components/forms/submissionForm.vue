@@ -13,6 +13,8 @@
           v-if="isAdmin && user_options && submission.participants"
         >
           <q-select
+            inverted-light
+            color="white"
             float-label="Select"
             multiple
             v-model="submission.participants"
@@ -27,6 +29,8 @@
           class="required"
         >
           <q-select
+            inverted-light
+            color="white"
             stack-label="* Submission Type"
             v-model="submission.type"
             :options="type_options"
