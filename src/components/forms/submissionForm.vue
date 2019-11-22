@@ -1,5 +1,6 @@
 <template>
   <div>
+      <div v-html="$store.getters.lab.submission_page" v-if="$store.getters.lab.submission_page"></div>
       <q-checkbox v-model="debug" label="Debug" v-if="$store.getters.isStaff && false" />
         <span v-if="debug">
           warnings: {{this.warnings}}

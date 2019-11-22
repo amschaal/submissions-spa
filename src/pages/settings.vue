@@ -19,31 +19,16 @@
         label-width="2"
       >
         <q-editor v-model="lab.home_page"
-        :toolbar="[
-      ['bold', 'italic', 'strike', 'underline'],
-      ['token', 'link', 'custom_btn'],
-      ['print', 'fullscreen'],
-      [
-        {
-          label: $q.i18n.editor.formatting,
-          icon: $q.icon.editor.formatting,
-          list: 'no-icons',
-          options: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code']
-        },
-        'removeFormat'
-      ],
-      ['quote', 'unordered', 'ordered'],
-      [
-        {
-          label: $q.i18n.editor.align,
-          icon: $q.icon.editor.align,
-          fixedLabel: true,
-          list: 'only-icons',
-          options: ['left', 'center', 'right', 'justify']
-        },
-      ],
-      ['undo', 'redo']
-    ]"
+        :toolbar="toolbar"
+        />
+      </q-field>
+      <q-field
+        label="Submission Page"
+        label-width="2"
+        helper="Enter custom content to be shown at the top of the submission page."
+      >
+        <q-editor v-model="lab.submission_page"
+        :toolbar="toolbar"
         />
       </q-field>
       <h5>Submission variables</h5>
@@ -68,7 +53,32 @@ export default {
       labs: [],
       submission_variables: {},
       sample_variables: {},
-      user_options: []
+      user_options: [],
+      toolbar: [
+        ['bold', 'italic', 'strike', 'underline'],
+        ['token', 'link', 'custom_btn'],
+        ['print', 'fullscreen'],
+        [
+          {
+            label: this.$q.i18n.editor.formatting,
+            icon: this.$q.icon.editor.formatting,
+            list: 'no-icons',
+            options: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code']
+          },
+          'removeFormat'
+        ],
+        ['quote', 'unordered', 'ordered'],
+        [
+          {
+            label: this.$q.i18n.editor.align,
+            icon: this.$q.icon.editor.align,
+            fixedLabel: true,
+            list: 'only-icons',
+            options: ['left', 'center', 'right', 'justify']
+          }
+        ],
+        ['undo', 'redo']
+      ]
     }
   },
   mounted () {
