@@ -13,7 +13,7 @@
           <form>
             <p><textarea v-model="note.text"></textarea></p>
             <div class="float-left controls" v-if="$store.getters.isLoggedIn">
-              <q-checkbox v-model="note.public" label="Public" /> <q-checkbox v-model="note.send_email" label="Email submitter" v-if="note.public && !note.id" title="Select if you want to email the submitter."/>
+              <q-checkbox v-model="note.public" label="Private" :true-value="false" :false-value="true"/> <q-checkbox v-model="note.send_email" label="Email submitter" v-if="note.public && !note.id" title="Select if you want to email the submitter."/>
             </div>
             <div class="float-right controls"><q-btn @click="save(note)" label="Save" color="primary"/></div>
             </form>
