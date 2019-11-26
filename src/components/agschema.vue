@@ -2,7 +2,7 @@
   <div>
     <!-- <HotTable :settings="settings"></HotTable> -->
     <!-- <q-select :value="value" :options="options" @change="handleChange" filter filter-placeholder="select"/> -->
-    <q-modal v-model="opened" :content-css="{minWidth: '90vw', minHeight: '90vh'}" ref="modal" no-backdrop-dismiss no-esc-dismiss :maximized="maximized">
+    <q-modal v-model="opened" :content-css="{height: '50vh', minWidth: '90vw', minHeight: '90vh'}" ref="modal" no-backdrop-dismiss no-esc-dismiss :maximized="maximized">
       <q-modal-layout>
         <q-toolbar slot="header">
           <q-toolbar-title>
@@ -36,8 +36,8 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
-          <ag-grid-vue style="width: 100%; max-height: 400px;" class="ag-theme-balham"
-            domLayout='autoHeight'
+          <ag-grid-vue style="width: 100%; height: 90%;" class="ag-theme-balham"
+
             rowSelection='multiple'
             :enableColResize='true'
             :enableSorting='true'
@@ -46,8 +46,10 @@
             :columnDefs='columnDefs'
             :ref="'grid'"
             :pinnedTopRowData="getExampleRows"
+            v-if="opened"
             >
           </ag-grid-vue>
+          <!-- domLayout='autoHeight' -->
         </div>
         <q-toolbar slot="footer">
           <q-toolbar-title v-if="editable">
