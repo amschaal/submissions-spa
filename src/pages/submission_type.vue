@@ -69,9 +69,21 @@
           label="Statuses"
           :error="errors.statuses"
           :error-label="errors.statuses"
-          helper="Special statuses include 'Completed'."
+          helper="Add statuses using the dropdown.  Statuses may reordered by dragging."
         >
-          <q-chips-input v-model="type.statuses" />
+          <!-- <q-chips-input v-model="type.statuses" /> -->
+          <q-select
+            float-label="Add Status"
+            :options="status_options"
+            filter
+            @input="add_status"
+          />
+          <draggable :list="type.statuses">
+            <div v-for="status in type.statuses" :key="status" class="q-chip row no-wrap inline items-center q-chip-small bg-primary text-white draggable">
+              <div class="q-chip-main ellipsis draggable">{{status}}</div>
+              <div class="q-chip-side q-chip-close q-chip-right row flex-center" @click="delete_status(status)"><i aria-hidden="true" class="q-icon cursor-pointer material-icons">cancel</i></div>
+            </div>
+          </draggable>
         </q-field>
         <q-field
           label="Submission Help"
@@ -138,6 +150,7 @@ import '../components/forms/docs-input.styl'
 import SchemaForm from '../components/forms/schemaForm.vue'
 import Vue from 'vue'
 import Agschema from '../components/agschema.vue'
+import draggable from 'vuedraggable'
 export default {
   name: 'submission_type',
   props: ['id'],
@@ -149,7 +162,8 @@ export default {
       examples: [],
       save_message: null,
       watch_changes: false,
-      user_options: []
+      user_options: [],
+      status_options: this.$store.getters.lab.statuses.map(status => ({label: status, value: status}))
     }
   },
   mounted: function () {
@@ -194,6 +208,7 @@ export default {
       .then(function (response) {
         self.user_options = response.data.results.map(opt => ({label: `${opt.first_name} ${opt.last_name}`, value: opt.id}))
       })
+    console.log('lab', this.$store.getters.lab)
   },
   beforeDestroy: function () {
     if (this.save_message) {
@@ -238,6 +253,11 @@ export default {
         this.save_message = null
       }
     },
+    add_status (status) {
+      if (this.type.statuses.indexOf(status) === -1) {
+        this.type.statuses.push(status)
+      }
+    },
     delete_type () {
       var self = this
       if (this.type.id && this.type.submission_count === 0) {
@@ -248,6 +268,11 @@ export default {
           .catch(function () {
             self.$q.notify('Error deleting submission type!')
           })
+      }
+    },
+    delete_status (status) {
+      if (confirm(`Are you sure you want to delete "${status}"?`)) {
+        this.type.statuses.splice(this.type.statuses.indexOf(status), 1)
       }
     },
     remove_autosave () {
@@ -352,7 +377,8 @@ export default {
   },
   components: {
     SchemaForm,
-    Agschema
+    Agschema,
+    draggable
   }
 }
 </script>
