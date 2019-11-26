@@ -2,6 +2,12 @@
   <q-page padding>
     <div v-if="lab">
       <h5>Settings for "{{lab.name}}"</h5>
+      <!-- <draggable :list="statuses">
+        <div v-for="status in statuses" :key="status" class="q-chip row no-wrap inline items-center q-chip-small bg-primary text-white">
+          <div class="q-chip-main ellipsis">{{status}}</div>
+        </div>
+          <button slot="header">Add</button>
+      </draggable> -->
       <q-field
         label="Users"
         v-if="user_options"
@@ -31,6 +37,12 @@
         :toolbar="toolbar"
         />
       </q-field>
+      <q-field
+        label="Statuses"
+        label-width="2"
+      >
+        <q-chips-input v-model="lab.statuses" @input="addStatus" @remove="removeStatus"/>
+      </q-field>
       <h5>Submission variables</h5>
       <schemaForm v-model="lab.submission_variables" :options="{variables: {}}" type="submission"/>
       <h5>Sample variables</h5>
@@ -44,6 +56,7 @@
 
 <script>
 import schemaForm from '../components/forms/schemaForm.vue'
+// import draggable from 'vuedraggable'
 export default {
   name: 'settings',
   data () {
@@ -53,6 +66,7 @@ export default {
       labs: [],
       submission_variables: {},
       sample_variables: {},
+      statuses: ['one', 'two', 'three'],
       user_options: [],
       toolbar: [
         ['bold', 'italic', 'strike', 'underline'],
@@ -104,6 +118,13 @@ export default {
             console.log('error', error)
           })
       }
+    },
+    addStatus (val) {
+      this.lab.statuses.sort()
+    },
+    removeStatus ({index, value}) {
+      // alert('removing')
+      // return true
     }
   },
   components: {
@@ -112,5 +133,10 @@ export default {
 }
 </script>
 <style>
-
+  .list-group-item {
+    background-color: navy;
+    color: white;
+    border-radius: 3px;
+    border: thin solid grey;
+  }
 </style>
