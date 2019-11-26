@@ -70,7 +70,11 @@
               :options="type_options"
             />
         </q-field>
-        <q-field label="Variable Name" :error="variableError(new_variable.name)" :error-label="variableMessage(new_variable.name)">
+        <q-field
+          label="Variable Name"
+          :error="variableError(new_variable.name)"
+          :error-label="variableMessage(new_variable.name)"
+          helper="Please only use lowercase letters, numbers, and underscores">
             <q-input
               v-model="new_variable.name"
             />
@@ -126,7 +130,8 @@ export default {
       type_options: [{ 'label': 'Text', 'value': 'string' }, { 'label': 'Number', 'value': 'number' }, { 'label': 'True / False', 'value': 'boolean' }],
       width_options: [{ 'label': '100%', 'value': 'col-md-12 col-sm-12 col-xs-auto' }, { 'label': '5/6', 'value': 'col-md-10 col-sm-12 col-xs-auto' }, { 'label': '3/4', 'value': 'col-md-9 col-sm-12 col-xs-auto' }, { 'label': '2/3', 'value': 'col-md-8 col-sm-12 col-xs-auto' }, { 'label': '1/2', 'value': 'col-md-6 col-sm-12 col-xs-auto' }, { 'label': '1/3', 'value': 'col-md-4 col-sm-6 col-xs-auto' }, { 'label': '1/4', 'value': 'col-md-3 col-sm-6 col-xs-auto' }, { 'label': '1/6', 'value': 'col-md-2 col-sm-4 col-xs-auto' }],
       new_variable: {},
-      variable_modal: false
+      variable_modal: false,
+      variable_re: /^[a-z0-9_]+$/
     }
   },
   created: function () {
@@ -165,6 +170,9 @@ export default {
     },
     variableMessage (name) {
       if (name && this.schema.properties) {
+        if (!name.match(this.variable_re)) {
+          return 'Variables should only contain lowercase letters, numbers, and underscores'
+        }
         for (var n in this.schema.properties) {
           if (n.toLowerCase() === name.toLowerCase()) {
             return 'That variable name exists'
