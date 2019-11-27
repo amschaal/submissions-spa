@@ -22,13 +22,21 @@ export default Vue.extend({
     }
   },
   methods: {
+    isDelete () {
+      return [8, 46].indexOf(this.params.keyPress) !== -1
+    },
     selected (value) {
       // this.params.stopEditing()
     },
     getValue () {
+      console.log('getValue')
       return Array.isArray(this.value) ? this.value.join(', ') : this.value
     },
+    // destroy () {
+    //   this.value = ''
+    // },
     setValue () {
+      console.log('set value')
       this.value = this.params.value
       if (this.widget_options.multiple) {
         this.value = this.value ? this.value : []
@@ -51,18 +59,22 @@ export default Vue.extend({
     }
   },
   created () {
+    console.log('is delete', this.isDelete())
     console.log('select params', this.params)
     console.log('value', this.value)
     this.widget_options = this.params.widget_options ? this.params.widget_options : {}
     this.options = this.params.definition.enum
-    this.setValue()
     this.select_options = this.options.map(function (val) { return {'label': val, 'value': val} })
-
+    this.setValue()
     // var options = this.params.widget_options ? this.params.widget_options : {}
   },
   mounted () {
+    console.log('mounted')
     Vue.nextTick(() => {
-      if (this.$refs.select) {
+      if (this.isDelete()) {
+        this.value = ''
+        this.params.stopEditing()
+      } else if (this.$refs.select) {
         console.log('select', this.$refs.select)
         this.$refs.select.show()
       }
