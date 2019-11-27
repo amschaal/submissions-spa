@@ -2,7 +2,7 @@
   <div v-if="submission.type">
     <p class="heading">{{submission.lab.name}} - Submission Details</p>
     <table class="full bordered compact">
-    <tr><th>Internal ID</th><td>{{submission.internal_id}}</td><th>ID</th><td>{{submission.id}}</td><th>Type</th><td>{{submission.type.name}}</td><th>Submitted</th><td>{{getDate(submission.submitted)}}</td></tr>
+    <tr><th>ID</th><td>{{submission.internal_id}}</td><th>Type</th><td colspan="3">{{submission.type.name}}</td><th>Submitted</th><td>{{getDate(submission.submitted)}}</td></tr>
     <!--<tr><th>Status</th><td><span v-if="submission.status">{{submission.status.name}}</span></td><th>Submitted</th><td>{{submission.submitted}}</td><th>Updated</th><td>{{submission.updated}}</td></tr>-->
     <tr><th>PI</th><td>{{submission.pi_first_name}} {{submission.pi_last_name}}</td><th>PI email</th><td>{{submission.pi_email}}</td><th>PI Phone</th><td>{{submission.pi_phone}}</td><th>Institute</th><td colspan="5">{{submission.institute}}</td></tr>
     <tr><th>Name</th><td>{{submission.first_name}} {{submission.last_name}}</td><th>Email</th><td>{{submission.email}}</td><th>Phone</th><td>{{submission.phone}}</td></tr>

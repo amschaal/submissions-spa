@@ -31,7 +31,7 @@
         <q-tr :props="props" v-bind:class="{'cancelled': props.row.cancelled, 'completed': props.row.status && props.row.status.toUpperCase() === 'COMPLETED'}">
           <q-td key="locked" :props="props"><q-icon size="18px" name="cancel" v-if="props.row.cancelled" color="red" title="Submission cancelled"/><q-icon size="18px" name="warning" v-if="hasWarnings(props.row)" color="warning" title="There are warnings associated with this submission"/><q-icon size="18px" name="lock" v-if="props.row.locked" color="red"/><q-icon size="18px" name="lock_open" v-else color="green"/></q-td>
           <q-td key="id" :props="props"><router-link :to="{ name: 'submission', params: { id: props.row.id }}">{{ props.row.id }}</router-link></q-td>
-          <q-td key="internal_id" :props="props">{{ props.row.internal_id }}</q-td>
+          <q-td key="internal_id" :props="props"><router-link :to="{ name: 'submission', params: { id: props.row.id }}">{{ props.row.internal_id }}</router-link></q-td>
           <q-td key="type" :props="props"><router-link :to="{'name': 'submission_type', 'params': { id: props.row.type.id }}">{{ props.row.type.name }}</router-link></q-td>
           <q-td key="status" :props="props">{{ props.row.status }}</q-td>
           <q-td key="participant_names" :props="props">{{ props.row.participant_names.join(', ') }}</q-td>
@@ -71,8 +71,8 @@ export default {
       serverData: [],
       columns: [
         { name: 'locked', label: 'Locked', field: 'locked', sortable: true },
-        { name: 'id', label: 'Id', field: 'id', sortable: true },
-        { name: 'internal_id', label: 'Internal Id', field: 'internal_id', sortable: true },
+        { name: 'id', label: 'System ID', field: 'id', sortable: true },
+        { name: 'internal_id', label: 'ID', field: 'internal_id', sortable: true },
         { name: 'type', label: 'Type', field: 'type' },
         { name: 'status', label: 'Status', field: 'status', sortable: true },
         { name: 'participant_names', label: 'Participants', field: 'participant_names', sortable: false },
@@ -84,7 +84,7 @@ export default {
         { name: 'sample_data', label: 'Samples', field: 'sample_data' },
         { name: 'biocore', label: 'Biocore', field: 'biocore', sortable: true }
       ],
-      visibleColumns: ['locked', 'id', 'internal_id', 'type', 'status', 'submitted', 'name', 'email', 'pi_name', 'sample_data', 'biocore']
+      visibleColumns: ['locked', 'internal_id', 'type', 'status', 'submitted', 'name', 'email', 'pi_name', 'sample_data', 'biocore']
     }
   },
   methods: {
