@@ -46,7 +46,8 @@ export class Widget {
     return true
   }
   getOptions () {
-    return _.merge(this.options, {'stack-label': this.variable.schema.title || this.variable.variable})
+    // return _.merge(this.options, {'stack-label': this.variable.schema.title || this.variable.variable})
+    return _.merge(this.options, {})
   }
   getDefault () {
     return this.defaultValue
@@ -84,8 +85,8 @@ export class WidgetFactory {
   getWidgetSchema (id) {
     return this.lookup[id] ? this.lookup[id].schema : {}
   }
-  getWidget (id, type) {
-    console.log('getWidget', id, type, this.lookup)
+  getWidget (id, type, definition) {
+    console.log('getWidget', id, type, this.lookup, definition)
     if (id && this.lookup[id]) {
       return this.lookup[id]
     } else if (type && this.defaults[type]) {

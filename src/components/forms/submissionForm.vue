@@ -14,9 +14,6 @@
           v-if="isAdmin && user_options && submission.participants"
         >
           <q-select
-            inverted-light
-            color="white"
-            float-label="Select"
             multiple
             v-model="submission.participants"
             :options="user_options"
