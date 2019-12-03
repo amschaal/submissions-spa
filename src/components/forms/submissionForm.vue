@@ -225,8 +225,8 @@
           </p>
         </span>
         <q-card-actions>
-          <q-btn @click="submit" label="Submit"></q-btn>
-          <q-btn @click="saveDraft" v-if="!id" color="positive" label="Save Draft"></q-btn>
+          <q-btn @click="submit" color="positive" label="Submit"></q-btn>
+          <q-btn @click="saveDraft" v-if="!id" label="Save Draft"></q-btn>
           <q-btn v-if="submission.id" label="Cancel" color="negative" class="float-right" @click="$router.push({name: 'submission', params: {id: submission.id}})"/>
           <q-btn color="primary" @click="show_help = true" label="Help" icon="fas fa-question-circle" v-if="type && type.submission_help"/>
         </q-card-actions>
