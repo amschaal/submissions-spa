@@ -55,7 +55,7 @@ export default {
     widgetClass (v) {
       var widget = v.schema.widget ? v.schema.widget : {}
       console.log('widgetClass', v, widget)
-      return widgetFactory.getWidget(widget.type, v.schema.type)
+      return widgetFactory.getWidget(widget.type, v.schema.type, v.schema)
     },
     widget (v) {
       var options = v.schema.widget && v.schema.widget.options ? v.schema.widget.options : {}

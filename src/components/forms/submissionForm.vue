@@ -191,7 +191,7 @@
           :error-label="sample_data_error_label"
           :warning="sample_data_warning"
           warning-label="Samples contain warnings"
-          v-if="type && type.sample_schema"
+          v-if="type && type.sample_schema && type.sample_schema.order && type.sample_schema.order.length"
           helper="Click on the Samples button to enter sample information"
         >
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
