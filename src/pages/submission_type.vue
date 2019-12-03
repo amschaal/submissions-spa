@@ -35,8 +35,8 @@
         </q-field>
         <q-field
           label="Internal ID"
-          :error="errors.next_id"
-          :error-label="errors.next_id"
+          :error="next_id_error"
+          :error-label="next_id_error"
           helper="The Prefix is concatenated with the Next ID to create the internal id for the submission."
         >
           <div class="row no-wrap">
@@ -338,6 +338,16 @@ export default {
     },
     error_message (field) {
       return this.errors[field]
+    },
+    next_id_error () {
+      var error = ''
+      if (this.errors['next_id']) {
+        error += this.errors['next_id'].join(', ')
+      }
+      if (this.errors['prefix']) {
+        error += this.errors['prefix'].join(', ')
+      }
+      return error === '' ? false : error
     },
     type_key () {
       return this.id && this.id !== 'create' ? `submission_type_${this.id}` : 'submission_type'
