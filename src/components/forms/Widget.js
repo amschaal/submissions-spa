@@ -65,7 +65,7 @@ export class Widget {
 }
 
 export class WidgetFactory {
-  constructor (widgets) {
+  constructor (widgets, enumDefault, multipleDefault) {
     this.widgets = widgets
     this.type_lookup = {}
     this.defaults = {}
@@ -81,6 +81,12 @@ export class WidgetFactory {
         self.defaults[widget.type] = widget
       }
     })
+    if (enumDefault) {
+      self.defaults['enum'] = enumDefault
+    }
+    if (multipleDefault) {
+      self.defaults['multiple'] = multipleDefault
+    }
   }
   getWidgetSchema (id) {
     return this.lookup[id] ? this.lookup[id].schema : {}
@@ -89,11 +95,19 @@ export class WidgetFactory {
     console.log('getWidget', id, type, this.lookup, definition)
     if (id && this.lookup[id]) {
       return this.lookup[id]
-    } else if (type && this.defaults[type]) {
-      return this.defaults[type]
-    } else {
-      return this.defaults['string']
     }
+    if (definition && definition.enum) {
+      if (definition.multiple && this.defaults['multiple']) {
+        return this.defaults['multiple']
+      }
+      if (this.defaults['enum']) {
+        return this.defaults['enum']
+      }
+    }
+    if (type && this.defaults[type]) {
+      return this.defaults[type]
+    }
+    return this.defaults['string']
   }
   getWidgets (type) {
     if (!type || !this.type_lookup[type]) {
