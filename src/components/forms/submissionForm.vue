@@ -1,6 +1,12 @@
 <template>
   <div>
       <div v-html="$store.getters.lab.submission_page" v-if="$store.getters.lab.submission_page"></div>
+
+      <q-alert
+        type="info"
+        v-if="imported">
+        Importing from <a target="_blank" :href="imported.url">{{imported.internal_id}}: {{imported.type.name}}</a>
+      </q-alert>
       <q-checkbox v-model="debug" label="Debug" v-if="$store.getters.isStaff && false" />
         <span v-if="debug">
           warnings: {{this.warnings}}
@@ -275,7 +281,8 @@ export default {
       show_help: false,
       payment: {},
       draft: null,
-      messages: []
+      messages: [],
+      imported: null
       // create: false
     }
   },
@@ -512,13 +519,19 @@ export default {
         .get(`${self.import}/`)
         .then(function (response) {
           var imported = response.data
-          delete imported['type']
+          // Rather than getting the url directly, which may have security restrictions, proxy through server which will clean the following.
+          var type = imported['type']
+          self.imported = _.cloneDeep(imported)
           delete imported['id']
+          delete imported['type']
           delete imported['submission_schema']
           delete imported['sample_schema']
           delete imported['participants']
+          var internalID = imported['internal_id']
+          delete imported['internal_id']
           console.log('import response', response.data)
           self.submission = imported
+          self.$q.notify({message: `Submission information from submission "${internalID}: ${type.name}" loaded.  Please select the target type and attempt saving the import.`, type: 'positive', timeout: 15000})
           // self.loadDraftMessage()
           // Vue.set(self.submission, 'type', response.data.type.id)
         }).catch(function (error, stuff) {
