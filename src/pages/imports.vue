@@ -1,0 +1,135 @@
+<template>
+  <q-page class="docs-input justify-center"><!-- row -->
+    <q-table
+      ref="table"
+      :data="serverData"
+      :columns="columns"
+      :visible-columns="visibleColumns"
+      :filter="filter"
+      row-key="id"
+      :pagination.sync="serverPagination"
+      :loading="loading"
+      @request="request"
+      binary-state-sort
+    >
+      <template slot="top-left" slot-scope="props">
+        <q-table-columns
+          color="secondary"
+          class="q-mr-sm"
+          v-model="visibleColumns"
+          :columns="columns"
+          :props="props"
+        />
+        <q-checkbox v-model="showImported" label="Show imported" @input="refresh"/>
+      </template>
+      <template slot="top-right" slot-scope="props">
+        <q-search hide-underline v-model="filter" :props="props"/>
+      </template>
+      <template slot="body" slot-scope="props">
+        <q-tr :props="props" v-bind:class="{'imported': props.row.submission}">
+          <q-td key="created" :props="props">{{ props.row.created | formatDate }}</q-td>
+          <q-td key="url" :props="props"><a target="_blank" :href="props.row.url">{{ props.row.url }}</a></q-td>
+        </q-tr>
+      </template>
+    </q-table>
+  </q-page>
+</template>
+
+<script>
+// import axios from 'axios'
+// import _ from 'lodash'
+
+export default {
+  name: 'imports',
+  data () {
+    return {
+      filter: '',
+      showImported: false,
+      loading: false,
+      serverPagination: {
+        page: 1,
+        rowsNumber: 0, // specifying this determines pagination is server-side
+        rowsPerPage: 10,
+        descending: true,
+        sortBy: 'created'
+      },
+      serverData: [],
+      columns: [
+        { name: 'created', label: 'Created', field: 'created', sortable: true },
+        // { name: 'id', label: 'System ID', field: 'id', sortable: true },
+        // { name: 'internal_id', label: 'ID', field: 'internal_id', sortable: false },
+        { name: 'url', label: 'URL', field: 'url' }
+      ],
+      visibleColumns: ['created', 'url']
+    }
+  },
+  methods: {
+    request ({ pagination, filter }) {
+      // we set QTable to "loading" state
+      this.loading = true
+
+      // we do the server data fetch, based on pagination and filter received
+      // (using Axios here, but can be anything; parameters vary based on backend implementation)
+      console.log(pagination, filter)
+      var sortBy = pagination.sortBy
+      if (pagination.descending) {
+        sortBy = '-' + sortBy
+      }
+      var search = this.filter !== '' ? `&search=${this.filter}` : ''
+      var imported = !this.imported ? '&imported__isnull=false' : ''
+      var pageSize = pagination.rowsPerPage ? pagination.rowsPerPage : 1000000 // HACKY
+      // var type = this.$route.query.type ? `&type__name__icontains=${this.$route.query.type}` : ''
+      this.$axios
+        .get(`/api/imports/?ordering=${sortBy}&page=${pagination.page}&page_size=${pageSize}${search}${imported}`)// ${pagination.descending}&filter=${filter}
+        .then(({ data }) => {
+          console.log('data', data)
+          // updating pagination to reflect in the UI
+          this.serverPagination = pagination
+
+          // we also set (or update) rowsNumber
+          this.serverPagination.rowsNumber = data.count
+
+          // then we update the rows with the fetched ones
+          this.serverData = data.results
+
+          // finally we tell QTable to exit the "loading" state
+          this.loading = false
+        })
+        .catch(error => {
+          // there's an error... do SOMETHING
+          console.log(error)
+          // we tell QTable to exit the "loading" state
+          this.loading = false
+        })
+    },
+    refresh () {
+      this.request({
+        pagination: this.serverPagination,
+        filter: this.filter
+      })
+    }
+  },
+  mounted () {
+    // once mounted, we need to trigger the initial server data fetch
+    console.log(this.$route.query.search)
+    if (this.$route.query.search) {
+      this.filter = this.$route.query.search
+    }
+    this.refresh()
+  }
+}
+</script>
+<style>
+tr.cancelled td, tr.cancelled td a {
+  color: red;
+}
+tr.imported td, tr.imported td a {
+  color: green;
+}
+/*
+.q-table-middle.scroll, .scroll {
+  overflow: inherit !important;
+}
+*/
+
+</style>

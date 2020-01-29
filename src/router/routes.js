@@ -11,6 +11,12 @@ export default [
         name: 'submissions',
         meta: { authorize: {isLoggedIn: true} }
       },
+      {
+        path: '/imports',
+        component: () => import('pages/imports'),
+        name: 'imports',
+        meta: { authorize: {isLoggedIn: true} }
+      },
       { path: '/submissions/create',
         component: () => import('pages/submission'),
         name: 'create_submission',
