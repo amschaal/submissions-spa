@@ -9,8 +9,8 @@
         <q-toolbar-title>
           {{$store.getters.lab.name}}
           <div slot="subtitle">Sample Submission System</div>
-          <q-btn v-if="!$store.getters.isLoggedIn" @click="$refs.auth.opened=true" class="float-right" color="primary">Admin</q-btn>
-          <q-btn v-if="$store.getters.isLoggedIn" @click="$refs.auth.logout()" class="float-right" color="primary">Logout</q-btn>
+          <q-btn v-if="!$store.getters.isLoggedIn" @click="$login()" class="float-right" color="primary">Login</q-btn>
+          <q-btn v-if="$store.getters.isLoggedIn" @click="$logout()" class="float-right" color="primary">Logout</q-btn>
         </q-toolbar-title>
       </q-toolbar>
       <q-tabs

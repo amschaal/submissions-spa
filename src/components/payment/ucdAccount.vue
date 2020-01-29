@@ -47,7 +47,12 @@ import { QSelect } from 'quasar'
 // import _ from 'lodash'
 
 export default {
-  props: ['value', 'editable', 'errors', 'modify'],
+  props: {
+    value: {type: Object, default: function () { return {} }},
+    editable: Boolean,
+    errors: Object,
+    modify: Boolean
+  }, // ['value', 'editable', 'errors', 'modify'],
   data () {
     return {
       payment: this.value
@@ -58,8 +63,9 @@ export default {
   },
   computed: {
     type_help () {
-      console.log('type_help', this.value.payment_type)
-      switch (this.value.payment_type) {
+      var paymentType = this.value ? this.value.payment_type : null
+      console.log('type_help', paymentType)
+      switch (paymentType) {
         case 'DaFIS':
           return 'Enter payment info in the form CHART-ACCOUNT, e.g. 3-MYACCNT'
         case 'Credit Card':
