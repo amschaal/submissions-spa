@@ -298,8 +298,12 @@ export default {
       //   })
       this.loadSubmission(this.id)
     } else {
+      this.import = !this.id && this.$route.query.import ? this.$route.query.import : null
+      console.log('import', this.import)
       this.draft = !this.id && this.$route.query.draft ? this.$route.query.draft : null
-      if (this.draft) {
+      if (this.import) {
+        this.loadImport()
+      } else if (this.draft) {
         this.loadDraft(this.draft)
       } else if (submission && window.JSON && window.JSON.parse) {
         var message = this.$q.notify({
@@ -498,6 +502,27 @@ export default {
         }).catch(function (error, stuff) {
           self.$q.notify({message: `No draft was found with ID: ${id}`, type: 'negative'})
           self.draft = null
+          self.$router.push({name: 'create_submission'})
+          throw error
+        })
+    },
+    loadImport: function () {
+      var self = this
+      this.$axios
+        .get(`${self.import}/`)
+        .then(function (response) {
+          var imported = response.data
+          delete imported['type']
+          delete imported['id']
+          delete imported['submission_schema']
+          delete imported['sample_schema']
+          delete imported['participants']
+          console.log('import response', response.data)
+          self.submission = imported
+          // self.loadDraftMessage()
+          // Vue.set(self.submission, 'type', response.data.type.id)
+        }).catch(function (error, stuff) {
+          self.$q.notify({message: `Unable to load import from url: ${self.import}`, type: 'negative'})
           self.$router.push({name: 'create_submission'})
           throw error
         })
