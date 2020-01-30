@@ -29,6 +29,7 @@
         <q-tr :props="props" v-bind:class="{'imported': props.row.submission}">
           <q-td key="created" :props="props">{{ props.row.created | formatDate }}</q-td>
           <q-td key="url" :props="props"><a target="_blank" :href="props.row.url">{{ props.row.url }}</a></q-td>
+          <q-td key="actions" :props="props"><q-btn :to="{name: 'create_submission', query: {import: props.row.api_url}}" label="import"/></q-td>
         </q-tr>
       </template>
     </q-table>
@@ -58,9 +59,10 @@ export default {
         { name: 'created', label: 'Created', field: 'created', sortable: true },
         // { name: 'id', label: 'System ID', field: 'id', sortable: true },
         // { name: 'internal_id', label: 'ID', field: 'internal_id', sortable: false },
-        { name: 'url', label: 'URL', field: 'url' }
+        { name: 'url', label: 'URL', field: 'url' },
+        { name: 'actions', label: 'Actions', field: 'actions' }
       ],
-      visibleColumns: ['created', 'url']
+      visibleColumns: ['created', 'url', 'actions']
     }
   },
   methods: {

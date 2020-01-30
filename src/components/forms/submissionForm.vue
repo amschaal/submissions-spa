@@ -515,9 +515,10 @@ export default {
     loadImport: function () {
       var self = this
       this.$axios
-        .get(`${self.import}/`)
+        // .get(`${self.import}/`)
+        .get(`/api/imports/get_submission/?url=${self.import}`)
         .then(function (response) {
-          var imported = response.data
+          var imported = response.data.data
           // Rather than getting the url directly, which may have security restrictions, proxy through server which will clean the following.
           var type = imported['type']
           self.imported = _.cloneDeep(imported)
