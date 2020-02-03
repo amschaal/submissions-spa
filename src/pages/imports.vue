@@ -11,6 +11,7 @@
       :loading="loading"
       @request="request"
       binary-state-sort
+      :rows-per-page-options="[10,25,0]"
     >
       <template slot="top-left" slot-scope="props">
         <q-table-columns

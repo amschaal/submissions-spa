@@ -10,6 +10,7 @@
       :loading="loading"
       @request="request"
       binary-state-sort
+      :rows-per-page-options="[10,25,0]"
     >
       <template slot="top-right" slot-scope="props" :props="props">
         <q-checkbox v-model="showInactive" label="Show inactive" @input="refresh" class="inactive"/>  <q-search hide-underline v-model="filter" />
