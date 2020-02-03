@@ -1,6 +1,11 @@
 <template>
   <div>
         <div class="row">
+          <div class="field col-12" v-if="submission.import_data">
+            <q-alert type="info">
+              Imported from <a target="_blank" :href="submission.import_data.url">{{submission.import_data.internal_id}}: {{submission.import_data.type.name}}</a>
+            </q-alert>
+          </div>
           <div class="field col-12" v-if="hasWarnings">
             <q-alert
               type="warning"

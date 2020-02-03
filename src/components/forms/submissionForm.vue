@@ -529,7 +529,7 @@ export default {
           delete imported['participants']
           var internalID = imported['internal_id']
           delete imported['internal_id']
-          imported['import_url'] = self.import
+          imported['import_internal_id'] = internalID
           imported['import_data'] = _.cloneDeep(self.imported)
           console.log('import response', response.data)
           self.submission = imported

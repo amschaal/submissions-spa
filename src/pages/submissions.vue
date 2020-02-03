@@ -32,7 +32,7 @@
           <q-td key="locked" :props="props"><q-icon size="18px" name="cancel" v-if="props.row.cancelled" color="red" title="Submission cancelled"/><q-icon size="18px" name="warning" v-if="hasWarnings(props.row)" color="warning" title="There are warnings associated with this submission"/><q-icon size="18px" name="lock" v-if="props.row.locked" color="red"/><q-icon size="18px" name="lock_open" v-else color="green"/></q-td>
           <q-td key="id" :props="props"><router-link :to="{ name: 'submission', params: { id: props.row.id }}">{{ props.row.id }}</router-link></q-td>
           <q-td key="internal_id" :props="props"><router-link :to="{ name: 'submission', params: { id: props.row.id }}">{{ props.row.internal_id }}</router-link></q-td>
-          <q-td key="imported_id" :props="props"><span v-if="props.row.import_data"><q-icon size="18px" name="link" color="grey"/><a target="_blank" :href="props.row.import_data.url">{{ props.row.import_data.internal_id }}</a></span></q-td>
+          <q-td key="import_internal_id" :props="props"><span v-if="props.row.import_data"><q-icon size="18px" name="link" color="grey"/><a target="_blank" :href="props.row.import_data.url">{{ props.row.import_data.internal_id }}</a></span></q-td>
           <q-td key="type" :props="props"><router-link :to="{'name': 'submission_type', 'params': { id: props.row.type.id }}">{{ props.row.type.name }}</router-link></q-td>
           <q-td key="status" :props="props">{{ props.row.status }}</q-td>
           <q-td key="participant_names" :props="props">{{ props.row.participant_names.join(', ') }}</q-td>
@@ -74,7 +74,7 @@ export default {
         { name: 'locked', label: 'Locked', field: 'locked', sortable: true },
         { name: 'id', label: 'System ID', field: 'id', sortable: true },
         { name: 'internal_id', label: 'ID', field: 'internal_id', sortable: true },
-        { name: 'imported_id', label: 'Imported ID', field: 'imported_id', sortable: false },
+        { name: 'import_internal_id', label: 'Imported ID', field: 'import_internal_id', sortable: true },
         { name: 'type', label: 'Type', field: 'type' },
         { name: 'status', label: 'Status', field: 'status', sortable: true },
         { name: 'participant_names', label: 'Participants', field: 'participant_names', sortable: false },
