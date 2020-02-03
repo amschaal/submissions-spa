@@ -529,6 +529,8 @@ export default {
           delete imported['participants']
           var internalID = imported['internal_id']
           delete imported['internal_id']
+          imported['import_url'] = self.import
+          imported['import_data'] = _.cloneDeep(self.imported)
           console.log('import response', response.data)
           self.submission = imported
           self.$q.notify({message: `Submission information from submission "${internalID}: ${type.name}" loaded.  Please select the target type and attempt saving the import.`, type: 'positive', timeout: 15000})

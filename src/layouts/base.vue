@@ -21,6 +21,7 @@
         <q-route-tab slot="title" to="/" replace label="Home" />
         <q-route-tab slot="title" :to="{ name: 'create_submission' }" replace label="Create Submission" />
         <q-route-tab slot="title" :to="{ name: 'submissions' }" v-if="$store.getters.isLoggedIn" replace label="Submissions" />
+        <q-route-tab slot="title" :to="{ name: 'imports' }" v-if="$store.getters.isLoggedIn" replace label="Imports" />
         <q-route-tab slot="title" :to="{ name: 'submission_types' }" v-if="$store.getters.isLoggedIn" label="Submission Types"/>
         <q-route-tab slot="title" :to="{ name: 'settings' }" v-if="$store.getters.isLoggedIn" label="Settings"/>
       </q-tabs>
