@@ -1,16 +1,27 @@
 <template>
   <div>
-      <q-alert
-        type="info"
-        v-if="imported">
-        Importing from <a target="_blank" :href="imported.url">{{imported.internal_id}}: {{imported.type.name}}</a>
-      </q-alert>
       <div v-html="$store.getters.lab.submission_page" v-if="$store.getters.lab.submission_page"></div>
       <q-checkbox v-model="debug" label="Debug" v-if="$store.getters.isStaff && false" />
         <span v-if="debug">
           warnings: {{this.warnings}}
         </span>
 <!-- v-if="submission.participants && user_options && !create" -->
+      <fieldset v-if="$store.getters.isStaff">
+        <legend>Submission import</legend>
+        <q-alert
+          type="info"
+          v-if="imported">
+          Importing from <a target="_blank" :href="imported.url">{{imported.internal_id}}: {{imported.type.name}}</a>
+        </q-alert>
+        <q-field
+          :label-width="12"
+          helper="You may import an existing submission, make modifications, and create a new submission."
+        >
+        <div class="row">
+          <q-input class="col-sm-8 col-md-10 col-lg-10" v-model="import_url" placeholder="Enter existing submission URL here (https://....../submissions/abcd12345678)"/><q-btn label="Import" @click="loadImport(import_url)" class="col-sm-2 col-md-2 col-lg-1"/>
+        </div>
+        </q-field>
+      </fieldset>
         <q-field
           label="Participants"
           label-width="2"
@@ -281,7 +292,8 @@ export default {
       payment: {},
       draft: null,
       messages: [],
-      imported: null
+      imported: null,
+      import_url: ''
       // create: false
     }
   },
@@ -512,7 +524,10 @@ export default {
           throw error
         })
     },
-    loadImport: function () {
+    loadImport: function (url) {
+      if (url) {
+        this.import = url
+      }
       var self = this
       this.$axios
         // .get(`${self.import}/`)
