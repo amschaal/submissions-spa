@@ -30,6 +30,12 @@
         <q-tr :props="props" v-bind:class="{'imported': props.row.submission}">
           <q-td key="created" :props="props">{{ props.row.created | formatDate }}</q-td>
           <q-td key="url" :props="props"><a target="_blank" :href="props.row.url">{{ props.row.url }}</a></q-td>
+          <q-td key="submissions" :props="props">
+            <span v-for="(s, key) in props.row.submissions" :key="s.id">
+              <router-link :to="{ name: 'submission', params: { id: s.id }}">{{s.internal_id}}</router-link>
+              <span v-if="key+1 != props.row.submissions.length">, </span>
+            </span>
+          </q-td>
           <q-td key="actions" :props="props"><q-btn :to="{name: 'create_submission', query: {import: props.row.api_url}}" label="import"/></q-td>
         </q-tr>
       </template>
@@ -59,11 +65,11 @@ export default {
       columns: [
         { name: 'created', label: 'Created', field: 'created', sortable: true },
         // { name: 'id', label: 'System ID', field: 'id', sortable: true },
-        // { name: 'internal_id', label: 'ID', field: 'internal_id', sortable: false },
         { name: 'url', label: 'URL', field: 'url' },
+        { name: 'submissions', label: 'Submissions', field: 'submissions', sortable: false },
         { name: 'actions', label: 'Actions', field: 'actions' }
       ],
-      visibleColumns: ['created', 'url', 'actions']
+      visibleColumns: ['created', 'url', 'submissions', 'actions']
     }
   },
   methods: {
