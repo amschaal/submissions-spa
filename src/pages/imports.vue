@@ -85,7 +85,7 @@ export default {
         sortBy = '-' + sortBy
       }
       var search = this.filter !== '' ? `&search=${this.filter}` : ''
-      var imported = !this.imported ? '&imported__isnull=false' : ''
+      var imported = this.showImported ? '' : '&submissions__id__isnull=True'
       var pageSize = pagination.rowsPerPage ? pagination.rowsPerPage : 1000000 // HACKY
       // var type = this.$route.query.type ? `&type__name__icontains=${this.$route.query.type}` : ''
       this.$axios

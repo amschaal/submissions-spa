@@ -6,7 +6,7 @@
           warnings: {{this.warnings}}
         </span>
 <!-- v-if="submission.participants && user_options && !create" -->
-      <fieldset v-if="$store.getters.isStaff">
+      <fieldset v-if="!id && $store.getters.isStaff">
         <legend>Submission import</legend>
         <q-alert
           type="info"
