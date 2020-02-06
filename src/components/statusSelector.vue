@@ -15,7 +15,7 @@ export default {
   data () {
     return {
       status: this.value ? this.value : null,
-      email: true,
+      email: false,
       options: this.$store.getters.statusOptions
     }
   },

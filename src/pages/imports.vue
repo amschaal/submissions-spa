@@ -32,7 +32,7 @@
           <q-td key="url" :props="props"><a target="_blank" :href="props.row.url">{{ props.row.url }}</a></q-td>
           <q-td key="submissions" :props="props">
             <span v-for="(s, key) in props.row.submissions" :key="s.id">
-              <router-link :to="{ name: 'submission', params: { id: s.id }}">{{s.internal_id}}</router-link>
+              <router-link :to="{ name: 'submission', params: { id: s.id }}"><span v-if="s.internal_id">{{s.internal_id}}</span><span v-else class="red">{{s.id}}</span></router-link>
               <span v-if="key+1 != props.row.submissions.length">, </span>
             </span>
           </q-td>
@@ -134,6 +134,9 @@ tr.cancelled td, tr.cancelled td a {
 }
 tr.imported td, tr.imported td a {
   color: green;
+}
+.red {
+  color: red;
 }
 /*
 .q-table-middle.scroll, .scroll {
