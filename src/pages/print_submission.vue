@@ -9,26 +9,25 @@
     <!--<tr><th>Institute</th><td colspan="5">{{submission.institute}}</td></tr>-->
     <tr v-if="submission.notes"><th>Notes</th><td colspan="7">{{submission.notes}}</td></tr>
     </table>
-
+    <table class="full bordered compact">
+        <tr>
+          <th v-for="(value, label) in submission.payment.display" :key="label">{{label}}</th>
+        </tr>
+        <tr>
+          <td v-for="(value, label) in submission.payment.display" :key="label">{{value}}</td>
+        </tr>
+    </table>
     <div v-if="submission.submission_data && Object.keys(submission.submission_data).length">
       <table class="full bordered compact">
         <tr><th :key="variable" v-for="(value, variable) in submission.submission_data" v-show="!hidden(submission.submission_schema, variable)">{{getTitle(submission.submission_schema,variable)}}</th></tr>
         <tr><td :key="variable" v-for="(value, variable) in submission.submission_data" v-show="!hidden(submission.submission_schema, variable)">{{truncate(submission.submission_schema, variable, value)}}</td></tr>
       </table>
     </div>
-    <p class="heading">Payment details</p>
-    <table class="full bordered compact">
-      <tr>
-        <th v-for="(value, label) in submission.payment.display" :key="label">{{label}}</th>
-      </tr>
-      <tr>
-        <td v-for="(value, label) in submission.payment.display" :key="label">{{value}}</td>
-      </tr>
-  </table>
   <table v-if="submission.comments" class="full bordered compact">
     <tr><th>***Special Instructions / Comments***</th></tr>
     <tr><td>{{submission.comments}}</td></tr>
   </table>
+
     <p class="heading">Total Number of Samples: {{submission.sample_data.length}}</p> <!--  page-break-before -->
 <table class="horizontal full bordered compact page-break-after">
   <tr>
@@ -101,7 +100,7 @@ export default {
   width:100%;
 }
 td,th{
-  text-align: center;
+  text-align: left;
 }
 .bordered td, .bordered th{
   border: thin solid grey;

@@ -36,7 +36,7 @@
         :error-label="errors.ppms_order_id"
         helper="Please see our getting started page for more details: https://dnatech.genomecenter.ucdavis.edu/getting-started/"
       >
-        <q-input v-model="value.ppms_order_id" type="text" stack-label="PPMS Order ID"/>
+        <q-input v-model="value.ppms_order_id" type="text" stack-label="PPMS Order Ref #"/>
       </q-field>
     </div>
   </div>

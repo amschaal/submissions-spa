@@ -42,10 +42,10 @@
             <p class="caption">ID</p>
             {{submission.internal_id}}
           </div>
-          <!-- <div class="field col-sm-6 col-md-2">
-            <p class="caption">ID</p>
-            {{submission.id}}
-          </div> -->
+          <div class="field col-sm-6 col-md-2">
+            <p class="caption">Submitted</p>
+            {{submission.submitted|formatDate}}
+          </div>
           <div class="field col-sm-12 col-md-5">
             <p class="caption">Type</p>
             {{submission_type.name}}
