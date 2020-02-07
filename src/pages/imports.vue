@@ -29,6 +29,7 @@
       <template slot="body" slot-scope="props">
         <q-tr :props="props" v-bind:class="{'imported': props.row.submission}">
           <q-td key="created" :props="props">{{ props.row.created | formatDate }}</q-td>
+          <q-td key="external_id" :props="props"><a target="_blank" :href="props.row.url">{{ props.row.external_id }}</a></q-td>
           <q-td key="url" :props="props"><a target="_blank" :href="props.row.url">{{ props.row.url }}</a></q-td>
           <q-td key="submissions" :props="props">
             <span v-for="(s, key) in props.row.submissions" :key="s.id">
@@ -65,11 +66,12 @@ export default {
       columns: [
         { name: 'created', label: 'Created', field: 'created', sortable: true },
         // { name: 'id', label: 'System ID', field: 'id', sortable: true },
+        { name: 'external_id', label: 'External submission', field: 'external_id' },
         { name: 'url', label: 'URL', field: 'url' },
         { name: 'submissions', label: 'Submissions', field: 'submissions', sortable: false },
         { name: 'actions', label: 'Actions', field: 'actions' }
       ],
-      visibleColumns: ['created', 'url', 'submissions', 'actions']
+      visibleColumns: ['created', 'external_id', 'submissions', 'actions']
     }
   },
   methods: {

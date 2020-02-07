@@ -140,6 +140,7 @@
         <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet"/>
         <div class="row" v-if="submission.id">
           <div class="col-lg-12">
+            <q-btn class="float-right" label="Create copy" description="Create a new submission using data from this submission." @click="copySubmission"/>
             <q-btn label="Download" @click="download()"  class="float-right"/>
               <q-select
                 v-model="downloadParams.format"
@@ -219,6 +220,10 @@ export default {
     },
     download () {
       window.location.href = `/server/api/submissions/${this.submission.id}/download/?format=${this.downloadParams.format}&data=${this.downloadParams.data}`
+    },
+    copySubmission () {
+      this.$router.push({ name: 'create_submission', query: { import: window.location.href } })
+      // window.location.href = window.location.href + '?import=' + window.location.href
     }
   },
   computed: {
