@@ -174,9 +174,9 @@ export default {
     }
     var id = this.$route.query.copy_from || this.id
     console.log('mounted', this.id, this.create, id, this.$route.query.copy_from)
-    if (this.create) {
-      this.notify_autosave()
-    }
+    // if (this.create) {
+    //   this.notify_autosave()
+    // }
     if (!this.create || this.$route.query.copy_from) {
       this.$q.loading.show()
       this.$axios
@@ -197,7 +197,7 @@ export default {
             self.type.name = 'Copy from ' + self.type.name
           }
           self.$q.loading.hide()
-          self.notify_autosave()
+          // self.notify_autosave()
         })
     }
     setTimeout(function () {
@@ -359,10 +359,10 @@ export default {
         if (!this.watch_changes) {
           return
         }
-        if (window.JSON && window.JSON.stringify) { // && (!newVal.updated || Date.now() - newVal.updated < 5000)
-          clearTimeout(this.autosave_timeout)
-          this.autosave_timeout = setTimeout(this.autosave, 10000)
-        }
+        // if (window.JSON && window.JSON.stringify) { // && (!newVal.updated || Date.now() - newVal.updated < 5000)
+        //   clearTimeout(this.autosave_timeout)
+        //   this.autosave_timeout = setTimeout(this.autosave, 10000)
+        // }
         if (this.save_message) {
           return
         }
