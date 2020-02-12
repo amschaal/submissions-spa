@@ -39,3 +39,10 @@ export const statusOptions = (state) => {
 export const lab = (state) => {
   return state.lab
 }
+export const staff = (state) => {
+  return state.staff
+}
+export const staffOptions = (state) => {
+  console.log('staffOptions', state.staff)
+  return state.staff.map(opt => ({label: `${opt.first_name} ${opt.last_name}`, value: opt.id}))
+}

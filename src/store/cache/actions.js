@@ -39,9 +39,20 @@ export const fetchLab = (context, {axios}) => {
       console.log(error.message)
     })
 }
+export const fetchStaff = (context, {axios}) => {
+  return axios.get('/api/users/?show=true&page_size=1000')
+    .then(function (response) {
+      console.log('staff', response.data.results)
+      context.commit('staff', response.data.results)
+    })
+    .catch(function (error) {
+      console.log(error.message)
+    })
+}
 export const fetchAll = (context, {axios}) => {
   fetchLab(context, {axios})
   fetchValidators(context, {axios})
   fetchTypes(context, {axios})
   fetchStatuses(context, {axios})
+  fetchStaff(context, {axios})
 }

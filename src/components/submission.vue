@@ -5,6 +5,7 @@
             <q-alert type="info">
               Imported from <a target="_blank" :href="submission.import_data.url">{{submission.import_data.internal_id}}: {{submission.import_data.type.name}}</a>
             </q-alert>
+            <SamplesReceived v-if="submission.id" v-model="submission" :admin="isAdmin"/>
           </div>
           <div class="field col-12" v-if="hasWarnings">
             <q-alert
@@ -166,6 +167,7 @@ import CustomFields from './forms/customFields.vue'
 import StatusSelector from './statusSelector.vue'
 import Lock from './lock.vue'
 import Cancel from './cancel.vue'
+import SamplesReceived from './samplesReceived.vue'
 // import Vue from 'vue'
 import _ from 'lodash'
 
@@ -271,7 +273,8 @@ export default {
     CustomFields,
     StatusSelector,
     Lock,
-    Cancel
+    Cancel,
+    SamplesReceived
   }
 }
 </script>

@@ -10,3 +10,6 @@ export const statuses = (state, statuses) => {
 export const lab = (state, lab) => {
   state.lab = lab
 }
+export const staff = (state, staff) => {
+  state.staff = staff
+}
