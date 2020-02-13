@@ -13,6 +13,7 @@
             :error-label="errors ? getError(v) : ''"
             :label="v.schema.title ? v.schema.title : v.variable"
             orientation="vertical"
+            :helper="v.schema.description"
           >
           <!-- {{widget(v).getOptions()}} {{widget(v).getDefault()}} value: "{{value[v.variable]}}" -->
             <!-- <q-input v-model="value[v.variable]" type="text" :stack-label="v.schema.title ? v.schema.title : v.variable"/> -->
