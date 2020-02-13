@@ -17,6 +17,9 @@
           <td v-for="(value, label) in submission.payment.display" :key="label">{{value}}</td>
         </tr>
     </table>
+    {{submission_field_data}}
+    {{submission.submission_schema}}
+    {{submission_field_data_array}}
     <div v-if="submission.submission_data && Object.keys(submission.submission_data).length">
       <table class="full bordered compact">
         <tr><th :key="variable" v-for="(value, variable) in submission.submission_data" v-show="!hidden(submission.submission_schema, variable)">{{getTitle(submission.submission_schema,variable)}}</th></tr>
@@ -87,6 +90,31 @@ export default {
     },
     getDate (timeStamp) {
       return formatDate(timeStamp, 'MM/DD/YYYY')
+    }
+  },
+  computed: {
+    // <tr><th :key="variable" v-for="(value, variable) in submission.submission_data" v-show="!hidden(submission.submission_schema, variable)">{{getTitle(submission.submission_schema,variable)}}</th></tr>
+    // <tr><td :key="variable" v-for="(value, variable) in submission.submission_data" v-show="!hidden(submission.submission_schema, variable)">{{truncate(submission.submission_schema, variable, value)}}</td></tr>
+    submission_field_data (columns) {
+      var myarray = []
+      var i, j, chunk = columns | 4
+      for (i = 0, j = myarray.length; i < j; i += chunk) {
+        // temparray = array.slice(i,i+2*chunk)
+        // do whatever
+      }
+      return this.submission.submission_data
+    },
+    submission_field_data_array () {
+      // var arr = []
+      var self = this
+      return this.submission.submission_schema.order.map(v => [self.getTitle(self.submission.submission_schema, v), self.truncate(self.submission.submission_schema, v, self.submission.submission_data[v])])
+      // for (var i in this.submission.submission_schema.order) {
+      //   // if (!this.hidden(this.submission.submission_schema, v)) {
+      //   var v = this.submission.submission_schema.order[i]
+      //   arr.push([this.getTitle(this.submission.submission_schema, v), this.truncate(this.submission.submission_schema, v, this.submission.submission_data[v])])
+      //   // }
+      // }
+      // return arr
     }
   },
   components: {
