@@ -1,35 +1,46 @@
 <template>
   <div v-if="submission.type">
-    <p class="heading">{{submission.lab.name}} - Submission Details</p>
+    <p class="heading">{{submission.type.name}} - {{submission.internal_id}}</p>
     <table class="full bordered compact">
-    <tr><th>ID</th><td>{{submission.internal_id}}</td><th>Type</th><td colspan="3">{{submission.type.name}}</td><th>Submitted</th><td>{{getDate(submission.submitted)}}</td></tr>
-    <!--<tr><th>Status</th><td><span v-if="submission.status">{{submission.status.name}}</span></td><th>Submitted</th><td>{{submission.submitted}}</td><th>Updated</th><td>{{submission.updated}}</td></tr>-->
-    <tr><th>PI</th><td>{{submission.pi_first_name}} {{submission.pi_last_name}}</td><th>PI email</th><td>{{submission.pi_email}}</td><th>PI Phone</th><td>{{submission.pi_phone}}</td><th>Institute</th><td colspan="5">{{submission.institute}}</td></tr>
-    <tr><th>Name</th><td>{{submission.first_name}} {{submission.last_name}}</td><th>Email</th><td>{{submission.email}}</td><th>Phone</th><td>{{submission.phone}}</td></tr>
-    <!--<tr><th>Institute</th><td colspan="5">{{submission.institute}}</td></tr>-->
-    <tr v-if="submission.notes"><th>Notes</th><td colspan="7">{{submission.notes}}</td></tr>
+    <tbody>
+      <!-- <tr><th>Submitted</th><td>{{getDate(submission.submitted)}}</td><th>ID</th><td>{{submission.internal_id}}</td><th>Type</th><td colspan="3">{{submission.type.name}}</td></tr> -->
+      <tr><th>ID</th><td>{{submission.internal_id}}</td><th>Date Samples Received</th><td>{{submission.samples_received}}</td><th>Received by</th><td>{{submission.received_by}}</td></tr>
+      <!--<tr><th>Status</th><td><span v-if="submission.status">{{submission.status.name}}</span></td><th>Submitted</th><td>{{submission.submitted}}</td><th>Updated</th><td>{{submission.updated}}</td></tr>-->
+      <tr><th>PI</th><td>{{submission.pi_first_name}} {{submission.pi_last_name}}</td><th>PI email</th><td>{{submission.pi_email}}</td><th>PI Phone</th><td>{{submission.pi_phone}}</td></tr>
+      <tr><th>Submitter</th><td>{{submission.first_name}} {{submission.last_name}}</td><th>Email</th><td>{{submission.email}}</td><th>Phone</th><td>{{submission.phone}}</td></tr>
+      <tr><th>Institute</th><td colspan="5">{{submission.institute}}</td></tr>
+      <tr v-if="submission.notes"><th>Notes</th><td colspan="7">{{submission.notes}}</td></tr>
+    </tbody>
+    <KeyValueTable :arr="chunk_arr(payment_array(true), 6)"/>
+  </table>
+    <table class="full bordered compact">
+    <KeyValueTable :arr="chunk_arr(submission_field_data_array(true), 6)"/>
+    <tbody v-if="submission.comments">
+      <tr ><th>Special Instructions / Comments</th><td colspan="7">{{submission.comments}}</td></tr>
+    </tbody>
     </table>
-    <table class="full bordered compact">
+    <!-- <table class="full bordered compact">
         <tr>
           <th v-for="(value, label) in submission.payment.display" :key="label">{{label}}</th>
         </tr>
         <tr>
           <td v-for="(value, label) in submission.payment.display" :key="label">{{value}}</td>
         </tr>
-    </table>
-    {{submission_field_data}}
-    {{submission.submission_schema}}
-    {{submission_field_data_array}}
-    <div v-if="submission.submission_data && Object.keys(submission.submission_data).length">
+    </table> -->
+    <!-- <table class="full bordered compact">
+          <KeyValueTable :arr="chunk_arr(submission_field_data_array(true), 8)"/>
+    </table> -->
+
+    <!-- <div v-if="submission.submission_data && Object.keys(submission.submission_data).length">
       <table class="full bordered compact">
         <tr><th :key="variable" v-for="(value, variable) in submission.submission_data" v-show="!hidden(submission.submission_schema, variable)">{{getTitle(submission.submission_schema,variable)}}</th></tr>
         <tr><td :key="variable" v-for="(value, variable) in submission.submission_data" v-show="!hidden(submission.submission_schema, variable)">{{truncate(submission.submission_schema, variable, value)}}</td></tr>
       </table>
-    </div>
-  <table v-if="submission.comments" class="full bordered compact">
+    </div> -->
+  <!-- <table v-if="submission.comments" class="full bordered compact">
     <tr><th>***Special Instructions / Comments***</th></tr>
     <tr><td>{{submission.comments}}</td></tr>
-  </table>
+  </table> -->
 
     <p class="heading">Total Number of Samples: {{submission.sample_data.length}}</p> <!--  page-break-before -->
 <table class="horizontal full bordered compact page-break-after">
@@ -47,6 +58,8 @@
 <script>
 import Vue from 'vue'
 import { date } from 'quasar'
+import KeyValueTable from '../components/keyValueTable.vue'
+import _ from 'lodash'
 const { formatDate } = date
 export default {
   name: 'print_submission',
@@ -90,24 +103,22 @@ export default {
     },
     getDate (timeStamp) {
       return formatDate(timeStamp, 'MM/DD/YYYY')
-    }
-  },
-  computed: {
-    // <tr><th :key="variable" v-for="(value, variable) in submission.submission_data" v-show="!hidden(submission.submission_schema, variable)">{{getTitle(submission.submission_schema,variable)}}</th></tr>
-    // <tr><td :key="variable" v-for="(value, variable) in submission.submission_data" v-show="!hidden(submission.submission_schema, variable)">{{truncate(submission.submission_schema, variable, value)}}</td></tr>
-    submission_field_data (columns) {
-      var myarray = []
-      var i, j, chunk = columns | 4
-      for (i = 0, j = myarray.length; i < j; i += chunk) {
-        // temparray = array.slice(i,i+2*chunk)
-        // do whatever
-      }
-      return this.submission.submission_data
     },
-    submission_field_data_array () {
+    chunk_arr (arr, chunkSize = 8) {
+      // var chunked = []
+      // var i, j, chunk = chunkSize
+      // for (i = 0, j = arr.length; i < j; i += chunk) {
+      //   // temparray = array.slice(i,i+2*chunk)
+      //   // do whatever
+      //   chunked.push(arr.slice(i, i + chunk))
+      // }
+      return _.chunk(arr, chunkSize)
+    },
+    submission_field_data_array (flatten = true) {
       // var arr = []
       var self = this
-      return this.submission.submission_schema.order.map(v => [self.getTitle(self.submission.submission_schema, v), self.truncate(self.submission.submission_schema, v, self.submission.submission_data[v])])
+      var arr = this.submission.submission_schema.order.map(v => [self.getTitle(self.submission.submission_schema, v), self.truncate(self.submission.submission_schema, v, self.submission.submission_data[v])])
+      return flatten ? _.flatten(arr) : arr
       // for (var i in this.submission.submission_schema.order) {
       //   // if (!this.hidden(this.submission.submission_schema, v)) {
       //   var v = this.submission.submission_schema.order[i]
@@ -115,14 +126,22 @@ export default {
       //   // }
       // }
       // return arr
+    },
+    payment_array (flatten = true) {
+      var arr = _.toPairs(this.submission.payment.display)
+      // this.submission.submission_schema.order.map(v => [self.getTitle(self.submission.submission_schema, v), self.truncate(self.submission.submission_schema, v, self.submission.submission_data[v])])
+      return flatten ? _.flatten(arr) : arr
     }
   },
+  computed: {
+  },
   components: {
+    KeyValueTable
   }
 }
 </script>
 
-<style scoped>
+<style>
 /* media="print" */
 .full {
   width:100%;
@@ -164,7 +183,7 @@ td,th{
 */
 
 </style>
-<style scoped type="text/css" media="print">
+<style type="text/css" media="print">
   @page {
     size: landscape;
   }
