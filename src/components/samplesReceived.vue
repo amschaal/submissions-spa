@@ -1,5 +1,6 @@
 <template>
   <div>
+    2. {{value.samples_received}} 3. {{data.samples_received}}
     <q-alert type="warning" v-if="!value.samples_received">
        Samples not yet received.
        <span v-if="admin">
@@ -83,6 +84,7 @@ export default {
   mounted () {
     // console.log('widgetFactory', widgetFactory.getWidgetOptions('text'))
     // this.setup()
+    this.data = _.cloneDeep(this.value)
   },
   methods: {
     setup () {
@@ -114,10 +116,24 @@ export default {
       // this.data
     },
     markReceived (received, receivedBy) {
+      // this.data['samples_received'] = '2019-12-01'
+      // this.$emit('input', this.data)
+      // this.$refs.modal.hide()
       var self = this
-      this.$axios.post(`/api/submissions/${this.value.id}/samples_received/`, {samples_received: received, received_by: receivedBy})
+      var data = {}
+      if (received) {
+        data['received'] = received
+      }
+      if (receivedBy) {
+        data['received_by'] = receivedBy
+      }
+      this.$axios.post(`/api/submissions/${this.value.id}/samples_received/`, data)
         .then(function (response) {
-          self.$emit('input', response.data.submission)
+          console.log('received', self, response.data.submission)
+          // self.$set(self, 'data', response.data.submission)
+          self.data.samples_received = response.data.submission.samples_received
+          self.data.received_by = response.data.submission.received_by
+          self.$emit('input', self.data)
           self.$refs.modal.hide()
         })
         .catch(function (response) {
