@@ -26,12 +26,14 @@ export default Vue.extend({
     }
   },
   created () {
-    console.log('created', this.params)
+    // console.log('created', this.params, this.params.charPress)
     this.number = this.params.value
   },
-  mounted () {
-    console.log('NumericComponent', this)
+  mounted (foo) {
+    // console.log('NumericComponent', this, foo)
+    var char = this.params.charPress
     Vue.nextTick(() => {
+      this.number = !char || isNaN(char) ? this.params.value : parseInt(char)
       if (this.$refs.input) {
         this.$refs.input.select()
       }
