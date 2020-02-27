@@ -1,15 +1,14 @@
 <template>
   <div>
-    2. {{value.samples_received}} 3. {{data.samples_received}}
     <q-alert type="warning" v-if="!value.samples_received">
        Samples not yet received.
        <span v-if="admin">
-         Mark as received <a class="action" @click="markReceived">today by me</a>
+         Mark as received <a class="action" @click="markReceived()">today by me</a>
          or <a class="action" @click="openModal">set a specific date</a>.
        </span>
     </q-alert>
     <q-alert type="positive" v-else>
-      Samples received on {{value.samples_received|formatDate}} by {{value.received_by}}
+      Samples received on {{value.samples_received|formatDate}} by {{value.received_by_name}} <a class="action" @click="openModal" v-if="admin">Edit</a>
     </q-alert>
 
     <q-modal v-model="opened" :content-css="{width: '500px', minHeight: '40vh'}" ref="modal">
@@ -133,6 +132,7 @@ export default {
           // self.$set(self, 'data', response.data.submission)
           self.data.samples_received = response.data.submission.samples_received
           self.data.received_by = response.data.submission.received_by
+          self.data.received_by_name = response.data.submission.received_by_name
           self.$emit('input', self.data)
           self.$refs.modal.hide()
         })

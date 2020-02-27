@@ -43,6 +43,7 @@
           <q-td key="pi_name" :props="props">{{ props.row.pi_first_name }} {{ props.row.pi_last_name }}</q-td>
           <q-td key="pi_email" :props="props">{{ props.row.pi_email }}</q-td>
           <q-td key="sample_data" :props="props"><span v-if="props.row.sample_data">{{ props.row.sample_data.length }}</span></q-td>
+          <q-td key="samples_received" :props="props"><q-icon size="18px" name="check_circle" v-if="props.row.samples_received" color="green"><q-tooltip>Received on {{props.row.samples_received|formatDate}} by {{props.row.received_by_name}}</q-tooltip></q-icon></q-td>
           <q-td key="biocore" :props="props"><q-icon size="18px" name="check_circle" v-if="props.row.biocore" color="green"/></q-td>
         </q-tr>
       </template>
@@ -85,9 +86,10 @@ export default {
         { name: 'pi_name', label: 'PI', field: 'pi_name' },
         { name: 'pi_email', label: 'PI Email', field: 'pi_email', sortable: true },
         { name: 'sample_data', label: 'Samples', field: 'sample_data' },
+        { name: 'samples_received', label: 'Received', field: 'samples_received', sortable: false },
         { name: 'biocore', label: 'Biocore', field: 'biocore', sortable: true }
       ],
-      visibleColumns: ['locked', 'internal_id', 'type', 'status', 'submitted', 'name', 'email', 'pi_name', 'sample_data', 'biocore']
+      visibleColumns: ['locked', 'internal_id', 'type', 'status', 'submitted', 'name', 'email', 'pi_name', 'sample_data', 'samples_received']
     }
   },
   methods: {
