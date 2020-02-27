@@ -5,7 +5,7 @@
           <span v-if="!modify">
             <p class="caption">{{v.schema.title ? v.schema.title : v.variable}}</p>
 
-            {{widget(v).formatValue(value[v.variable])}}
+            {{widget(v).formatValue(value[v.variable],'None')}}
           </span>
           <q-field
             v-else
@@ -64,6 +64,9 @@ export default {
       return new WidgetClass(v, options)
     },
     colWidth (variable) {
+      // if (!this.modify) {
+      //   return 'col-4'
+      // }
       return this.schema.layout[variable] && this.schema.layout[variable].width ? [this.schema.layout[variable].width] : ['col-12']
     },
     getError (v) {

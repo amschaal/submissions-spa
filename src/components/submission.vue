@@ -5,6 +5,9 @@
             <q-alert type="info">
               Imported from <a target="_blank" :href="submission.import_data.url">{{submission.import_data.internal_id}}: {{submission.import_data.type.name}}</a>
             </q-alert>
+          </div>
+          <div class="field col-12" v-if="0">
+            1. {{submission.samples_received}}
             <SamplesReceived v-if="submission.id" v-model="submission" :admin="isAdmin"/>
           </div>
           <div class="field col-12" v-if="hasWarnings">
@@ -134,7 +137,7 @@
             <q-icon size="18px" name="check_circle" color="green"/> Bioinformatics Core to analyze data
           </div>
         </div>
-        <CustomFields v-model="submission.submission_data" :schema="submission_type.schema" ref="submission_fields" v-if="submission_type && submission_type.schema" :modify="false"/>
+        <CustomFields v-model="submission.submission_data" :schema="submission_type.submission_schema" ref="submission_fields" v-if="submission_type && submission_type.submission_schema" :modify="false"/>
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
         <Agschema v-model="submission.sample_data" :type="submission_type" :editable="false" ref="samplesheet" v-if="submission_type && submission_type.sample_schema" :submission="submission"/>
         <q-icon size="25px" name="warning" v-if="hasWarnings" color="warning" title="Samples contain warnings."/>

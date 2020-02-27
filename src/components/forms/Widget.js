@@ -52,11 +52,11 @@ export class Widget {
   getDefault () {
     return this.defaultValue
   }
-  formatValue (value) {
+  formatValue (value, defaultValue) {
     if (value instanceof Array) {
       return value.join(', ')
     }
-    return value
+    return !value && defaultValue ? defaultValue : value
   }
   validateOptions (options, field, schema) {
     console.log('validateOptions', options, field, schema)
