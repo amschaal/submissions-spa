@@ -18,9 +18,9 @@
           <q-btn
             color="primary"
             @click="show_help = true"
-            label="Sample requirements"
+            label="Help"
             v-if="type.sample_help"
-          /> <!-- icon="fas fa-question-circle" -->
+          ><q-tooltip ref="tooltip">Please click "Help" button for important information on sample requirements!</q-tooltip></q-btn> <!-- icon="fas fa-question-circle" -->
           <q-checkbox v-model="showDescriptions" label="Show descriptions" class="show_descriptions" v-if="hasDescriptions"/> <q-checkbox v-model="showExamples" label="Show examples" v-if="allowExamples && this.sample_schema.examples && sample_schema.examples.length"  class="show_examples"/>
           <q-btn-dropdown label="Resize Columns" class="float-right">
           <q-list link>
@@ -245,6 +245,9 @@ export default {
           self.addRow()
         }
         this.rootNode = this.gridOptions.api.getModel().rootNode
+        setTimeout(function () {
+          self.$refs.tooltip.show()
+        }, 1000)
       })
     },
     cellEditable (params) {
