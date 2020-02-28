@@ -1,5 +1,6 @@
 <template>
   <div>
+      <q-btn class="pull-right" color="primary" @click="show_help = true" label="Help" icon="fas fa-question-circle" v-if="type && type.submission_help"><q-tooltip ref="help_tooltip">Click for help with {{type.name}}</q-tooltip></q-btn>
       <div v-html="$store.getters.lab.submission_page" v-if="$store.getters.lab.submission_page"></div>
       <q-checkbox v-model="debug" label="Debug" v-if="$store.getters.isStaff && false" />
         <span v-if="debug">
@@ -241,7 +242,7 @@
           <q-btn @click="submit" color="positive" label="Submit"></q-btn>
           <q-btn @click="saveDraft" v-if="!id" label="Save Draft"></q-btn>
           <q-btn v-if="submission.id" label="Cancel" color="negative" class="float-right" @click="$router.push({name: 'submission', params: {id: submission.id}})"/>
-          <q-btn color="primary" @click="show_help = true" label="Help" icon="fas fa-question-circle" v-if="type && type.submission_help"/>
+          <q-btn color="primary" @click="show_help = true" label="Help" icon="fas fa-question-circle" v-if="type && type.submission_help"><q-tooltip>Click for help with {{type.name}}</q-tooltip></q-btn>
         </q-card-actions>
         <q-modal v-model="show_help">
           <q-modal-layout>
@@ -286,6 +287,7 @@ export default {
       // submission_types: [{ foo: 'bar' }],
       // type_options: this.$store.getters.typeOptions,
       type: {},
+      type_id: null, // from query params ?type=, will force form to use type
       debug: false,
       user_options: null,
       show_help: false,
@@ -358,6 +360,10 @@ export default {
         // }
       }
       console.log('draft', this.draft)
+    }
+    this.type_id = !this.id && this.$route.query.type ? this.$route.query.type : null
+    if (this.type_id) {
+      this.submission.type = this.type_id
     }
     if (this.submission.type) {
       if (this.submission.type.id) {
@@ -601,6 +607,18 @@ export default {
       Vue.set(this.submission, 'last_name', this.submission.pi_last_name)
       Vue.set(this.submission, 'phone', this.submission.pi_phone)
       Vue.set(this.submission, 'email', this.submission.pi_email)
+    },
+    flashHelpTooltip () {
+      var self = this
+      // this.$refs.help_tooltip.show()
+      setTimeout(function () {
+        console.log('tooltip', self.$refs.help_tooltip)
+        self.$refs.help_tooltip.show()
+      }, 250)
+      setTimeout(function () {
+        console.log('tooltip', self.$refs.help_tooltip)
+        self.$refs.help_tooltip.hide()
+      }, 5000)
     }
   },
   watch: {
@@ -608,6 +626,9 @@ export default {
       // this.assignType(id)
       this.type = this.$store.getters.typesDict[id]
       console.log('type', id, this.type, this.$store.getters.typesDict)
+      if (this.type.submission_help) {
+        this.flashHelpTooltip()
+      }
       // this.type = this.submission.type
       // this.submission.type = this.type.id
     },
