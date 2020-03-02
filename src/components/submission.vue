@@ -7,7 +7,7 @@
             </q-alert>
           </div>
           <div class="field col-12">
-            <SamplesReceived v-if="submission.id" v-model="submission" :admin="isAdmin"/>
+            <SamplesReceived v-if="submission.id" v-model="submission" :admin="$store.getters.isStaff"/>
           </div>
           <div class="field col-12" v-if="hasWarnings">
             <q-alert

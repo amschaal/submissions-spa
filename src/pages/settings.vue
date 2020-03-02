@@ -40,7 +40,7 @@
       <q-field
         label="Statuses"
         label-width="2"
-        helper="A list of statuses that can be used for submission types.  Special statuses include 'Completed'."
+        helper="A list of statuses that can be used for submission types.  Special statuses include 'Samples Received' and 'Completed'."
       >
         <q-chips-input v-model="lab.statuses" @input="addStatus" @remove="removeStatus"/>
       </q-field>

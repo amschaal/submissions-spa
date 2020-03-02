@@ -102,7 +102,7 @@
               </q-list>
             </q-btn-dropdown>
             <div v-for="(v, index) in data.validators" :key="index" :title="validators[v.id].description">
-              <q-btn flat dense round icon="delete_outline" @click="removeValidator(index)"/> {{validators[v.id].name}} <q-btn size="sm" v-if="validators[v.id].uses_options" label="Options" @click="open('validator_options_'+v.id)"/>
+              <q-btn flat dense round icon="delete_outline" @click="removeValidator(index)"/> {{validators[v.id].name}}  <label title="Raise as a warning only"><input type="checkbox" v-model="v.options.warning"/>Warning only</label><q-btn size="sm" v-if="validators[v.id].uses_options" label="Options" @click="open('validator_options_'+v.id)"/>
               <ValidatorOptions v-model="v.options" :fields="validators[v.id].schema" :schema="schema" :variable="variable" :title="`${validators[v.id].name} validator options`" :ref="`validator_options_${v.id}`" v-if="validators[v.id].uses_options"/>
             </div>
           </q-field>
