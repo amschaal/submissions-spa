@@ -136,7 +136,7 @@
             <q-icon size="18px" name="check_circle" color="green"/> Bioinformatics Core to analyze data
           </div>
         </div>
-        <CustomFields v-model="submission.submission_data" :schema="submission_type.submission_schema" ref="submission_fields" v-if="submission_type && submission_type.submission_schema" :modify="false"/>
+        <CustomFields v-model="submission.submission_data" :schema="submission_schema" ref="submission_fields" v-if="submission_schema" :modify="false"/>
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
         <Agschema v-model="submission.sample_data" :type="submission_type" :editable="false" ref="samplesheet" v-if="submission_type && submission_type.sample_schema" :submission="submission"/>
         <q-icon size="25px" name="warning" v-if="hasWarnings" color="warning" title="Samples contain warnings."/>
@@ -238,6 +238,15 @@ export default {
         return this.$store.getters.typesDict[this.submission.type]
       }
       return {}
+    },
+    submission_schema () {
+      if (this.submission && this.submission.submission_schema) {
+        return this.submission.submission_schema
+      } else if (this.submission_type) {
+        return this.submission_type
+      } else {
+        return null
+      }
     },
     hasWarnings () {
       return this.submission.data && this.submission.data.warnings && _.size(this.submission.data.warnings) > 0

@@ -200,7 +200,7 @@
       <fieldset>
         <legend>Sample Information</legend>
         <p v-if="!type.id" class="error">***Please select submission type at the top of the form before filling in sample information***</p>
-        <CustomFields v-model="submission.submission_data" :schema="submission.type.submission_schema || type.submission_schema" ref="submission_fields" v-if="type && type.submission_schema" :errors="errors.submission_data" modify="true"/>
+        <CustomFields v-model="submission.submission_data" :schema="submission.submission_schema || type.submission_schema" ref="submission_fields" v-if="type && type.submission_schema" :errors="errors.submission_data" modify="true"/>
         <q-field
           label="* Samples"
           label-width="2"
