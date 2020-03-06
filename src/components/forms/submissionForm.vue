@@ -200,7 +200,7 @@
       <fieldset>
         <legend>Sample Information</legend>
         <p v-if="!type.id" class="error">***Please select submission type at the top of the form before filling in sample information***</p>
-        <CustomFields v-model="submission.submission_data" :schema="submission.submission_schema || type.submission_schema" ref="submission_fields" v-if="type && type.submission_schema" :errors="errors.submission_data" modify="true"/>
+        <CustomFields v-model="submission.submission_data" :schema="submission.submission_schema || type.submission_schema" ref="submission_fields" v-if="type && type.submission_schema" :errors="errors.submission_data" :warnings="errors.warnings ? errors.warnings.submission_data : {}" modify="true"/>
         <q-field
           label="* Samples"
           label-width="2"
@@ -212,7 +212,18 @@
           helper="Click on the Samples button to enter sample information"
         >
           <!-- <Samplesheet v-model="submission.sample_data" :type="type"/> -->
-          <Agschema v-model="submission.sample_data" :schema="submission.sample_schema" :type="type" :editable="true" :allow-examples="true" :allow-force-save="true" ref="samplesheet" v-if="type && type.sample_schema" :submission="submission" v-on:warnings="updateWarnings" v-on:errors="updateErrors"/>
+          <Agschema
+            v-model="submission.sample_data"
+            :schema="submission.sample_schema"
+            :type="type"
+            :editable="true"
+            :allow-examples="true"
+            :allow-force-save="true"
+            ref="samplesheet"
+            v-if="type && type.sample_schema"
+            :submission="submission"
+            v-on:warnings="updateWarnings"
+            v-on:errors="updateErrors"/>
           <q-btn :label="'Samples ('+submission.sample_data.length+')'"  @click="openSamplesheet" />
         </q-field>
         <q-field
@@ -282,7 +293,7 @@ export default {
   data () {
     return {
       submission: {'submission_data': {}, 'sample_data': [], 'contacts': [], biocore: false, 'payment': {}},
-      errors: {contacts: [], payment: {}},
+      errors: {contacts: [], payment: {}, warnings: {}},
       warnings: {},
       // submission_types: [{ foo: 'bar' }],
       // type_options: this.$store.getters.typeOptions,
@@ -417,7 +428,7 @@ export default {
     },
     updateWarnings (warnings) {
       console.log('update', warnings)
-      Vue.set(this.warnings, 'sample_data', warnings)
+      Vue.set(this.error.warnings, 'sample_data', warnings)
     },
     updateErrors (errors) {
       console.log('update errors', errors)
@@ -439,7 +450,7 @@ export default {
           // self.warnings = {}
           self.submission = response.data
           Vue.set(self, 'errors', response.data.data.errors)
-          Vue.set(self, 'warnings', response.data.data.warnings)
+          // Vue.set(self, 'warnings', response.data.data.warnings)
           // console.log(response)
           self.$q.notify({message: 'Submission successfully saved.', type: 'positive'})
           self.$emit('submission_updated', self.submission)
@@ -456,6 +467,22 @@ export default {
           console.log('ERROR', error.response)
           var message = error.response.data.detail || 'There were errors saving your submission.'
           self.$q.notify({message: message, type: 'negative'})
+          if (error.response.data.warnings && !self.submission.ignore_warnings) {
+            self.$q.notify({
+              message: 'There are warnings in your submission.',
+              timeout: 10000, // in milliseconds; 0 means no timeout
+              type: 'warning',
+              // position: 'bottom', // 'top', 'left', 'bottom-left' etc.
+              actions: [
+                {
+                  label: 'Ignore warnings',
+                  handler: () => {
+                    self.submission.ignore_warnings = true
+                  }
+                }
+              ]
+            })
+          }
           if (error.response) {
             // Vue.set(self, 'errors', error.response.data)
             self.errors = error.response.data
@@ -573,8 +600,8 @@ export default {
             response.data.sample_data = []
           }
           self.submission = response.data
-          Vue.set(self, 'errors', response.data.data.errors || {contacts: [], payment: {}})
-          Vue.set(self, 'warnings', response.data.data.warnings || {})
+          Vue.set(self, 'errors', {contacts: [], payment: {}, warnings: response.data.warnings})
+          // Vue.set(self, 'warnings', response.data.warnings || {})
           Vue.set(self.submission, 'type', response.data.type.id)
         })
     },
@@ -670,7 +697,7 @@ export default {
       return this.errors[field]
     },
     sample_data_warning () {
-      return this.warnings && this.warnings.sample_data && _.size(this.warnings.sample_data) > 0
+      return this.errors.warnings && this.errors.warnings.sample_data && _.size(this.errors.warnings.sample_data) > 0
     },
     sample_data_error () {
       return this.errors && this.errors.sample_data && _.size(this.errors.sample_data) > 0

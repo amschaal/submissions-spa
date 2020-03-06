@@ -2,15 +2,17 @@
   <div class="row">
       <div v-for="v in fields" :key="v.variable" class="field" v-bind:class="colWidth(v.variable)">
         <div v-if="$store.getters.isLoggedIn || !v.schema.internal">
-          <span v-if="!modify">
+          <span v-if="!modify" v-bind:class="{'warning': warnings && warnings[v.variable]}">
             <p class="caption">{{v.schema.title ? v.schema.title : v.variable}}</p>
 
-            {{widget(v).formatValue(value[v.variable],'None')}}
+            <span><q-tooltip v-if="warnings && warnings[v.variable]">{{warnings ? getWarning(v).join(', ') : ''}}</q-tooltip>{{widget(v).formatValue(value[v.variable],'None')}}</span>
           </span>
           <q-field
             v-else
             :error="errors && errors[v.variable]"
             :error-label="errors ? getError(v) : ''"
+            :warning="warnings && warnings[v.variable]"
+            :warning-label="warnings ? getWarning(v) : ''"
             :label="v.schema.title ? v.schema.title : v.variable"
             orientation="vertical"
             :helper="v.schema.description"
@@ -43,7 +45,7 @@ import { QSelect } from 'quasar'
 // import _ from 'lodash'
 
 export default {
-  props: ['value', 'schema', 'editable', 'errors', 'modify'],
+  props: ['value', 'schema', 'editable', 'errors', 'warnings', 'modify'],
   data () {
     return {
       data: this.value ? this.value : {}
@@ -71,6 +73,9 @@ export default {
     },
     getError (v) {
       return v.schema.error_message || this.errors[v.variable]
+    },
+    getWarning (v) {
+      return v.schema.error_message || this.warnings[v.variable]
     }
   },
   computed: {
@@ -94,8 +99,11 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 .q-field {
   padding: 3px !important;
+}
+.warning {
+  color: orange;
 }
 </style>
