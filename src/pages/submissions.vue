@@ -140,7 +140,7 @@ export default {
       })
     },
     hasWarnings (submission) {
-      return submission.data && submission.data.warnings && _.size(submission.data.warnings) > 0
+      return submission.warnings && _.size(submission.warnings) > 0
     }
   },
   mounted () {

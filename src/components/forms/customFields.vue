@@ -5,7 +5,7 @@
           <span v-if="!modify" v-bind:class="{'warning': warnings && warnings[v.variable]}">
             <p class="caption">{{v.schema.title ? v.schema.title : v.variable}}</p>
 
-            <span><q-tooltip v-if="warnings && warnings[v.variable]">{{warnings ? getWarning(v).join(', ') : ''}}</q-tooltip>{{widget(v).formatValue(value[v.variable],'None')}}</span>
+            <span><q-tooltip v-if="warnings && warnings[v.variable]">{{warnings ? getWarning(v) : ''}}</q-tooltip><q-icon v-if="warnings && warnings[v.variable]" size="14px" name="warning" color="orange"/> {{widget(v).formatValue(value[v.variable],'None')}}</span>
           </span>
           <q-field
             v-else
@@ -74,8 +74,9 @@ export default {
     getError (v) {
       return v.schema.error_message || this.errors[v.variable]
     },
-    getWarning (v) {
-      return v.schema.error_message || this.warnings[v.variable]
+    getWarning (v, flatten) {
+      var warning = v.schema.error_message || this.warnings[v.variable]
+      return warning.join ? warning.join(', ') : warning
     }
   },
   computed: {

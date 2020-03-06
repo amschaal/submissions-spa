@@ -13,7 +13,7 @@
             <q-alert
               type="warning"
             >
-              <p>There are warnings associated with this submission.  Modify the submission for details.</p>
+              <p>There are warnings associated with this submission.</p>
             </q-alert>
           </div>
           <div v-if="$route.query.created" class="field col-12">
@@ -249,7 +249,7 @@ export default {
       }
     },
     hasWarnings () {
-      return this.submission.data && this.submission.data.warnings && _.size(this.submission.data.warnings) > 0
+      return this.submission && this.submission.warnings && _.size(this.submission.warnings) > 0
     },
     formatOptions () {
       var options = [
