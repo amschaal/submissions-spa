@@ -58,7 +58,7 @@ export const logout = (context, {axios}) => {
     })
 }
 
-export const updateSettings = (context, {key, value, axios, dispatch}) => {
+export const updateSettings = (context, {key, value, axios, self, dispatch}) => {
   return new Promise((resolve, reject) => {
     axios.post('/api/users/update_settings/', {
       key: key,
@@ -67,10 +67,12 @@ export const updateSettings = (context, {key, value, axios, dispatch}) => {
     })
       .then(function (response) {
         context.commit('userSettings', response.data.settings)
+        self.$q.notify({message: 'Settings updated', type: 'positive'})
         resolve(response)
       })
       .catch(function (error) {
         console.log('errors', error.message)
+        self.$q.notify({message: 'Unable to update settings', type: 'negative'})
         reject(error.message)
       })
   })

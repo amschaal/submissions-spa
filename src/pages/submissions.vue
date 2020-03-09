@@ -1,7 +1,5 @@
 <template>
   <q-page class="docs-input justify-center"><!-- row -->
-    {{$store.getters.getUserSettings}}
-    <q-btn label="Save Search Settings" @click="saveSettings"/>
     <q-table
       ref="table"
       :data="serverData"
@@ -29,6 +27,26 @@
       </template>
       <template slot="top-right" slot-scope="props">
         <q-search hide-underline v-model="filters.filter" :props="props"/>
+        <!-- <q-btn size="sm" label="Save Search Settings" @click="saveSettings"/> -->
+        <q-btn>
+          <q-icon name="settings" />
+          <q-popover>
+            <q-list link separator class="scroll" style="min-width: 100px">
+              <q-item
+                v-close-overlay
+                @click.native="saveSettings"
+              >
+                <q-item-main label="Save search settings"/>
+              </q-item>
+              <q-item
+                v-close-overlay
+                @click.native="loadDefaults"
+              >
+                <q-item-main label="Load defaults"/>
+              </q-item>
+            </q-list>
+          </q-popover>
+        </q-btn>
       </template>
       <template slot="body" slot-scope="props">
         <q-tr :props="props" v-bind:class="{'cancelled': props.row.cancelled, 'completed': props.row.status && props.row.status.toUpperCase() === 'COMPLETED'}">
@@ -152,7 +170,11 @@ export default {
       return submission.warnings && _.size(submission.warnings) > 0
     },
     saveSettings () {
-      this.$store.dispatch('updateSettings', {key: 'submission_filters', value: this.filters, axios: this.$axios})
+      this.$store.dispatch('updateSettings', {key: 'submission_filters', value: this.filters, axios: this.$axios, self: this})
+    },
+    loadDefaults () {
+      this.$set(this, 'filters', _.cloneDeep(defaultFilters))
+      this.refresh()
     }
   },
   mounted () {
