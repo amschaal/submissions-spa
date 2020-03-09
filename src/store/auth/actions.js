@@ -38,6 +38,7 @@ export const checkAuth = (context, {axios}) => {
   return axios.get('/api/get_user/')
     .then(function (response) {
       context.commit('login', response.data.user)
+      context.commit('userSettings', response.data.user.profile ? response.data.user.profile.settings : {})
     })
     .catch(function (error) {
       console.log(error.message)
@@ -55,4 +56,22 @@ export const logout = (context, {axios}) => {
       console.log('error!!!', error.message)
       return Promise.reject(new Error('failed'))
     })
+}
+
+export const updateSettings = (context, {key, value, axios, dispatch}) => {
+  return new Promise((resolve, reject) => {
+    axios.post('/api/users/update_settings/', {
+      key: key,
+      value: value
+      // headers: auth.getAuthHeader(),
+    })
+      .then(function (response) {
+        context.commit('userSettings', response.data.settings)
+        resolve(response)
+      })
+      .catch(function (error) {
+        console.log('errors', error.message)
+        reject(error.message)
+      })
+  })
 }

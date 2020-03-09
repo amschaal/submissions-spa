@@ -1,13 +1,15 @@
 <template>
   <q-page class="docs-input justify-center"><!-- row -->
+    {{$store.getters.getUserSettings}}
+    <q-btn label="Save Search Settings" @click="saveSettings"/>
     <q-table
       ref="table"
       :data="serverData"
       :columns="columns"
-      :visible-columns="visibleColumns"
-      :filter="filter"
+      :visible-columns="filters.visibleColumns"
+      :filter="filters.filter"
       row-key="id"
-      :pagination.sync="serverPagination"
+      :pagination.sync="filters.serverPagination"
       :loading="loading"
       @request="request"
       binary-state-sort
@@ -17,16 +19,16 @@
         <q-table-columns
           color="secondary"
           class="q-mr-sm"
-          v-model="visibleColumns"
+          v-model="filters.visibleColumns"
           :columns="columns"
           :props="props"
         />
-        <q-checkbox v-model="showCancelled" label="Show cancelled" @input="refresh"/>
-        <q-checkbox v-model="showCompleted" label="Show completed" @input="refresh"><q-tooltip>Include submissions with a status of "completed"</q-tooltip></q-checkbox>
-        <q-checkbox v-model="participating" label="Participating" @input="refresh"><q-tooltip>Only show submissions in which I am a participant</q-tooltip></q-checkbox>
+        <q-checkbox v-model="filters.showCancelled" label="Show cancelled" @input="refresh"/>
+        <q-checkbox v-model="filters.showCompleted" label="Show completed" @input="refresh"><q-tooltip>Include submissions with a status of "completed"</q-tooltip></q-checkbox>
+        <q-checkbox v-model="filters.participating" label="Participating" @input="refresh"><q-tooltip>Only show submissions in which I am a participant</q-tooltip></q-checkbox>
       </template>
       <template slot="top-right" slot-scope="props">
-        <q-search hide-underline v-model="filter" :props="props"/>
+        <q-search hide-underline v-model="filters.filter" :props="props"/>
       </template>
       <template slot="body" slot-scope="props">
         <q-tr :props="props" v-bind:class="{'cancelled': props.row.cancelled, 'completed': props.row.status && props.row.status.toUpperCase() === 'COMPLETED'}">
@@ -54,23 +56,27 @@
 <script>
 // import axios from 'axios'
 import _ from 'lodash'
+var defaultFilters = {
+  filter: '',
+  showCancelled: false,
+  showCompleted: false,
+  participating: false,
+  serverPagination: {
+    page: 1,
+    rowsNumber: 0, // specifying this determines pagination is server-side
+    rowsPerPage: 10,
+    descending: true,
+    sortBy: 'submitted'
+  },
+  visibleColumns: ['locked', 'internal_id', 'type', 'status', 'submitted', 'name', 'email', 'pi_name', 'sample_data', 'samples_received']
+}
 
 export default {
   name: 'submissions',
   data () {
     return {
-      filter: '',
-      showCancelled: false,
-      showCompleted: false,
-      participating: false,
+      filters: this.$store.getters.getUserSettings.submission_filters ? this.$store.getters.getUserSettings.submission_filters : defaultFilters,
       loading: false,
-      serverPagination: {
-        page: 1,
-        rowsNumber: 0, // specifying this determines pagination is server-side
-        rowsPerPage: 10,
-        descending: true,
-        sortBy: 'submitted'
-      },
       serverData: [],
       columns: [
         { name: 'locked', label: 'Locked', field: 'locked', sortable: true },
@@ -88,8 +94,7 @@ export default {
         { name: 'sample_data', label: 'Samples', field: 'sample_data' },
         { name: 'samples_received', label: 'Received', field: 'samples_received', sortable: false },
         { name: 'biocore', label: 'Biocore', field: 'biocore', sortable: true }
-      ],
-      visibleColumns: ['locked', 'internal_id', 'type', 'status', 'submitted', 'name', 'email', 'pi_name', 'sample_data', 'samples_received']
+      ]
     }
   },
   methods: {
@@ -104,21 +109,25 @@ export default {
       if (pagination.descending) {
         sortBy = '-' + sortBy
       }
-      var search = this.filter !== '' ? `&search=${this.filter}` : ''
-      var cancelled = !this.showCancelled ? '&cancelled__isnull=true' : ''
-      var completed = !this.showCompleted ? '&exclude_status=completed' : ''
-      var participating = this.participating ? '&participating' : ''
+      var search = this.filters.filter !== '' ? `&search=${this.filters.filter}` : ''
+      var cancelled = !this.filters.showCancelled ? '&cancelled__isnull=true' : ''
+      var completed = !this.filters.showCompleted ? '&exclude_status=completed' : ''
+      var participating = this.filters.participating ? '&participating' : ''
       var pageSize = pagination.rowsPerPage ? pagination.rowsPerPage : 1000000 // HACKY
       // var type = this.$route.query.type ? `&type__name__icontains=${this.$route.query.type}` : ''
       this.$axios
         .get(`/api/submissions/?ordering=${sortBy}&page=${pagination.page}&page_size=${pageSize}${search}${cancelled}${completed}${participating}`)// ${pagination.descending}&filter=${filter}
         .then(({ data }) => {
           console.log('data', data)
+
+          // console.log('pagination', pagination)
           // updating pagination to reflect in the UI
-          this.serverPagination = pagination
+          this.filters.serverPagination = pagination
+
+          this.filters.serverPagination.sortBy = pagination.sortBy
 
           // we also set (or update) rowsNumber
-          this.serverPagination.rowsNumber = data.count
+          this.filters.serverPagination.rowsNumber = data.count
 
           // then we update the rows with the fetched ones
           this.serverData = data.results
@@ -135,19 +144,22 @@ export default {
     },
     refresh () {
       this.request({
-        pagination: this.serverPagination,
-        filter: this.filter
+        pagination: this.filters.serverPagination,
+        filter: this.filters.filter
       })
     },
     hasWarnings (submission) {
       return submission.warnings && _.size(submission.warnings) > 0
+    },
+    saveSettings () {
+      this.$store.dispatch('updateSettings', {key: 'submission_filters', value: this.filters, axios: this.$axios})
     }
   },
   mounted () {
     // once mounted, we need to trigger the initial server data fetch
     console.log(this.$route.query.search)
     if (this.$route.query.search) {
-      this.filter = this.$route.query.search
+      this.filters.filter = this.$route.query.search
     }
     this.refresh()
   }

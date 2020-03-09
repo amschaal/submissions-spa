@@ -248,6 +248,9 @@ export default {
         setTimeout(function () {
           self.$refs.tooltip.show()
         }, 1000)
+        setTimeout(function () {
+          self.$refs.tooltip.hide()
+        }, 6000)
       })
     },
     cellEditable (params) {
