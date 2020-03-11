@@ -11,7 +11,7 @@
             v-else
             :error="errors && errors[v.variable]"
             :error-label="errors ? getError(v) : ''"
-            :warning="warnings && warnings[v.variable]"
+            :warning="hasWarning(v)"
             :warning-label="warnings ? getWarning(v) : ''"
             :label="v.schema.title ? v.schema.title : v.variable"
             orientation="vertical"
@@ -76,7 +76,10 @@ export default {
     },
     getWarning (v, flatten) {
       var warning = v.schema.error_message || this.warnings[v.variable]
-      return warning.join ? warning.join(', ') : warning
+      return warning && warning.join ? warning.join(', ') : ''
+    },
+    hasWarning (v) {
+      return this.warnings && this.getWarning(v) !== ''
     }
   },
   computed: {
